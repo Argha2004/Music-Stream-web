@@ -38,7 +38,7 @@ insert into public.releases (
 - Pull to refresh on Home
 - Updates now come from the MusicStream website$notes$,
   -- Case-sensitive: must match the R2 object name exactly.
-  'https://pub-cec11addff5f4d68a3cc6df91976c697.r2.dev/MusicStream-v2.1.3-20103.apk',
+  '',
   207833592,
   -- Optional integrity check. Leave NULL unless you paste the REAL hash:
   --   (Get-FileHash .\MusicStream-v2.1.3-20103.apk -Algorithm SHA256).Hash.ToLower()
