@@ -1,0 +1,224 @@
+/* Tailwind v4 + HeroUI v3.
+   Import order is load-bearing: Tailwind must come before HeroUI styles. */
+@import 'tailwindcss';
+@import '@heroui/styles';
+
+/* ---------------------------------------------------------------------------
+   Brand tokens. Replaces the old tailwind.config.js `theme.extend` block —
+   in v4 the theme lives in CSS. Each --color-* here generates the matching
+   utilities (bg-bg, text-fg, border-border, …) exactly as before.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* Semantic tokens — never use raw hex in components. */
+  --color-bg: #0b0b10;
+  --color-surface: #121218;
+  --color-elevated: #1b1b24;
+  --color-border: #26262f;
+  --color-fg: #f8fafc;
+  --color-muted: #9ca3af;
+  --color-dim: #6b7280;
+
+  /* Brand accent, matched to the Android app's coral. */
+  --color-accent: #ff6b5b;
+  --color-accent-hi: #ff8577;
+  --color-on-accent: #241717;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --container-content: 1120px;
+
+  --animate-fade-up: fade-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Point HeroUI's semantic variables at the brand palette above, so every
+   HeroUI component inherits the site's look without per-component overrides.
+   The site is dark-only, so these are declared once on :root and mirrored to
+   HeroUI's dark selectors rather than split across light/dark themes.
+   --------------------------------------------------------------------------- */
+:root,
+.dark,
+[data-theme='dark'] {
+  --background: var(--color-bg);
+  --background-secondary: var(--color-surface);
+  --background-tertiary: var(--color-elevated);
+  --foreground: var(--color-fg);
+  --muted: var(--color-muted);
+
+  --surface: var(--color-surface);
+  --surface-foreground: var(--color-fg);
+  --surface-secondary: var(--color-elevated);
+  --surface-secondary-foreground: var(--color-fg);
+  --surface-hover: var(--color-elevated);
+
+  --border: var(--color-border);
+  --border-secondary: var(--color-border);
+  --separator: var(--color-border);
+
+  --accent: var(--color-accent);
+  --accent-foreground: var(--color-on-accent);
+  --accent-hover: var(--color-accent-hi);
+
+  --danger: var(--color-danger);
+  --success: var(--color-success);
+  --focus: var(--color-accent);
+  --link: var(--color-accent);
+
+  /* Fields: dark, pill-adjacent, coral focus — matches the old .field class. */
+  --field-background: var(--color-elevated);
+  --field-foreground: var(--color-fg);
+  --field-placeholder: var(--color-dim);
+  --field-border: var(--color-border);
+  --field-border-hover: color-mix(in oklab, var(--color-accent) 50%, transparent);
+  --field-border-focus: var(--color-accent);
+  --field-radius: 0.75rem;
+  /* HeroUI ships 0px here — a filled, borderless field. On this dark surface a
+     borderless input is indistinguishable from the card behind it, so give
+     every field back a real edge. */
+  --field-border-width: 1px;
+
+  --radius: 0.75rem;
+}
+
+/* Field sizing. Deliberately unlayered so it outranks HeroUI's layered rules,
+   which set .input to 14px with 8px vertical padding — about 36px tall. That
+   reads as cramped next to a full-width button, and 16px also stops iOS from
+   zooming the viewport on focus. Restores the comfort of the old .field. */
+.input,
+.textarea {
+  padding-block: 0.75rem;
+  padding-inline: 0.875rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  transition: border-color 200ms ease;
+}
+
+/* HeroUI defines --field-border-hover/-focus but never applies them to .input,
+   which leaves a field with outline:none and no focus indication of its own.
+   Keyed off :focus rather than :focus-visible: for text inputs a visible focus
+   state is wanted for pointer users too, and it must not depend on the
+   heuristic. The global :focus-visible ring in @layer base still applies. */
+.input:hover,
+.textarea:hover {
+  border-color: var(--field-border-hover);
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--field-border-focus);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    /* Ambient brand glow behind the whole page. */
+    background-image:
+      radial-gradient(60% 50% at 12% -5%, rgba(255, 107, 91, 0.16), transparent 70%),
+      radial-gradient(45% 45% at 88% 4%, rgba(255, 133, 119, 0.1), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  /* Visible focus ring for keyboard users on every interactive element. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg rounded-md;
+  }
+
+  ::selection {
+    @apply bg-accent text-on-accent;
+  }
+
+  /* iOS zooms the viewport when a focused control's text is under 16px. The old
+     .field class set this per-input; HeroUI's Input doesn't, so enforce it here
+     for every text control instead of losing the behaviour in the migration. */
+  @media (max-width: 767px) {
+    input,
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-[92%] max-w-content;
+  }
+
+  .prose-doc h2 {
+    @apply mt-12 mb-4 text-2xl font-bold tracking-tight text-fg scroll-mt-24;
+  }
+  .prose-doc h3 {
+    @apply mt-8 mb-3 text-lg font-semibold text-fg scroll-mt-24;
+  }
+  .prose-doc p,
+  .prose-doc li {
+    @apply text-muted leading-relaxed;
+  }
+  .prose-doc p {
+    @apply mb-4;
+  }
+  .prose-doc ul {
+    @apply mb-4 list-disc space-y-2 pl-6;
+  }
+  .prose-doc ol {
+    @apply mb-4 list-decimal space-y-2 pl-6;
+  }
+  .prose-doc code {
+    @apply rounded bg-elevated px-1.5 py-0.5 text-sm text-accent-hi;
+  }
+  .prose-doc pre {
+    @apply mb-4 overflow-x-auto rounded-xl border border-border bg-elevated p-4 text-sm;
+  }
+  .prose-doc pre code {
+    @apply bg-transparent p-0 text-muted;
+  }
+  .prose-doc a {
+    @apply text-accent hover:underline;
+  }
+  .prose-doc strong {
+    @apply text-fg;
+  }
+}
+
+/* Honour the user's motion preference across every animation on the site. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

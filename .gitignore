@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+dist
+dist-ssr
+build
+*.local
+
+# Secrets — never commit these.
+# .env holds the Supabase keys plus SMTP_PASS for the approval-notification
+# mailer. The catch-all covers .env.production and friends; .env.example is the
+# tracked template and must stay valueless.
+.env
+.env.*
+!.env.example
+
+# Deploy / tooling caches
+.vercel
+.turbo
+.cache
+.eslintcache
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
