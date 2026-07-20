@@ -1,0 +1,101 @@
+MusicStream — Personal & Educational Use License
+
+Copyright (c) 2026 Arghadeep Pakhira. All rights reserved.
+
+MusicStream is proprietary software. It is NOT open source. It is provided free
+of charge to approved individuals for personal, non-commercial use only, and is
+not licensed for redistribution.
+
+These terms cover the MusicStream Android application, this website, and their
+source code.
+
+
+1. GRANT OF LICENCE
+
+Subject to these terms, you are granted a personal, non-exclusive,
+non-transferable, revocable licence to install and use MusicStream on devices
+you own, for private and non-commercial purposes only.
+
+You may:
+  - Install and use MusicStream on devices you personally own
+  - Use the app for private, non-commercial listening
+  - Study the app for personal educational purposes
+  - Report bugs and suggest improvements
+
+
+2. RESTRICTIONS
+
+You may not copy, redistribute, sublicense, sell, rent, lease, or otherwise make
+the software available to third parties. You may not remove or obscure any
+copyright, trademark, or attribution notices. Access credentials issued to you
+are personal and must not be shared.
+
+Specifically, you may not:
+  - Redistribute, resell, or republish the APK anywhere
+  - Use MusicStream for any commercial purpose
+  - Remove or alter attribution, branding, or this licence
+  - Share your account credentials or download links publicly
+  - Represent the app or its content as your own work
+
+
+3. ACCESS
+
+Access to downloads is granted at the developer's sole discretion and may be
+revoked at any time, for any reason, without notice.
+
+
+4. NO WARRANTY
+
+The software is provided "AS IS", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability, fitness
+for a particular purpose, and non-infringement.
+
+
+5. LIMITATION OF LIABILITY
+
+In no event shall the author be liable for any claim, damages, data loss, or
+other liability, whether in an action of contract, tort, or otherwise, arising
+from, out of, or in connection with the software or its use.
+
+
+6. THIRD-PARTY SERVICES
+
+The app relies on third-party services it neither owns nor controls. Their
+availability, accuracy, and continued operation are not guaranteed, and they may
+change or disappear without notice.
+
+
+7. CHANGES TO THESE TERMS
+
+These terms may be updated at any time. Continued use of the software after
+changes are published constitutes acceptance of the revised terms.
+
+
+CONTENT DISCLAIMER
+
+MusicStream does not host, own, or distribute any music. It is a client that
+retrieves publicly accessible data from an unofficial, self-made API. All music,
+artwork, and metadata remain the property of their respective owners and rights
+holders.
+
+This project exists for personal and educational purposes only. It is not
+affiliated with, endorsed by, or connected to any music service or label. You are
+responsible for ensuring your use complies with the laws and licensing terms that
+apply where you live.
+
+
+THIRD-PARTY COMPONENTS
+
+MusicStream is built with the following components, used under their respective
+licences. Those licences govern those components, not this one:
+
+  AndroidX / Jetpack Compose / Media3    Apache License 2.0
+  Kotlin & Kotlin Coroutines             Apache License 2.0
+  Retrofit, OkHttp, Moshi (Square)       Apache License 2.0
+  Coil                                   Apache License 2.0
+  FFmpeg Kit                             LGPL v3.0 / GPL v3.0
+  Inter typeface                         SIL Open Font License 1.1
+  Lucide icons                           ISC License
+
+The website additionally uses React, Vite, Tailwind CSS, HeroUI, Framer Motion,
+and the Supabase JavaScript client, each under their own licences.
