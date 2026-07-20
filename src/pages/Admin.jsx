@@ -104,7 +104,7 @@ export default function Admin() {
             </p>
           </div>
 
-          <Button variant="outline" size="sm" onPress={load}>
+          <Button variant="outline" className="h-11" onPress={load}>
             <RefreshCw className="h-4 w-4" aria-hidden="true" />
             Refresh
           </Button>
@@ -118,7 +118,7 @@ export default function Admin() {
             return (
               <Button
                 key={f.id}
-                size="sm"
+                className="h-11"
                 variant={active ? 'primary' : 'outline'}
                 aria-pressed={active}
                 onPress={() => setFilter(f.id)}
@@ -193,13 +193,19 @@ export default function Admin() {
             <ul className="space-y-3">
               {visible.map((p) => (
                 <li key={p.id}>
+                  {/* Stacked on phones: side-by-side crushed the email to ~40px
+                      and truncated it, so you couldn't read who you were
+                      approving. Row layout only once there's width for both. */}
                   <Card
                     variant="secondary"
-                    className="flex flex-row flex-wrap items-center gap-4 border border-border p-5"
+                    className="flex flex-col items-stretch gap-3 border border-border p-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-3">
-                        <p className="truncate font-semibold">{p.email}</p>
+                        {/* break-all, not truncate: you're deciding access
+                            based on this address, so a hidden tail could mean
+                            approving the wrong account. Wrap it instead. */}
+                        <p className="break-all font-semibold">{p.email}</p>
                         <Chip color={STATUS_COLOR[p.status] || 'default'} size="sm">
                           {p.status}
                         </Chip>
@@ -212,11 +218,13 @@ export default function Admin() {
                       </p>
                     </div>
 
-                    <div className="flex gap-2">
+                    {/* h-11 clears the 44px touch minimum; flex-1 splits the
+                        width evenly on phones, natural width from sm up. */}
+                    <div className="flex shrink-0 gap-2">
                       {p.status !== 'approved' && (
                         <Button
                           variant="secondary"
-                          size="sm"
+                          className="h-11 flex-1 sm:flex-none"
                           isDisabled={busyId === p.id}
                           onPress={() => decide(p.id, p.email, 'approved')}
                         >
@@ -227,7 +235,7 @@ export default function Admin() {
                       {p.status !== 'rejected' && (
                         <Button
                           variant="danger-soft"
-                          size="sm"
+                          className="h-11 flex-1 sm:flex-none"
                           isDisabled={busyId === p.id}
                           onPress={() => decide(p.id, p.email, 'rejected')}
                         >

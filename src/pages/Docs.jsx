@@ -79,8 +79,11 @@ export default function Docs() {
           </nav>
         </aside>
 
-        {/* Content — max-w keeps line length in the readable 60–75 char range */}
-        <article className="prose-doc max-w-2xl">
+        {/* Content — max-w keeps line length in the readable 60–75 char range.
+            min-w-0 is load-bearing: a grid item defaults to min-width:auto, so
+            without it the <pre> blocks set a min-content floor wider than the
+            phone and push the whole page into horizontal scroll. */}
+        <article className="prose-doc min-w-0 max-w-2xl">
           <section id="getting-started">
             <h2>Getting started</h2>
             <p>

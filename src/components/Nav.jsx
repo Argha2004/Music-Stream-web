@@ -143,9 +143,15 @@ export default function Nav() {
               )}
             </div>
 
-            {/* 44px minimum touch target. */}
+            {/* 44px minimum touch target. Carries its own border/background so
+                it reads as a deliberate control — without them the focus ring
+                lands on nothing and looks like a stray circle after a tap. */}
             <button
-              className="flex h-11 w-11 items-center justify-center rounded-xl text-fg md:hidden"
+              /* bg-elevated! needs the important modifier: importing
+                 @heroui/styles after tailwindcss re-declares the `base` layer,
+                 which puts preflight's `button { background: transparent }`
+                 after `utilities` in the cascade. The plain utility loses. */
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-elevated! text-fg transition-colors hover:border-accent/40 md:hidden"
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? 'Close menu' : 'Open menu'}
               aria-expanded={open}
@@ -187,7 +193,7 @@ export default function Nav() {
                       <Link
                         to="/admin"
                         onClick={() => setOpen(false)}
-                        className={`${linkBtn('ghost')} w-full`}
+                        className={`${linkBtn('outline')} h-12 w-full`}
                       >
                         <ShieldCheck className="h-4 w-4" aria-hidden="true" />
                         Admin
@@ -196,12 +202,14 @@ export default function Nav() {
                     <Link
                       to="/download"
                       onClick={() => setOpen(false)}
-                      className={`${linkBtn('primary')} w-full`}
+                      className={`${linkBtn('primary')} h-12 w-full`}
                     >
                       <Download className="h-4 w-4" aria-hidden="true" />
                       Download
                     </Link>
-                    <Button variant="ghost" fullWidth onPress={handleSignOut}>
+                    {/* h-12: matches the 48px nav links above and clears the
+                        44px minimum touch target. */}
+                    <Button variant="outline" fullWidth className="h-12" onPress={handleSignOut}>
                       Sign out
                     </Button>
                   </>
@@ -210,14 +218,14 @@ export default function Nav() {
                     <Link
                       to="/signup"
                       onClick={() => setOpen(false)}
-                      className={`${linkBtn('primary')} w-full`}
+                      className={`${linkBtn('primary')} h-12 w-full`}
                     >
                       Get access
                     </Link>
                     <Link
                       to="/login"
                       onClick={() => setOpen(false)}
-                      className={`${linkBtn('ghost')} w-full`}
+                      className={`${linkBtn('outline')} h-12 w-full`}
                     >
                       Sign in
                     </Link>

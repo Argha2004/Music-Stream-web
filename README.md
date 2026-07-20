@@ -158,9 +158,21 @@ npm run dev
    See `.env.example` for provider-specific notes — it explains why Resend needs
    a domain and SMTP doesn't. `SMTP_PASS` is a real secret: it lives only in
    Vercel and in your gitignored `.env`, never in the repo.
-4. Deploy, then note your domain (e.g. `musicstream.vercel.app`).
+4. Deploy, then note your **actual** domain — currently
+   `https://music-stream-web.vercel.app`. Vercel derives it from the project
+   name, so it is not necessarily the name you expect.
 5. Put that domain in **`BASE_URL`** in the Android app's
    `update/UpdateManager.kt` and rebuild the APK.
+
+   > **Verify it before shipping:**
+   > ```bash
+   > curl -sI https://music-stream-web.vercel.app/api/latest   # must be 200
+   > ```
+   > A wrong host here is unusually costly. Update checks fail silently, and the
+   > bad URL is compiled into every APK — so you cannot ship a fix to the users
+   > who already have it, because the updater is the thing that's broken. An
+   > unclaimed `*.vercel.app` subdomain is also registrable by anyone, and
+   > whoever holds it controls the `apkUrl` this app downloads and installs.
 
 ---
 

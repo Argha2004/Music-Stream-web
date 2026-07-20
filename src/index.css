@@ -193,12 +193,19 @@
   }
   .prose-doc code {
     @apply rounded bg-elevated px-1.5 py-0.5 text-sm text-accent-hi;
+    /* Inline code is often one long unbreakable token (paths, env var names).
+       Allow a mid-token break so it can't set a min-content floor wider than
+       a phone. Block code in <pre> scrolls instead — see below. */
+    overflow-wrap: anywhere;
   }
   .prose-doc pre {
     @apply mb-4 overflow-x-auto rounded-xl border border-border bg-elevated p-4 text-sm;
   }
   .prose-doc pre code {
     @apply bg-transparent p-0 text-muted;
+    /* Undo the inline-code wrapping: code blocks keep their formatting and
+       scroll inside the <pre>, which is already overflow-x-auto. */
+    overflow-wrap: normal;
   }
   .prose-doc a {
     @apply text-accent hover:underline;

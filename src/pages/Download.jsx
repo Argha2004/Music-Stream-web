@@ -189,7 +189,7 @@ export default function Download() {
             {/* A real <a download> — not a Button — so the browser handles the file. */}
             <a
               href={release.apk_url}
-              className={`${buttonVariants({ variant: 'primary' })} mt-8 w-full`}
+              className={`${buttonVariants({ variant: 'primary', size: 'lg' })} mt-8 h-12 w-full`}
               download
               rel="noopener"
             >
