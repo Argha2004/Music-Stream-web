@@ -1,6 +1,7 @@
 import { AlertTriangle, Ban, Check, Scale } from 'lucide-react'
 import { Card } from '@heroui/react'
 import Reveal from '../components/Reveal'
+import SectionLabel from '../components/SectionLabel'
 
 const PERMITTED = [
   'Install and use MusicStream on devices you personally own',
@@ -23,7 +24,7 @@ const THIRD_PARTY = [
   { name: 'Retrofit, OkHttp, Moshi (Square)', licence: 'Apache License 2.0' },
   { name: 'Coil', licence: 'Apache License 2.0' },
   { name: 'FFmpeg Kit', licence: 'LGPL v3.0 / GPL v3.0' },
-  { name: 'Inter typeface', licence: 'SIL Open Font License 1.1' },
+  { name: 'Inter & Space Grotesk typefaces', licence: 'SIL Open Font License 1.1' },
   { name: 'Lucide icons', licence: 'ISC License' },
 ]
 
@@ -31,9 +32,9 @@ export default function License() {
   return (
     <div className="container-x py-16">
       <Reveal className="mx-auto max-w-3xl">
-        <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-accent">Legal</p>
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">License</h1>
-        <p className="mt-4 text-muted">
+        <SectionLabel>Legal</SectionLabel>
+        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">License</h1>
+        <p className="mt-5 text-lg text-muted">
           Terms covering your use of the MusicStream application and this website.
         </p>
 

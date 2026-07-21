@@ -5,6 +5,7 @@ import { Alert, Button, Card, Chip, Skeleton, buttonVariants } from '@heroui/rea
 import { fetchReleases, formatBytes } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import Reveal from '../components/Reveal'
+import SectionLabel from '../components/SectionLabel'
 
 export default function Changelog() {
   const { user } = useAuth()
@@ -26,11 +27,9 @@ export default function Changelog() {
   return (
     <div className="container-x py-16">
       <Reveal className="mx-auto max-w-3xl">
-        <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-accent">
-          Release notes
-        </p>
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Changelog</h1>
-        <p className="mt-4 text-muted">
+        <SectionLabel>Release notes</SectionLabel>
+        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Changelog</h1>
+        <p className="mt-5 text-lg text-muted">
           Every published build of MusicStream. The app checks this list on launch and
           tells you when a newer version is available.
         </p>

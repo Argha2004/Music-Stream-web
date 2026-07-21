@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal'
+import SectionLabel from '../components/SectionLabel'
 
 const SECTIONS = [
   { id: 'getting-started', label: 'Getting started' },
@@ -46,9 +47,9 @@ export default function Docs() {
   return (
     <div className="container-x py-16">
       <Reveal>
-        <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-accent">Guide</p>
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">Documentation</h1>
-        <p className="mt-4 max-w-2xl text-muted">
+        <SectionLabel>Guide</SectionLabel>
+        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Documentation</h1>
+        <p className="mt-5 max-w-2xl text-lg text-muted">
           Everything you need to install, use and troubleshoot MusicStream on Android.
         </p>
       </Reveal>

@@ -7,29 +7,42 @@
    Brand tokens. Replaces the old tailwind.config.js `theme.extend` block —
    in v4 the theme lives in CSS. Each --color-* here generates the matching
    utilities (bg-bg, text-fg, border-border, …) exactly as before.
+
+   The palette is a warm, near-black editorial dark: neutrals carry a faint
+   warm cast (rather than the old blue-black) so the coral accent sits in the
+   same temperature family instead of fighting it. Coral is used sparingly —
+   as ink, not as glow.
    --------------------------------------------------------------------------- */
 @theme {
   /* Semantic tokens — never use raw hex in components. */
-  --color-bg: #0b0b10;
-  --color-surface: #121218;
-  --color-elevated: #1b1b24;
-  --color-border: #26262f;
-  --color-fg: #f8fafc;
-  --color-muted: #9ca3af;
-  --color-dim: #6b7280;
+  --color-bg: #0b0a09;
+  --color-surface: #131110;
+  --color-elevated: #1c1917;
+  --color-border: #2a2623;
+  --color-fg: #f7f3ee;
+  --color-muted: #a8a097;
+  --color-dim: #6f6a63;
 
   /* Brand accent, matched to the Android app's coral. */
   --color-accent: #ff6b5b;
-  --color-accent-hi: #ff8577;
-  --color-on-accent: #241717;
-  --color-success: #22c55e;
-  --color-danger: #ef4444;
+  --color-accent-hi: #ff8a72;
+  --color-on-accent: #23150f;
+  --color-success: #4ade80;
+  --color-danger: #f87171;
 
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  /* Editorial display face for headings — a grotesque, not the body sans, so
+     titles read as set with intent rather than defaulted. Generates the
+     `font-display` utility. */
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   --container-content: 1120px;
 
   --animate-fade-up: fade-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-float: float 6s ease-in-out infinite;
+
+  /* Cheap, GPU-only equalizer bar bounce for the waveform motif. Animating
+     scaleY on a handful of thin bars costs nothing to composite — the polar
+     opposite of the old blurred aurora blobs it replaces. */
+  --animate-bar: bar 1.1s ease-in-out infinite;
 }
 
 @keyframes fade-up {
@@ -43,13 +56,13 @@
   }
 }
 
-@keyframes float {
+@keyframes bar {
   0%,
   100% {
-    transform: translateY(0);
+    transform: scaleY(0.35);
   }
   50% {
-    transform: translateY(-10px);
+    transform: scaleY(1);
   }
 }
 
@@ -139,11 +152,25 @@
 
   body {
     @apply bg-bg text-fg font-sans antialiased;
-    /* Ambient brand glow behind the whole page. */
-    background-image:
-      radial-gradient(60% 50% at 12% -5%, rgba(255, 107, 91, 0.16), transparent 70%),
-      radial-gradient(45% 45% at 88% 4%, rgba(255, 133, 119, 0.1), transparent 70%);
-    background-attachment: fixed;
+    /* A single, static, low-cost brand wash at the very top of the page.
+       No `background-attachment: fixed` — that forces a full-viewport repaint
+       on every scroll frame and was a real source of jank on phones. This
+       gradient scrolls away with the hero, where it belongs. */
+    background-image: radial-gradient(
+      120% 60% at 50% -10%,
+      rgba(255, 107, 91, 0.08),
+      transparent 60%
+    );
+    background-repeat: no-repeat;
+  }
+
+  /* Editorial headings default to the display face and tight tracking, so any
+     h1–h3 on the site reads consistently without repeating classes. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
 
   /* Visible focus ring for keyboard users on every interactive element. */
@@ -170,6 +197,26 @@
 @layer components {
   .container-x {
     @apply mx-auto w-[92%] max-w-content;
+  }
+
+  /* Editorial section eyebrow — a hairline tick, a two-digit index, and a
+     tracked label. Used across every page in place of the old lone coral
+     mini-caps line, so sections read like numbered chapters. */
+  .eyebrow {
+    @apply flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-dim;
+    font-family: var(--font-display);
+  }
+  .eyebrow-index {
+    @apply text-accent tabular-nums;
+  }
+
+  /* Editorial card: hairline edge on the base surface, no glow. Hover lifts the
+     border to coral rather than casting shadow. */
+  .card-edit {
+    @apply rounded-2xl border border-border bg-surface transition-colors duration-300;
+  }
+  .card-edit-hover {
+    @apply hover:border-accent/40;
   }
 
   .prose-doc h2 {

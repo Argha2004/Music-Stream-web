@@ -3,6 +3,7 @@ import { AlertCircle, Check, Hourglass, RefreshCw, ShieldCheck, UserX, Users } f
 import { Alert, Button, Card, Chip, Skeleton } from '@heroui/react'
 import { fetchProfiles, notifyDecision, setProfileStatus } from '../lib/supabase'
 import Reveal from '../components/Reveal'
+import SectionLabel from '../components/SectionLabel'
 
 const FILTERS = [
   { id: 'pending', label: 'Pending' },
@@ -92,14 +93,12 @@ export default function Admin() {
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-accent">
-              Developer
-            </p>
-            <h1 className="mt-3 flex items-center gap-3 text-3xl font-extrabold tracking-tight">
-              <ShieldCheck className="h-7 w-7 text-accent" aria-hidden="true" />
+            <SectionLabel>Developer</SectionLabel>
+            <h1 className="mt-4 flex items-center gap-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              <ShieldCheck className="h-7 w-7 shrink-0 text-accent" aria-hidden="true" />
               Access requests
             </h1>
-            <p className="mt-3 text-muted">
+            <p className="mt-4 text-muted">
               Approve who can download MusicStream. Changes take effect immediately.
             </p>
           </div>

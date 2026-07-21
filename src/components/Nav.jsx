@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { AudioLines, Download, LogOut, Menu, ShieldCheck, X } from 'lucide-react'
+import { Download, LogOut, Menu, ShieldCheck, X } from 'lucide-react'
 import { Button, buttonVariants } from '@heroui/react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import Waveform from './Waveform'
 
 const LINKS = [
   { to: '/docs', label: 'Documentation' },
@@ -86,10 +87,17 @@ export default function Nav() {
                 : 'border border-transparent bg-transparent'
             }`}
           >
-            <Link to="/" className="group flex items-center gap-2 font-extrabold tracking-tight">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/[0.12] transition-colors group-hover:bg-accent/20">
-                <AudioLines className="h-4 w-4 text-accent" aria-hidden="true" />
-              </span>
+            <Link
+              to="/"
+              className="group flex items-center gap-2.5 font-display text-[0.95rem] font-bold tracking-tight"
+            >
+              <Waveform
+                bars={4}
+                height={16}
+                barWidth={2.5}
+                gap={2}
+                className="opacity-90 transition-opacity group-hover:opacity-100"
+              />
               MusicStream
             </Link>
 

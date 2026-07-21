@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'framer-motion'
 import {
   ArrowRight,
   Download,
-  Heart,
   ListMusic,
   Lock,
   Mic2,
@@ -15,8 +14,10 @@ import {
   Smartphone,
   Zap,
 } from 'lucide-react'
-import { Card, Chip, buttonVariants } from '@heroui/react'
+import { buttonVariants } from '@heroui/react'
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal'
+import SectionLabel from '../components/SectionLabel'
+import Waveform from '../components/Waveform'
 import { useAuth } from '../context/AuthContext'
 
 /* HeroUI's Button takes no `as` prop, so routed CTAs are react-router Links
@@ -28,7 +29,6 @@ const FEATURES = [
     icon: Smartphone,
     title: 'Background playback',
     body: 'Full lock-screen and notification controls, powered by Media3 and ExoPlayer. Music keeps going when you leave the app.',
-    wide: true,
   },
   {
     icon: Mic2,
@@ -87,46 +87,25 @@ const PRIVACY_POINTS = [
   'Open about exactly what it downloads',
 ]
 
-/** Slow-drifting colour field behind the hero. Purely decorative. */
-function Aurora() {
-  const reduce = useReducedMotion()
-
-  const blob = (className, delay) => (
-    <motion.div
-      className={`absolute rounded-full blur-3xl ${className}`}
-      animate={reduce ? undefined : { x: [0, 30, -20, 0], y: [0, -25, 15, 0], scale: [1, 1.1, 0.95, 1] }}
-      transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay }}
-    />
-  )
-
-  return (
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      {blob('left-[8%] top-[-6rem] h-80 w-80 bg-accent/25', 0)}
-      {blob('right-[6%] top-[2rem] h-72 w-72 bg-[#7C3AED]/20', 3)}
-      {blob('left-[38%] top-[10rem] h-64 w-64 bg-accent-hi/15', 6)}
-    </div>
-  )
-}
-
 /** Phone mockup wrapping a real screenshot of the app's home screen. */
 function PhoneMockup() {
   const reduce = useReducedMotion()
 
   return (
     <motion.div
-      initial={reduce ? false : { opacity: 0, y: 24, scale: 0.96 }}
-      animate={reduce ? false : { opacity: 1, y: 0, scale: 1 }}
+      initial={reduce ? false : { opacity: 0, y: 24 }}
+      animate={reduce ? false : { opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-      className="relative mx-auto w-[270px]"
+      className="relative mx-auto w-[220px] sm:w-[248px] lg:w-[270px]"
     >
-      {/* Brand glow behind the device. */}
-      <div className="absolute -inset-10 rounded-full bg-accent/20 blur-3xl" aria-hidden="true" />
+      {/* Static coral wash behind the device — no animation, so it never costs
+          a frame while scrolling. */}
+      <div
+        className="absolute -inset-8 rounded-[3rem] bg-accent/10 blur-2xl"
+        aria-hidden="true"
+      />
 
-      <motion.div
-        animate={reduce ? undefined : { y: [0, -10, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        className="relative rounded-[2.5rem] border border-border bg-surface p-2.5 shadow-2xl"
-      >
+      <div className="relative rounded-[2.5rem] border border-border bg-surface p-2.5 shadow-2xl shadow-black/40">
         {/* The screenshot carries its own status bar, so the frame draws no
             notch — one would sit on top of the real one. */}
         <img
@@ -140,7 +119,7 @@ function PhoneMockup() {
           decoding="async"
           className="block w-full rounded-[2rem] object-cover"
         />
-      </motion.div>
+      </div>
     </motion.div>
   )
 }
@@ -152,33 +131,28 @@ export default function Home() {
   return (
     <>
       {/* ---------------- Hero ---------------- */}
-      <section className="relative overflow-hidden pb-20 pt-16 sm:pt-24">
-        <Aurora />
-
-        <div className="container-x grid items-center gap-16 lg:grid-cols-[1.05fr_0.95fr]">
+      <section className="relative overflow-hidden pb-16 pt-12 sm:pt-20">
+        <div className="container-x grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <div>
             <motion.div
               initial={reduce ? false : { opacity: 0, y: 16 }}
               animate={reduce ? false : { opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <Chip color="accent" size="sm" className="gap-2">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-                </span>
-                Native Android · Invite only
-              </Chip>
+              <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-dim">
+                <Waveform bars={5} height={14} barWidth={2.5} gap={2} />
+                <span className="font-display">Native Android · Invite only</span>
+              </div>
 
-              <h1 className="mt-6 text-balance text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="mt-6 text-balance text-[2.6rem] font-bold leading-[1.03] tracking-tight sm:text-6xl lg:text-[4.25rem]">
                 Your music.
                 <br />
-                <span className="bg-gradient-to-r from-accent to-accent-hi bg-clip-text text-transparent">
-                  No ads. No noise.
-                </span>
+                No ads.
+                <br />
+                <span className="text-accent">No noise.</span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+              <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
                 A fast, native music player for Android — background playback, synced
                 lyrics, a real equalizer and offline downloads. Built in Kotlin, with
                 nothing between you and the music.
@@ -195,7 +169,7 @@ export default function Home() {
                 </Link>
               </div>
 
-              <p className="mt-5 flex items-center gap-2 text-sm text-dim">
+              <p className="mt-6 flex items-center gap-2 text-sm text-dim">
                 <Lock className="h-3.5 w-3.5" aria-hidden="true" />
                 Sign-in required — access is limited to approved accounts.
               </p>
@@ -207,91 +181,75 @@ export default function Home() {
       </section>
 
       {/* ---------------- Stats ---------------- */}
-      <section className="border-y border-border bg-surface/40">
-        <div className="container-x py-10">
-          <RevealGroup className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-            {STATS.map((s) => (
-              <RevealItem key={s.label} className="text-center">
-                <p className="text-3xl font-extrabold tracking-tight text-accent tabular-nums">
+      <section className="border-y border-border">
+        <div className="container-x">
+          <RevealGroup className="grid grid-cols-2 divide-border sm:grid-cols-4 sm:divide-x">
+            {STATS.map((s, i) => (
+              <RevealItem
+                key={s.label}
+                className={`py-8 text-center sm:py-10 ${i % 2 === 1 ? 'border-l border-border sm:border-l-0' : ''} ${
+                  i >= 2 ? 'border-t border-border sm:border-t-0' : ''
+                }`}
+              >
+                <p className="font-display text-4xl font-bold tracking-tight text-fg tabular-nums">
                   {s.value}
                 </p>
-                <p className="mt-1 text-sm text-muted">{s.label}</p>
+                <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.15em] text-dim">
+                  {s.label}
+                </p>
               </RevealItem>
             ))}
           </RevealGroup>
         </div>
       </section>
 
-      {/* ---------------- Features (bento) ---------------- */}
-      <section className="py-24">
+      {/* ---------------- Features ---------------- */}
+      <section className="py-20 sm:py-28">
         <div className="container-x">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-extrabold uppercase tracking-[0.15em] text-accent">
-              Features
-            </p>
-            <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
-              Everything you expect. Nothing you don't.
+          <Reveal className="max-w-2xl">
+            <SectionLabel index={1}>Features</SectionLabel>
+            <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
+              Everything you expect.
+              <br className="hidden sm:block" /> Nothing you don't.
             </h2>
-            <p className="mt-4 text-muted">
+            <p className="mt-5 text-lg leading-relaxed text-muted">
               Built as a proper Android app, not a wrapped website — so it feels fast,
               behaves correctly, and respects the platform.
             </p>
           </Reveal>
 
-          {/* One wide tile + eight standard + a wide CTA tile = 12 units, an
-              exact 3x4 bento on desktop with no ragged trailing row. */}
-          <RevealGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ icon: Icon, title, body, wide }) => (
-              <RevealItem key={title} className={wide ? 'lg:col-span-2' : undefined}>
-                <Card
-                  variant="secondary"
-                  className="group h-full border border-border p-6 transition-colors duration-300 hover:border-accent/40"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10 transition-transform duration-300 group-hover:scale-110">
-                    <Icon className="h-5 w-5 text-accent" aria-hidden="true" />
-                  </div>
-                  <Card.Title className="mt-5 font-bold">{title}</Card.Title>
-                  <Card.Description className="mt-2 text-sm leading-relaxed text-muted">
-                    {body}
-                  </Card.Description>
-                </Card>
+          {/* An editorial index, not a card grid. Each entry sits under a
+              hairline rule with a two-digit number, so the section reads like a
+              spec sheet rather than nine identical glowing tiles. */}
+          <RevealGroup className="mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-12">
+            {FEATURES.map(({ icon: Icon, title, body }, i) => (
+              <RevealItem key={title} className="group border-t border-border pt-5">
+                <div className="flex items-center justify-between">
+                  <Icon
+                    className="h-5 w-5 text-accent transition-transform duration-300 group-hover:-translate-y-0.5"
+                    aria-hidden="true"
+                  />
+                  <span className="font-display text-sm font-semibold tabular-nums text-dim">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <h3 className="mt-4 font-display text-lg font-semibold">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
               </RevealItem>
             ))}
-
-            <RevealItem className="lg:col-span-2">
-              <Card
-                variant="transparent"
-                className="relative h-full overflow-hidden border border-accent/30 bg-gradient-to-br from-accent/[0.12] to-transparent p-6"
-              >
-                <Card.Title className="text-lg font-bold">And it stays out of the way</Card.Title>
-                <Card.Description className="mt-2 max-w-md text-sm leading-relaxed text-muted">
-                  No sign-up walls inside the app, no upsells, no notifications begging you
-                  to come back. It plays music.
-                </Card.Description>
-                <Link
-                  to="/docs"
-                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline"
-                >
-                  Read the docs
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </Link>
-              </Card>
-            </RevealItem>
           </RevealGroup>
         </div>
       </section>
 
       {/* ---------------- Privacy ---------------- */}
-      <section className="border-y border-border bg-surface/40 py-20">
-        <div className="container-x grid items-center gap-12 lg:grid-cols-2">
+      <section className="border-t border-border py-20 sm:py-28">
+        <div className="container-x grid items-start gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <Reveal>
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
-              <ShieldCheck className="h-6 w-6 text-accent" aria-hidden="true" />
-            </div>
-            <h2 className="mt-6 text-3xl font-extrabold tracking-tight">
+            <SectionLabel index={2}>Privacy</SectionLabel>
+            <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
               Your library stays on your phone
             </h2>
-            <p className="mt-4 leading-relaxed text-muted">
+            <p className="mt-5 leading-relaxed text-muted">
               Liked songs, playlists and listening history are stored locally on your
               device using Android DataStore. There is no cloud sync, no account inside
               the app, and no analytics SDK bundled in.
@@ -303,16 +261,14 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <ul className="space-y-3">
+            <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border">
               {PRIVACY_POINTS.map((item) => (
-                <li key={item}>
-                  <Card
-                    variant="secondary"
-                    className="flex flex-row items-center gap-3 border border-border px-5 py-4"
-                  >
-                    <Heart className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
-                    <span className="text-sm text-muted">{item}</span>
-                  </Card>
+                <li
+                  key={item}
+                  className="flex items-center gap-3.5 bg-surface px-5 py-4 transition-colors hover:bg-elevated"
+                >
+                  <ShieldCheck className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
+                  <span className="text-sm text-fg">{item}</span>
                 </li>
               ))}
             </ul>
@@ -321,23 +277,20 @@ export default function Home() {
       </section>
 
       {/* ---------------- CTA ---------------- */}
-      <section className="py-24">
+      <section className="py-20 sm:py-28">
         <div className="container-x">
           <Reveal>
-            <div className="relative overflow-hidden rounded-3xl border border-border bg-surface px-6 py-16 text-center sm:px-12">
-              <div
-                className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-accent/20 blur-3xl"
-                aria-hidden="true"
-              />
-              <div className="relative">
-                <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                  Ready to listen?
+            <div className="relative overflow-hidden rounded-3xl border border-border bg-surface px-6 py-16 sm:px-14">
+              <div className="relative max-w-xl">
+                <SectionLabel>Ready to listen?</SectionLabel>
+                <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-5xl">
+                  Sign in and start playing.
                 </h2>
-                <p className="mx-auto mt-4 max-w-lg text-muted">
+                <p className="mt-5 text-lg leading-relaxed text-muted">
                   Sign in with an approved account to download the latest build. Access is
                   invite-only — ask the developer to add your email.
                 </p>
-                <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+                <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                   <Link to={user ? '/download' : '/signup'} className={linkBtn('primary')}>
                     <Download className="h-4 w-4" aria-hidden="true" />
                     {user ? 'Go to download' : 'Get access'}

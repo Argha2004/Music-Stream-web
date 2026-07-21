@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { AudioLines } from 'lucide-react'
 import { Separator } from '@heroui/react'
+import Waveform from './Waveform'
 
 const GROUPS = [
   {
@@ -31,10 +31,11 @@ export default function Footer() {
     <footer className="mt-8 border-t border-border">
       <div className="container-x flex flex-col gap-10 py-14 md:flex-row md:items-start md:justify-between">
         <div className="max-w-xs">
-          <Link to="/" className="group flex items-center gap-2 font-extrabold tracking-tight">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/[0.12] transition-colors group-hover:bg-accent/20">
-              <AudioLines className="h-4 w-4 text-accent" aria-hidden="true" />
-            </span>
+          <Link
+            to="/"
+            className="group flex items-center gap-2.5 font-display text-[0.95rem] font-bold tracking-tight"
+          >
+            <Waveform bars={4} height={16} barWidth={2.5} gap={2} animated={false} />
             MusicStream
           </Link>
           <p className="mt-3 text-sm leading-relaxed text-muted">
@@ -43,23 +44,25 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* One column on phones. A 2-col grid orphaned the third group on its
-            own row with dead space beside it; stacking keeps it balanced. */}
-        <nav className="grid gap-7 sm:grid-cols-3 sm:gap-x-12 sm:gap-y-8" aria-label="Footer">
+        {/* Three tidy columns at every width — the groups line up as a proper
+            link directory instead of loose inline rows on phones. Narrow gutters
+            on mobile so the three short columns fit a 360px screen without
+            wrapping the labels. */}
+        <nav
+          className="grid grid-cols-3 gap-x-4 gap-y-8 sm:gap-x-12"
+          aria-label="Footer"
+        >
           {GROUPS.map((group) => (
             <div key={group.heading}>
-              <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-dim">
+              <h2 className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-dim">
                 {group.heading}
               </h2>
-              {/* Links run inline on phones so each group is one compact row
-                  instead of a tall stack; they return to a column once there
-                  are real columns to sit in. */}
-              <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 sm:flex-col sm:gap-x-0 sm:gap-y-0 sm:space-y-2.5">
+              <ul className="mt-3.5 space-y-1">
                 {group.links.map((l) => (
                   <li key={l.to}>
                     <Link
                       to={l.to}
-                      className="inline-flex min-h-11 items-center text-sm text-muted transition-colors hover:text-fg sm:min-h-0"
+                      className="inline-flex min-h-9 items-center text-sm text-muted transition-colors hover:text-fg"
                     >
                       {l.label}
                     </Link>
