@@ -98,7 +98,7 @@ export default function Nav() {
                 gap={2}
                 className="opacity-90 transition-opacity group-hover:opacity-100"
               />
-              MusicStream
+              <span className="text-gradient">MusicStream</span>
             </Link>
 
             <div className="hidden items-center gap-8 md:flex">

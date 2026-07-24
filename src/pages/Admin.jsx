@@ -173,7 +173,7 @@ export default function Admin() {
               ))}
             </div>
           ) : visible.length === 0 ? (
-            <Card variant="secondary" className="border border-border p-10 text-center">
+            <Card variant="secondary" className="card-lift border border-border p-10 text-center">
               {filter === 'pending' ? (
                 <Hourglass className="mx-auto h-10 w-10 text-dim" aria-hidden="true" />
               ) : (
@@ -197,7 +197,7 @@ export default function Admin() {
                       approving. Row layout only once there's width for both. */}
                   <Card
                     variant="secondary"
-                    className="flex flex-col items-stretch gap-3 border border-border p-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
+                    className="card-lift card-interactive flex flex-col items-stretch gap-3 border border-border p-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-3">

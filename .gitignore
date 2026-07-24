@@ -34,10 +34,16 @@ pnpm-debug.log*
 # Editors
 .idea
 .vscode
+CLAUDE.md
+AGENTS.md
 *.swp
 *.swo
+
 
 # OS cruft
 .DS_Store
 Thumbs.db
 desktop.ini
+
+#Folders
+supabase/

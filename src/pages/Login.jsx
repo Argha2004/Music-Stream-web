@@ -42,7 +42,7 @@ export default function Login() {
     <div className="container-x flex min-h-[75vh] items-center justify-center py-16">
       <div className="w-full max-w-md">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight">Welcome back</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
           <p className="mt-2 text-sm text-muted">Sign in to download MusicStream.</p>
         </div>
 
@@ -98,7 +98,7 @@ export default function Login() {
           </Alert>
         )}
 
-        <Card variant="secondary" className="mt-8 border border-border p-6">
+        <Card variant="secondary" className="card-lift mt-8 border border-border p-6">
           <form onSubmit={onSubmit} className="space-y-5">
             {error && (
               // role="alert" so screen readers announce it immediately.

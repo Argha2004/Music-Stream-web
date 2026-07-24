@@ -65,7 +65,7 @@ export default function Changelog() {
               </Alert.Content>
             </Alert>
           ) : releases.length === 0 ? (
-            <Card variant="secondary" className="border border-border p-10 text-center">
+            <Card variant="secondary" className="card-lift border border-border p-10 text-center">
               <PackageOpen className="mx-auto h-10 w-10 text-dim" aria-hidden="true" />
               <p className="mt-4 font-semibold">No releases yet</p>
               <p className="mt-2 text-sm text-muted">
@@ -79,19 +79,21 @@ export default function Changelog() {
                   {/* Timeline dot */}
                   <span
                     className={`absolute -left-[2.32rem] top-1.5 h-3 w-3 rounded-full ring-4 ring-bg ${
-                      index === 0 ? 'bg-accent' : 'bg-border'
+                      index === 0
+                        ? 'bg-accent shadow-[0_0_12px_2px] shadow-accent/50'
+                        : 'bg-border'
                     }`}
                     aria-hidden="true"
                   />
 
                   <Card
                     variant="secondary"
-                    className={`border p-6 transition-colors ${
-                      index === 0 ? 'border-accent/40' : 'border-border'
+                    className={`card-lift border p-6 ${
+                      index === 0 ? 'border-accent/40' : 'card-interactive border-border'
                     }`}
                   >
                     <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="text-lg font-extrabold">{r.name}</h2>
+                      <h2 className="text-lg font-bold">{r.name}</h2>
                       {index === 0 && (
                         <Chip color="accent" size="sm">
                           Latest

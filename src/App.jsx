@@ -4,6 +4,7 @@ import { Spinner } from '@heroui/react'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
+import PageTransition from './components/PageTransition'
 import Home from './pages/Home'
 
 // Route-level code splitting keeps the landing page's bundle small.
@@ -51,31 +52,33 @@ export default function App() {
 
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         <Suspense fallback={<PageFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/license" element={<License />} />
-            <Route path="/changelog" element={<Changelog />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route
-              path="/download"
-              element={
-                <ProtectedRoute>
-                  <Download />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute requireAdmin>
-                  <Admin />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <PageTransition>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/docs" element={<Docs />} />
+              <Route path="/license" element={<License />} />
+              <Route path="/changelog" element={<Changelog />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route
+                path="/download"
+                element={
+                  <ProtectedRoute>
+                    <Download />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <Admin />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </PageTransition>
         </Suspense>
       </main>
 

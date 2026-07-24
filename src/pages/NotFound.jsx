@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10">
         <SearchX className="h-6 w-6 text-accent" aria-hidden="true" />
       </div>
-      <h1 className="mt-6 text-3xl font-extrabold tracking-tight">Page not found</h1>
+      <h1 className="mt-6 text-3xl font-bold tracking-tight">Page not found</h1>
       <p className="mt-3 max-w-sm text-muted">
         That page doesn't exist. It may have been moved or the link is out of date.
       </p>

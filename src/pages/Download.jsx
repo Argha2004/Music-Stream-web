@@ -41,7 +41,7 @@ function AwaitingApproval({ email, status, onRecheck }) {
           )}
         </div>
 
-        <h1 className="mt-6 text-2xl font-extrabold tracking-tight">
+        <h1 className="mt-6 text-2xl font-bold tracking-tight">
           {rejected ? 'Access not granted' : 'Access request pending'}
         </h1>
 
@@ -113,7 +113,7 @@ export default function Download() {
     <div className="container-x py-16">
       <Reveal className="mx-auto max-w-2xl">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Download MusicStream
           </h1>
           <p className="mt-3 text-muted">
@@ -148,7 +148,7 @@ export default function Download() {
             </Alert.Content>
           </Alert>
         ) : !release ? (
-          <Card variant="secondary" className="mt-10 border border-border p-10 text-center">
+          <Card variant="secondary" className="card-lift mt-10 border border-border p-10 text-center">
             <PackageOpen className="mx-auto h-10 w-10 text-dim" aria-hidden="true" />
             <p className="mt-4 font-semibold">No release published yet</p>
             <p className="mt-2 text-sm text-muted">
@@ -156,10 +156,10 @@ export default function Download() {
             </p>
           </Card>
         ) : (
-          <Card variant="secondary" className="mt-10 border border-accent/30 p-6">
+          <Card variant="secondary" className="card-lift mt-10 border border-accent/30 p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-extrabold">{release.name}</h2>
+                <h2 className="text-xl font-bold">{release.name}</h2>
                 <p className="mt-1 text-sm text-muted">
                   Published {release.published_at}
                   {formatBytes(release.apk_size) ? ` · ${formatBytes(release.apk_size)}` : ''}
@@ -200,7 +200,7 @@ export default function Download() {
         )}
 
         {/* --- Install guidance --- */}
-        <Card variant="secondary" className="mt-6 border border-border p-6">
+        <Card variant="secondary" className="card-lift card-interactive mt-6 border border-border p-6">
           <h2 className="flex items-center gap-2 font-bold">
             <Smartphone className="h-4 w-4 text-accent" aria-hidden="true" />
             Installing

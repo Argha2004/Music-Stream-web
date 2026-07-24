@@ -58,11 +58,11 @@ export default function Signup() {
   if (done) {
     return (
       <div className="container-x flex min-h-[75vh] items-center justify-center py-16">
-        <Card variant="secondary" className="w-full max-w-md border border-border p-6 text-center">
+        <Card variant="secondary" className="card-lift w-full max-w-md border border-border p-6 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success/10">
             <CheckCircle2 className="h-6 w-6 text-success" aria-hidden="true" />
           </div>
-          <h1 className="mt-5 text-2xl font-extrabold tracking-tight">Check your email</h1>
+          <h1 className="mt-5 text-2xl font-bold tracking-tight">Check your email</h1>
           <p className="mt-3 text-sm leading-relaxed text-muted">
             We sent a confirmation link to <strong className="text-fg">{email}</strong>. Click
             it to activate your account, then sign in.
@@ -79,7 +79,7 @@ export default function Signup() {
     <div className="container-x flex min-h-[75vh] items-center justify-center py-16">
       <div className="w-full max-w-md">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight">Request access</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Request access</h1>
           <p className="mt-2 text-sm text-muted">
             Create an account and the developer will review your request.
           </p>
@@ -121,7 +121,7 @@ export default function Signup() {
           </Alert.Content>
         </Alert>
 
-        <Card variant="secondary" className="mt-6 border border-border p-6">
+        <Card variant="secondary" className="card-lift mt-6 border border-border p-6">
           <form onSubmit={onSubmit} className="space-y-5">
             {error && (
               <Alert status="danger" role="alert">

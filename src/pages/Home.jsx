@@ -1,5 +1,14 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
+import {
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from 'framer-motion'
 import {
   ArrowRight,
   Download,
@@ -18,6 +27,7 @@ import { buttonVariants } from '@heroui/react'
 import Reveal, { RevealGroup, RevealItem } from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 import Waveform from '../components/Waveform'
+import HeroBackdrop from '../components/HeroBackdrop'
 import { useAuth } from '../context/AuthContext'
 
 /* HeroUI's Button takes no `as` prop, so routed CTAs are react-router Links
@@ -87,25 +97,60 @@ const PRIVACY_POINTS = [
   'Open about exactly what it downloads',
 ]
 
-/** Phone mockup wrapping a real screenshot of the app's home screen. */
+/**
+ * Phone mockup wrapping a real screenshot of the app's home screen. The device
+ * tilts in 3D toward the pointer (springed, so it settles rather than snapping)
+ * and floats gently at rest — both disabled under reduced motion.
+ */
 function PhoneMockup() {
   const reduce = useReducedMotion()
 
+  // Pointer position within the card, normalised to [-0.5, 0.5].
+  const px = useMotionValue(0)
+  const py = useMotionValue(0)
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [9, -9]), {
+    stiffness: 150,
+    damping: 16,
+  })
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-11, 11]), {
+    stiffness: 150,
+    damping: 16,
+  })
+
+  function handleMove(e) {
+    if (reduce) return
+    const r = e.currentTarget.getBoundingClientRect()
+    px.set((e.clientX - r.left) / r.width - 0.5)
+    py.set((e.clientY - r.top) / r.height - 0.5)
+  }
+  function reset() {
+    px.set(0)
+    py.set(0)
+  }
+
   return (
     <motion.div
+      onPointerMove={handleMove}
+      onPointerLeave={reset}
       initial={reduce ? false : { opacity: 0, y: 24 }}
       animate={reduce ? false : { opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-      className="relative mx-auto w-[220px] sm:w-[248px] lg:w-[270px]"
+      style={reduce ? undefined : { rotateX, rotateY, transformPerspective: 1000 }}
+      className="group relative mx-auto w-[220px] [transform-style:preserve-3d] sm:w-[248px] lg:w-[270px]"
     >
-      {/* Static coral wash behind the device — no animation, so it never costs
-          a frame while scrolling. */}
+      {/* Coral wash behind the device, pushed back in Z so the tilt parallaxes it. */}
       <div
-        className="absolute -inset-8 rounded-[3rem] bg-accent/10 blur-2xl"
+        className="absolute -inset-8 rounded-[3rem] bg-accent/10 blur-2xl transition-opacity duration-500 group-hover:bg-accent/20"
+        style={{ transform: 'translateZ(-40px)' }}
         aria-hidden="true"
       />
 
-      <div className="relative rounded-[2.5rem] border border-border bg-surface p-2.5 shadow-2xl shadow-black/40">
+      <motion.div
+        style={reduce ? undefined : { transform: 'translateZ(36px)' }}
+        animate={reduce ? undefined : { y: [0, -10, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        className="relative rounded-[2.5rem] border border-border bg-surface p-2.5 shadow-2xl shadow-black/40"
+      >
         {/* The screenshot carries its own status bar, so the frame draws no
             notch — one would sit on top of the real one. */}
         <img
@@ -119,9 +164,45 @@ function PhoneMockup() {
           decoding="async"
           className="block w-full rounded-[2rem] object-cover"
         />
-      </div>
+      </motion.div>
     </motion.div>
   )
+}
+
+/**
+ * Counts up from zero to the stat's value when it first scrolls into view.
+ * Keeps any non-numeric suffix ("%", "+") and matches the source's decimals.
+ * Renders the value verbatim under reduced motion or if it isn't number-led.
+ */
+function CountUp({ value }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const reduce = useReducedMotion()
+
+  const match = /^([\d.]+)(.*)$/.exec(value)
+  // Derive only primitives from the regex match — the match array itself is a
+  // fresh object every render, so it must never go in the effect deps below or
+  // each setText re-render would restart the animation from 0 forever.
+  const isNumeric = match != null
+  const target = match ? parseFloat(match[1]) : 0
+  const suffix = match ? match[2] : ''
+  const decimals = match && match[1].includes('.') ? match[1].split('.')[1].length : 0
+
+  const [text, setText] = useState(
+    !isNumeric || reduce ? value : `0${decimals ? '.' + '0'.repeat(decimals) : ''}${suffix}`,
+  )
+
+  useEffect(() => {
+    if (!isNumeric || reduce || !inView) return
+    const controls = animate(0, target, {
+      duration: 1.1,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => setText(`${v.toFixed(decimals)}${suffix}`),
+    })
+    return () => controls.stop()
+  }, [inView, reduce, isNumeric, target, suffix, decimals])
+
+  return <span ref={ref}>{!isNumeric || reduce ? value : text}</span>
 }
 
 export default function Home() {
@@ -132,6 +213,7 @@ export default function Home() {
     <>
       {/* ---------------- Hero ---------------- */}
       <section className="relative overflow-hidden pb-16 pt-12 sm:pt-20">
+        <HeroBackdrop />
         <div className="container-x grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <div>
             <motion.div
@@ -144,12 +226,12 @@ export default function Home() {
                 <span className="font-display">Native Android · Invite only</span>
               </div>
 
-              <h1 className="mt-6 text-balance text-[2.6rem] font-bold leading-[1.03] tracking-tight sm:text-6xl lg:text-[4.25rem]">
+              <h1 className="mt-6 text-balance text-[2.9rem] font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.75rem]">
                 Your music.
                 <br />
                 No ads.
                 <br />
-                <span className="text-accent">No noise.</span>
+                <span className="text-gradient">No noise.</span>
               </h1>
 
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
@@ -159,13 +241,22 @@ export default function Home() {
               </p>
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link to={user ? '/download' : '/signup'} className={linkBtn('primary')}>
+                <Link
+                  to={user ? '/download' : '/signup'}
+                  className={`${linkBtn('primary')} group/cta transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0`}
+                >
                   <Download className="h-4 w-4" aria-hidden="true" />
                   {user ? 'Download the app' : 'Get access'}
                 </Link>
-                <Link to="/docs" className={linkBtn('outline')}>
+                <Link
+                  to="/docs"
+                  className={`${linkBtn('outline')} group/docs transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0`}
+                >
                   Read the docs
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <ArrowRight
+                    className="h-4 w-4 transition-transform duration-200 group-hover/docs:translate-x-0.5"
+                    aria-hidden="true"
+                  />
                 </Link>
               </div>
 
@@ -191,8 +282,8 @@ export default function Home() {
                   i >= 2 ? 'border-t border-border sm:border-t-0' : ''
                 }`}
               >
-                <p className="font-display text-4xl font-bold tracking-tight text-fg tabular-nums">
-                  {s.value}
+                <p className="text-gradient font-display text-4xl font-bold tracking-tight tabular-nums sm:text-5xl">
+                  <CountUp value={s.value} />
                 </p>
                 <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.15em] text-dim">
                   {s.label}
@@ -210,7 +301,8 @@ export default function Home() {
             <SectionLabel index={1}>Features</SectionLabel>
             <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
               Everything you expect.
-              <br className="hidden sm:block" /> Nothing you don't.
+              <br className="hidden sm:block" />{' '}
+              <span className="text-gradient">Nothing you don't.</span>
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-muted">
               Built as a proper Android app, not a wrapped website — so it feels fast,
@@ -218,22 +310,21 @@ export default function Home() {
             </p>
           </Reveal>
 
-          {/* An editorial index, not a card grid. Each entry sits under a
-              hairline rule with a two-digit number, so the section reads like a
-              spec sheet rather than nine identical glowing tiles. */}
-          <RevealGroup className="mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-12">
+          {/* Bento grid of frosted-glass tiles, each with a coral→violet gradient
+              rim and a gradient icon badge. Hover floats the tile and casts a
+              coral glow. */}
+          <RevealGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map(({ icon: Icon, title, body }, i) => (
-              <RevealItem key={title} className="group border-t border-border pt-5">
+              <RevealItem key={title} className="group gradient-border p-6">
                 <div className="flex items-center justify-between">
-                  <Icon
-                    className="h-5 w-5 text-accent transition-transform duration-300 group-hover:-translate-y-0.5"
-                    aria-hidden="true"
-                  />
-                  <span className="font-display text-sm font-semibold tabular-nums text-dim">
+                  <span className="icon-badge">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="font-display text-sm font-semibold tabular-nums text-dim transition-colors duration-300 group-hover:text-accent">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
-                <h3 className="mt-4 font-display text-lg font-semibold">{title}</h3>
+                <h3 className="mt-5 font-display text-lg font-semibold">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
               </RevealItem>
             ))}
@@ -261,7 +352,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border">
+            <ul className="card-lift divide-y divide-border overflow-hidden rounded-2xl border border-border">
               {PRIVACY_POINTS.map((item) => (
                 <li
                   key={item}
@@ -280,7 +371,7 @@ export default function Home() {
       <section className="py-20 sm:py-28">
         <div className="container-x">
           <Reveal>
-            <div className="relative overflow-hidden rounded-3xl border border-border bg-surface px-6 py-16 sm:px-14">
+            <div className="card-lift relative overflow-hidden rounded-3xl border border-border bg-surface px-6 py-16 sm:px-14">
               <div className="relative max-w-xl">
                 <SectionLabel>Ready to listen?</SectionLabel>
                 <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-5xl">
