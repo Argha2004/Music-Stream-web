@@ -221,7 +221,7 @@ export default function Home() {
               animate={reduce ? false : { opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-dim">
+              <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-balance">
                 <Waveform bars={5} height={14} barWidth={2.5} gap={2} />
                 <span className="font-display">Native Android · Invite only</span>
               </div>
