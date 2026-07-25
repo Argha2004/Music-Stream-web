@@ -1,7 +1,14 @@
-import { AlertTriangle, Ban, Check, Scale } from 'lucide-react'
-import { Card } from '@heroui/react'
+import Sheet from '../components/Sheet'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
+
+/**
+ * Terms of use, set as numbered clauses with a schedule of use.
+ *
+ * A licence is already a clause document, so this sheet needed the least
+ * translation of any: the permitted / not-permitted lists become a two-column
+ * schedule, and the third-party notices become a ruled attribution table.
+ */
 
 const PERMITTED = [
   'Install and use MusicStream on devices you personally own',
@@ -28,79 +35,108 @@ const THIRD_PARTY = [
   { name: 'Lucide icons', licence: 'ISC License' },
 ]
 
+/** A numbered clause heading that can be cited by its number. */
+function ClauseHead({ no, children }) {
+  return (
+    <div className="mb-6 flex items-baseline gap-4 border-b border-rule pb-3">
+      <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
+        § {no}
+      </span>
+      <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.02em] text-chalk">
+        {children}
+      </h2>
+    </div>
+  )
+}
+
 export default function License() {
   return (
-    <div className="container-x py-16">
-      <Reveal className="mx-auto max-w-3xl">
-        <SectionLabel>Legal</SectionLabel>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">License</h1>
-        <p className="mt-5 text-lg text-muted">
+    <Sheet label="Terms of use">
+      <Reveal className="max-w-3xl">
+        <SectionLabel index={4}>Sheet</SectionLabel>
+        <h1 className="drawing-title mt-6">Terms</h1>
+        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
           Terms covering your use of the MusicStream application and this website.
         </p>
+      </Reveal>
 
-        {/* Summary card */}
-        <Card variant="secondary" className="mt-10 border border-border p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent/10">
-              <Scale className="h-5 w-5 text-accent" aria-hidden="true" />
-            </div>
-            <div>
-              <h2 className="font-bold">Personal &amp; Educational Use License</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                Copyright © {new Date().getFullYear()} Arghadeep Pakhira. All rights
-                reserved. MusicStream is proprietary software provided free of charge to
-                approved individuals for personal, non-commercial use. It is not open
-                source and is not licensed for redistribution.
-              </p>
-            </div>
+      {/* --- The grant --- */}
+      <section className="mt-14 max-w-3xl">
+        <div className="plate">
+          <div className="plate-hd">
+            <span className="font-mono text-[0.6875rem] font-bold tracking-[0.18em] text-stamp">
+              § 01
+            </span>
+            <span className="label">Personal &amp; educational use licence</span>
           </div>
-        </Card>
-
-        {/* Permissions grid */}
-        <div className="mt-6 grid gap-5 md:grid-cols-2">
-          <Card variant="secondary" className="border border-border p-6">
-            <h2 className="flex items-center gap-2 font-bold">
-              <Check className="h-4 w-4 text-success" aria-hidden="true" />
-              You may
-            </h2>
-            <ul className="mt-4 space-y-3">
-              {PERMITTED.map((item) => (
-                <li key={item} className="flex gap-3 text-sm text-muted">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Card>
-
-          <Card variant="secondary" className="border border-border p-6">
-            <h2 className="flex items-center gap-2 font-bold">
-              <Ban className="h-4 w-4 text-danger" aria-hidden="true" />
-              You may not
-            </h2>
-            <ul className="mt-4 space-y-3">
-              {NOT_PERMITTED.map((item) => (
-                <li key={item} className="flex gap-3 text-sm text-muted">
-                  <Ban className="mt-0.5 h-4 w-4 shrink-0 text-danger" aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <div className="plate-bd">
+            <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+              Copyright © {new Date().getFullYear()} Arghadeep Pakhira. All rights
+              reserved. MusicStream is proprietary software provided free of charge to
+              approved individuals for personal, non-commercial use. It is not open source
+              and is not licensed for redistribution.
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* Content disclaimer */}
-        <div className="mt-6 flex items-start gap-4 rounded-2xl border border-accent/30 bg-accent/5 p-6">
-          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
-          <div>
-            <h2 className="font-bold">Content disclaimer</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
+      {/* --- Schedule of use --- */}
+      <section className="mt-12 max-w-3xl">
+        <ClauseHead no="02">Schedule of use</ClauseHead>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="plate">
+            <div className="plate-hd">
+              <span className="label text-checked">You may</span>
+            </div>
+            {PERMITTED.map((item) => (
+              <div
+                key={item}
+                className="flex gap-3 border-b border-rule-soft px-4 py-3.5 last:border-b-0"
+              >
+                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 bg-checked" />
+                <span className="font-sans text-base normal-case leading-[1.6] text-chalk-2">
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="plate">
+            <div className="plate-hd">
+              <span className="label text-void">You may not</span>
+            </div>
+            {NOT_PERMITTED.map((item) => (
+              <div
+                key={item}
+                className="flex gap-3 border-b border-rule-soft px-4 py-3.5 last:border-b-0"
+              >
+                <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 bg-void" />
+                <span className="font-sans text-base normal-case leading-[1.6] text-chalk-2">
+                  {item}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- Content disclaimer --- */}
+      <section className="mt-12 max-w-3xl">
+        <div className="border border-stamp bg-sheet-deep">
+          <div className="flex items-center gap-2.5 border-b border-stamp bg-stamp/10 px-4 py-2.5">
+            <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-stamp">
+              Content disclaimer
+            </span>
+          </div>
+          <div className="p-5 sm:p-6">
+            <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
               MusicStream does not host, own, or distribute any music. It is a client that
               retrieves publicly accessible data from an unofficial selfmade API. All
               music, artwork, and metadata remain the property of their respective owners
               and rights holders.
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-muted">
+            <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-chalk-2">
               This project exists for personal and educational purposes only. It is not
               affiliated with, endorsed by, or connected to any music service or label. You
               are responsible for ensuring your use complies with the laws and licensing
@@ -108,19 +144,21 @@ export default function License() {
             </p>
           </div>
         </div>
+      </section>
 
-        {/* Full terms */}
-        <article className="prose-doc mt-12">
-          <h2>Full terms</h2>
+      {/* --- Full terms --- */}
+      <section className="mt-12 max-w-3xl">
+        <ClauseHead no="03">Full terms</ClauseHead>
 
-          <h3>1. Grant of licence</h3>
+        <article className="prose-doc">
+          <h3>3.1 Grant of licence</h3>
           <p>
             Subject to these terms, you are granted a personal, non-exclusive,
             non-transferable, revocable licence to install and use MusicStream on devices
             you own, for private and non-commercial purposes only.
           </p>
 
-          <h3>2. Restrictions</h3>
+          <h3>3.2 Restrictions</h3>
           <p>
             You may not copy, redistribute, sublicense, sell, rent, lease, or otherwise
             make the software available to third parties. You may not remove or obscure any
@@ -128,74 +166,75 @@ export default function License() {
             are personal and must not be shared.
           </p>
 
-          <h3>3. Access</h3>
+          <h3>3.3 Access</h3>
           <p>
             Access to downloads is granted at the developer's sole discretion and may be
             revoked at any time, for any reason, without notice.
           </p>
 
-          <h3>4. No warranty</h3>
+          <h3>3.4 No warranty</h3>
           <p>
             The software is provided <strong>"as is"</strong>, without warranty of any
             kind, express or implied, including but not limited to the warranties of
             merchantability, fitness for a particular purpose, and non-infringement.
           </p>
 
-          <h3>5. Limitation of liability</h3>
+          <h3>3.5 Limitation of liability</h3>
           <p>
             In no event shall the author be liable for any claim, damages, data loss, or
             other liability, whether in an action of contract, tort, or otherwise, arising
             from, out of, or in connection with the software or its use.
           </p>
 
-          <h3>6. Third-party services</h3>
+          <h3>3.6 Third-party services</h3>
           <p>
             The app relies on third-party services it neither owns nor controls. Their
             availability, accuracy, and continued operation are not guaranteed, and they
             may change or disappear without notice.
           </p>
 
-          <h3>7. Changes to these terms</h3>
+          <h3>3.7 Changes to these terms</h3>
           <p>
             These terms may be updated at any time. Continued use of the software after
             changes are published constitutes acceptance of the revised terms.
           </p>
-
-          <h2>Third-party licences</h2>
-          <p>
-            MusicStream is built with the following open-source components, used under
-            their respective licences:
-          </p>
         </article>
+      </section>
 
-        <div className="mt-6 overflow-hidden rounded-2xl border border-border">
-          <table className="w-full text-left text-sm">
-            <caption className="sr-only">Third-party components and their licences</caption>
-            <thead className="bg-elevated">
-              <tr>
-                <th scope="col" className="px-5 py-3 font-semibold">
-                  Component
-                </th>
-                <th scope="col" className="px-5 py-3 font-semibold">
-                  Licence
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {THIRD_PARTY.map((row, i) => (
-                <tr key={row.name} className={i > 0 ? 'border-t border-border' : ''}>
-                  <td className="px-5 py-3 text-fg">{row.name}</td>
-                  <td className="px-5 py-3 text-muted">{row.licence}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* --- Third-party notices --- */}
+      <section className="mt-12 max-w-3xl">
+        <ClauseHead no="04">Third-party licences</ClauseHead>
+
+        <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+          MusicStream is built with the following open-source components, used under
+          their respective licences:
+        </p>
+
+        <div className="reg mt-6">
+          <div className="reg-hd grid grid-cols-[1fr_auto] gap-4">
+            <span>Component</span>
+            <span>Licence</span>
+          </div>
+          {THIRD_PARTY.map((row) => (
+            <div
+              key={row.name}
+              className="reg-row grid grid-cols-1 gap-1 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-4"
+            >
+              <span className="min-w-0 font-sans text-base normal-case text-chalk">
+                {row.name}
+              </span>
+              <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-chalk-3">
+                {row.licence}
+              </span>
+            </div>
+          ))}
         </div>
 
-        <p className="mt-8 text-sm text-dim">
-          Last updated {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long' })}.
+        <p className="mt-8 font-mono text-[0.6875rem] tracking-[0.12em] text-chalk-3">
+          Last updated{' '}
+          {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long' })}.
         </p>
-      </Reveal>
-    </div>
+      </section>
+    </Sheet>
   )
 }

@@ -1,10 +1,19 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { AlertCircle, Ban, Eye, EyeOff, Hourglass, LogIn } from 'lucide-react'
-import { Alert, Button, Card, Input, Label, Spinner, TextField } from '@heroui/react'
+import { Eye, EyeOff } from 'lucide-react'
 import { humanizeAuthError, useAuth } from '../context/AuthContext'
 import { isConfigured } from '../lib/supabase'
+import Sheet from '../components/Sheet'
+import Reveal from '../components/Reveal'
+import SectionLabel from '../components/SectionLabel'
 
+/**
+ * Holder sign-in, set as a document request form.
+ *
+ * The access-decision states are surfaced distinctly from a credential error:
+ * a correct password with an undecided or refused request is a document-control
+ * outcome, not a login failure, and saying so plainly is the whole point.
+ */
 export default function Login() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
@@ -39,145 +48,138 @@ export default function Login() {
   }
 
   return (
-    <div className="container-x flex min-h-[75vh] items-center justify-center py-16">
-      <div className="w-full max-w-md">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
-          <p className="mt-2 text-sm text-muted">Sign in to download MusicStream.</p>
-        </div>
+    <Sheet label="Holder sign-in">
+      <div className="mx-auto max-w-lg">
+        <Reveal>
+          <SectionLabel index={6}>Sheet</SectionLabel>
+          <h1 className="drawing-title mt-6">Sign in</h1>
+          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            Sign in to collect your issued build.
+          </p>
+        </Reveal>
 
         {!isConfigured && (
-          <Alert status="danger" className="mt-6" role="alert">
-            <Alert.Indicator>
-              <AlertCircle className="h-4 w-4" aria-hidden="true" />
-            </Alert.Indicator>
-            <Alert.Content>
-              <Alert.Title>Site not connected to Supabase</Alert.Title>
-              <Alert.Description>
-                The <code className="rounded bg-elevated px-1 py-0.5 text-accent-hi">VITE_SUPABASE_*</code>{' '}
+          <div className="mt-8 border border-void bg-sheet-deep" role="alert">
+            <div className="flex items-center gap-2.5 border-b border-void bg-void/10 px-4 py-2.5">
+              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-void">
+                Site not connected to Supabase
+              </span>
+            </div>
+            <div className="p-5">
+              <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+                The{' '}
+                <code className="border border-rule-soft bg-sheet px-1.5 py-0.5 font-mono text-[0.875rem] text-chalk">
+                  VITE_SUPABASE_*
+                </code>{' '}
                 environment variables are missing, so sign-in cannot work.
-              </Alert.Description>
-            </Alert.Content>
-          </Alert>
+              </p>
+            </div>
+          </div>
         )}
 
-        {/* Access decision — shown instead of a generic error so the user knows
-            their password was fine and it's approval that's outstanding. */}
+        {/* An access decision, shown instead of a generic error so the holder
+            knows their password was fine and it's approval that's outstanding. */}
         {blocked && (
-          <Alert
-            status={blocked === 'rejected' ? 'danger' : 'accent'}
-            className="mt-6"
+          <div
+            className={`mt-8 border bg-sheet-deep ${
+              blocked === 'rejected' ? 'border-void' : 'border-rule'
+            }`}
             role="alert"
           >
-            <Alert.Indicator>
-              {blocked === 'rejected' ? (
-                <Ban className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Hourglass className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Alert.Indicator>
-            <Alert.Content>
-              {blocked === 'rejected' ? (
-                <>
-                  <Alert.Title>Access request not approved</Alert.Title>
-                  <Alert.Description>
-                    Your account exists but the developer hasn't granted access. Contact
-                    them if you think this is a mistake.
-                  </Alert.Description>
-                </>
-              ) : (
-                <>
-                  <Alert.Title>Access request pending</Alert.Title>
-                  <Alert.Description>
-                    Your account is waiting for the developer to approve it. You'll get an
-                    email once a decision is made — try signing in again then.
-                  </Alert.Description>
-                </>
-              )}
-            </Alert.Content>
-          </Alert>
+            <div
+              className={`flex items-center gap-2.5 border-b px-4 py-2.5 ${
+                blocked === 'rejected' ? 'border-void bg-void/10' : 'border-rule bg-sheet-raised'
+              }`}
+            >
+              <span
+                className={`font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] ${
+                  blocked === 'rejected' ? 'text-void' : 'text-chalk-2'
+                }`}
+              >
+                {blocked === 'rejected' ? 'Request not approved' : 'Request pending'}
+              </span>
+            </div>
+            <div className="p-5">
+              <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+                {blocked === 'rejected'
+                  ? "Your account exists but the developer hasn't granted access. Contact them if you think this is a mistake."
+                  : "Your account is waiting for the developer to approve it. You'll get an email once a decision is made — try signing in again then."}
+              </p>
+            </div>
+          </div>
         )}
 
-        <Card variant="secondary" className="card-lift mt-8 border border-border p-6">
-          <form onSubmit={onSubmit} className="space-y-5">
+        <form onSubmit={onSubmit} className="mt-8 border border-rule bg-sheet-deep">
+          <div className="plate-hd">
+            <span className="label">Credentials</span>
+          </div>
+
+          <div className="space-y-5 p-5 sm:p-6">
             {error && (
               // role="alert" so screen readers announce it immediately.
-              <Alert status="danger" role="alert">
-                <Alert.Indicator>
-                  <AlertCircle className="h-4 w-4" aria-hidden="true" />
-                </Alert.Indicator>
-                <Alert.Content>
-                  <Alert.Description>{error}</Alert.Description>
-                </Alert.Content>
-              </Alert>
+              <div className="border border-void bg-void/10 px-4 py-3" role="alert">
+                <p className="font-mono text-[0.875rem] leading-relaxed text-void">{error}</p>
+              </div>
             )}
 
-            {/* react-aria TextField hands onChange the value string, not an event. */}
-            <TextField
-              value={email}
-              onChange={setEmail}
-              type="email"
-              autoComplete="email"
-              isRequired
-              fullWidth
-            >
-              <Label className="mb-2 block text-sm font-semibold">Email</Label>
-              <Input placeholder="you@example.com" />
-            </TextField>
+            <div>
+              <label className="field-label" htmlFor="login-email">
+                Email
+              </label>
+              <input
+                id="login-email"
+                className="field-input"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-            <TextField
-              value={password}
-              onChange={setPassword}
-              type={showPassword ? 'text' : 'password'}
-              autoComplete="current-password"
-              isRequired
-              fullWidth
-            >
-              <Label className="mb-2 block text-sm font-semibold">Password</Label>
+            <div>
+              <label className="field-label" htmlFor="login-password">
+                Password
+              </label>
               <div className="relative">
-                <Input placeholder="••••••••" className="pr-12" />
+                <input
+                  id="login-password"
+                  className="field-input pr-14"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-muted hover:text-fg"
+                  className="absolute right-0 top-0 flex h-full w-12 items-center justify-center border-l border-rule text-chalk-3 transition-colors hover:text-chalk"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-            </TextField>
+            </div>
+          </div>
 
-            {/* h-12 so the CTA reads as the same weight as the 50px fields. */}
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              fullWidth
-              className="mt-1 h-12"
-              isDisabled={busy}
-            >
-              {busy ? (
-                <>
-                  <Spinner size="sm" color="current" />
-                  Signing in…
-                </>
-              ) : (
-                <>
-                  <LogIn className="h-4 w-4" aria-hidden="true" />
-                  Sign in
-                </>
-              )}
-            </Button>
-          </form>
-        </Card>
+          <button type="submit" className="btn btn-issue w-full" disabled={busy}>
+            {busy ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
 
-        <p className="mt-6 text-center text-sm text-muted">
+        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
           Don't have an account?{' '}
-          <Link to="/signup" className="font-semibold text-accent hover:underline">
+          <Link
+            to="/signup"
+            className="text-stamp underline decoration-stamp/40 underline-offset-4"
+          >
             Request access
           </Link>
         </p>
       </div>
-    </div>
+    </Sheet>
   )
 }

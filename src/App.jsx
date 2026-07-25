@@ -1,13 +1,13 @@
 import { Suspense, lazy, useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import { Spinner } from '@heroui/react'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 import PageTransition from './components/PageTransition'
+import Waveform from './components/Waveform'
 import Home from './pages/Home'
 
-// Route-level code splitting keeps the landing page's bundle small.
+// Route-level code splitting keeps the first sheet's bundle small.
 const Docs = lazy(() => import('./pages/Docs'))
 const License = lazy(() => import('./pages/License'))
 const Changelog = lazy(() => import('./pages/Changelog'))
@@ -29,8 +29,11 @@ function RouteChangeEffects() {
 
 function PageFallback() {
   return (
-    <div className="container-x flex min-h-[60vh] items-center justify-center">
-      <Spinner size="lg" color="accent" role="status" aria-label="Loading" />
+    <div className="container-x flex min-h-[60vh] flex-col items-center justify-center gap-4">
+      <Waveform bars={9} height={28} barWidth={3} gap={3} barClassName="bg-rule" baseline />
+      <p className="label" role="status" aria-label="Loading">
+        Retrieving sheet
+      </p>
     </div>
   )
 }
@@ -41,8 +44,8 @@ export default function App() {
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50
-                   focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold
-                   focus:text-on-accent"
+                   focus:bg-stamp focus:px-4 focus:py-2 focus:font-mono focus:text-[0.6875rem]
+                   focus:uppercase focus:tracking-[0.18em] focus:text-on-stamp"
       >
         Skip to content
       </a>

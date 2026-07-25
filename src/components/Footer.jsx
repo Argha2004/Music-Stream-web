@@ -1,68 +1,55 @@
 import { Link } from 'react-router-dom'
-import { Separator } from '@heroui/react'
 import Waveform from './Waveform'
+import { DOC_NO } from './Sheet'
+
+/**
+ * The document's closing block: an index of sheets, then the issuing and
+ * copyright record. Rows are ruled and butt together — the footer is one ruled
+ * object rather than a set of spaced columns.
+ */
 
 const GROUPS = [
   {
-    heading: 'Product',
+    heading: 'Document',
     links: [
-      { to: '/download', label: 'Download' },
-      { to: '/changelog', label: 'Changelog' },
+      { to: '/', label: 'Specification' },
+      { to: '/docs', label: 'Operating manual' },
+      { to: '/changelog', label: 'Revision history' },
     ],
   },
   {
-    heading: 'Resources',
+    heading: 'Issue',
     links: [
-      { to: '/docs', label: 'Documentation' },
-      { to: '/license', label: 'License' },
-    ],
-  },
-  {
-    heading: 'Account',
-    links: [
-      { to: '/login', label: 'Sign in' },
+      { to: '/download', label: 'Controlled download' },
       { to: '/signup', label: 'Request access' },
+      { to: '/login', label: 'Sign in' },
     ],
+  },
+  {
+    heading: 'Legal',
+    links: [{ to: '/license', label: 'Terms of use' }],
   },
 ]
 
 export default function Footer() {
   return (
-    <footer className="mt-8 border-t border-border">
-      <div className="container-x flex flex-col gap-10 py-14 md:flex-row md:items-start md:justify-between">
-        <div className="max-w-xs">
-          <Link
-            to="/"
-            className="group flex items-center gap-2.5 font-display text-[0.95rem] font-bold tracking-tight"
-          >
-            <Waveform bars={4} height={16} barWidth={2.5} gap={2} animated={false} />
-            MusicStream
-          </Link>
-          <p className="mt-3 text-sm leading-relaxed text-muted">
-            A fast, ad-free native Android music player. Built with Kotlin and Jetpack
-            Compose.
-          </p>
-        </div>
-
-        {/* Three tidy columns at every width — the groups line up as a proper
-            link directory instead of loose inline rows on phones. Narrow gutters
-            on mobile so the three short columns fit a 360px screen without
-            wrapping the labels. */}
-        <nav
-          className="grid grid-cols-3 gap-x-4 gap-y-8 sm:gap-x-12"
-          aria-label="Footer"
-        >
-          {GROUPS.map((group) => (
-            <div key={group.heading}>
-              <h2 className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-dim">
-                {group.heading}
-              </h2>
-              <ul className="mt-3.5 space-y-1">
+    <footer className="mt-4 border-t-2 border-rule">
+      <div className="container-x">
+        <div className="grid grid-cols-1 border-x border-rule sm:grid-cols-3">
+          {GROUPS.map((group, i) => (
+            <div
+              key={group.heading}
+              className={`border-b border-rule p-5 sm:border-b-0 ${
+                i > 0 ? 'sm:border-l sm:border-rule' : ''
+              }`}
+            >
+              <h2 className="label">{group.heading}</h2>
+              <ul className="mt-4 space-y-0">
                 {group.links.map((l) => (
                   <li key={l.to}>
                     <Link
                       to={l.to}
-                      className="inline-flex min-h-9 items-center text-sm text-muted transition-colors hover:text-fg"
+                      className="inline-flex min-h-9 items-center font-sans text-sm text-chalk-2 transition-colors hover:text-stamp"
                     >
                       {l.label}
                     </Link>
@@ -71,15 +58,32 @@ export default function Footer() {
               </ul>
             </div>
           ))}
-        </nav>
+        </div>
+
+        {/* Issuing record. */}
+        <div className="flex flex-col gap-4 border-x border-b border-rule bg-sheet-deep px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <Waveform
+              bars={4}
+              height={14}
+              barWidth={2.5}
+              gap={2}
+              animated={false}
+              barClassName="bg-rule"
+            />
+            <span className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-chalk">
+              {DOC_NO}
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-1 font-mono text-[0.6875rem] tracking-[0.12em] text-chalk-3 sm:items-end">
+            <p>© {new Date().getFullYear()} Arghadeep Pakhira. All rights reserved.</p>
+            <p className="uppercase">Personal and educational use only</p>
+          </div>
+        </div>
       </div>
 
-      <Separator />
-
-      <div className="container-x flex flex-col gap-2 py-6 text-xs text-dim sm:flex-row sm:items-center sm:justify-between">
-        <p>© {new Date().getFullYear()} Arghadeep Pakhira. All rights reserved.</p>
-        <p>For personal and educational use only.</p>
-      </div>
+      <div className="h-8" />
     </footer>
   )
 }

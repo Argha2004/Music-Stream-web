@@ -1,14 +1,15 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Waveform from './Waveform'
 
-function Spinner(label) {
+/** The document's loading state: an instrument still taking a reading. */
+function Reading(label) {
   return (
-    <div className="container-x flex min-h-[60vh] items-center justify-center">
-      <div
-        className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-accent"
-        role="status"
-        aria-label={label}
-      />
+    <div className="container-x flex min-h-[60vh] flex-col items-center justify-center gap-4">
+      <Waveform bars={9} height={28} barWidth={3} gap={3} barClassName="bg-rule" baseline />
+      <p className="label" role="status">
+        {label}
+      </p>
     </div>
   )
 }
@@ -30,7 +31,7 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
   const { session, profile, loading, isAdmin } = useAuth()
   const location = useLocation()
 
-  if (loading) return Spinner('Checking your session')
+  if (loading) return Reading('Checking your session')
 
   if (!session) {
     // Remember where they were headed so login can send them back.
@@ -42,7 +43,7 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
   }
 
   // Wait for the profile before rendering pages that branch on status.
-  if (!requireAdmin && profile === null) return Spinner('Loading your account')
+  if (!requireAdmin && profile === null) return Reading('Loading your account')
 
   return children
 }

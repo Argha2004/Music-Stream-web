@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Sheet from '../components/Sheet'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
+
+/**
+ * The operating manual, set as numbered clauses.
+ *
+ * This sheet is Read mode: comprehension and wayfinding outrank expression.
+ * The world contributes the clause numbering and the ruled index — both of
+ * which are genuine navigation aids here — and then gets out of the way of a
+ * 68ch reading column.
+ */
 
 const SECTIONS = [
   { id: 'getting-started', label: 'Getting started' },
@@ -17,7 +27,9 @@ const SECTIONS = [
   { id: 'troubleshooting', label: 'Troubleshooting' },
 ]
 
-/** Highlights the section currently in view in the sidebar. */
+const clauseNo = (id) => String(SECTIONS.findIndex((s) => s.id === id) + 1).padStart(2, '0')
+
+/** Highlights the clause currently in view in the index. */
 function useActiveSection() {
   const [active, setActive] = useState(SECTIONS[0].id)
 
@@ -41,38 +53,53 @@ function useActiveSection() {
   return active
 }
 
+/** A clause heading carrying its own number, so it can be cited. */
+function Clause({ id, children }) {
+  return (
+    <div className="mb-5 mt-14 flex items-baseline gap-4 border-b border-rule pb-3 first:mt-0">
+      <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
+        § {clauseNo(id)}
+      </span>
+      <h2 className="m-0 border-0 p-0 font-sans text-2xl font-bold uppercase tracking-[0.02em] text-chalk">
+        {children}
+      </h2>
+    </div>
+  )
+}
+
 export default function Docs() {
   const active = useActiveSection()
 
   return (
-    <div className="container-x py-16">
+    <Sheet label="Operating manual">
       <Reveal>
-        <SectionLabel>Guide</SectionLabel>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Documentation</h1>
-        <p className="mt-5 max-w-2xl text-lg text-muted">
+        <SectionLabel index={2}>Sheet</SectionLabel>
+        <h1 className="drawing-title mt-6">Manual</h1>
+        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-chalk-2">
           Everything you need to install, use and troubleshoot MusicStream on Android.
         </p>
       </Reveal>
 
-      <div className="mt-14 grid gap-12 lg:grid-cols-[220px_minmax(0,1fr)]">
-        {/* Sidebar — sticky on desktop, hidden on mobile to keep content first */}
+      <div className="mt-14 grid gap-12 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-16">
+        {/* Clause index — sticky on desktop, hidden on mobile so content leads. */}
         <aside className="hidden lg:block">
-          <nav className="sticky top-24" aria-label="On this page">
-            <p className="mb-4 text-xs font-bold uppercase tracking-wider text-dim">
-              On this page
-            </p>
-            <ul className="space-y-1 border-l border-border">
-              {SECTIONS.map((s) => (
+          <nav className="sticky top-24" aria-label="Clause index">
+            <p className="label border-b border-rule pb-3">Contents</p>
+            <ul className="border-x border-b border-rule">
+              {SECTIONS.map((s, i) => (
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
-                    className={`-ml-px block border-l-2 py-1.5 pl-4 text-sm transition-colors duration-200 ${
-                      active === s.id
-                        ? 'border-accent font-semibold text-accent'
-                        : 'border-transparent text-muted hover:border-border hover:text-fg'
-                    }`}
+                    className={`flex items-baseline gap-3 border-b border-rule-soft px-3 py-2.5
+                                font-mono text-[0.6875rem] uppercase tracking-[0.12em]
+                                transition-colors last:border-b-0 ${
+                                  active === s.id
+                                    ? 'bg-sheet-raised text-stamp'
+                                    : 'text-chalk-3 hover:text-chalk'
+                                }`}
                   >
-                    {s.label}
+                    <span className="tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="normal-case tracking-normal">{s.label}</span>
                   </a>
                 </li>
               ))}
@@ -80,13 +107,11 @@ export default function Docs() {
           </nav>
         </aside>
 
-        {/* Content — max-w keeps line length in the readable 60–75 char range.
-            min-w-0 is load-bearing: a grid item defaults to min-width:auto, so
-            without it the <pre> blocks set a min-content floor wider than the
-            phone and push the whole page into horizontal scroll. */}
-        <article className="prose-doc min-w-0 max-w-2xl">
+        {/* min-w-0 is load-bearing: without it a single <pre> sets a min-content
+            floor wider than a phone and puts the page into horizontal scroll. */}
+        <article className="prose-doc min-w-0 max-w-[68ch]">
           <section id="getting-started">
-            <h2>Getting started</h2>
+            <Clause id="getting-started">Getting started</Clause>
             <p>
               MusicStream is a native Android music player. It is not distributed through
               the Play Store — you install it directly from this site as an APK.
@@ -107,7 +132,7 @@ export default function Docs() {
           </section>
 
           <section id="installing">
-            <h2>Installing the app</h2>
+            <Clause id="installing">Installing the app</Clause>
             <ol>
               <li>
                 Sign in and open <Link to="/download">Download</Link>, then tap{' '}
@@ -137,7 +162,7 @@ export default function Docs() {
           </section>
 
           <section id="updates">
-            <h2>How updates work</h2>
+            <Clause id="updates">How updates work</Clause>
             <p>
               The app checks this website for new versions. On launch it fetches a small
               manifest describing the newest published build and compares its version code
@@ -174,7 +199,7 @@ export default function Docs() {
           </section>
 
           <section id="playback">
-            <h2>Playback &amp; queue</h2>
+            <Clause id="playback">Playback &amp; queue</Clause>
             <p>
               Playback runs in a foreground service, so audio continues when you leave the
               app or lock the screen. Transport controls appear on your lock screen and in
@@ -204,7 +229,7 @@ export default function Docs() {
           </section>
 
           <section id="library">
-            <h2>Library &amp; playlists</h2>
+            <Clause id="library">Library &amp; playlists</Clause>
             <p>
               The Library tab holds your favourites, listening history, albums derived from
               liked songs, and your playlists.
@@ -227,7 +252,7 @@ export default function Docs() {
           </section>
 
           <section id="downloads">
-            <h2>Downloads &amp; quality</h2>
+            <Clause id="downloads">Downloads &amp; quality</Clause>
             <p>
               Downloaded songs are saved to your device's shared Music library, so any
               other player can read them too.
@@ -253,7 +278,7 @@ export default function Docs() {
           </section>
 
           <section id="equalizer">
-            <h2>Equalizer</h2>
+            <Clause id="equalizer">Equalizer</Clause>
             <p>
               Found under <code>Settings → Equalizer</code>. It uses Android's system audio
               effects, so it applies to MusicStream's output only.
@@ -270,7 +295,7 @@ export default function Docs() {
           </section>
 
           <section id="appearance">
-            <h2>Appearance</h2>
+            <Clause id="appearance">Appearance</Clause>
             <ul>
               <li>
                 <strong>Theme</strong> — Dark, Light, or follow the system setting.
@@ -287,7 +312,7 @@ export default function Docs() {
           </section>
 
           <section id="permissions">
-            <h2>Permissions</h2>
+            <Clause id="permissions">Permissions</Clause>
             <ul>
               <li>
                 <strong>Notifications</strong> — required for playback controls in the shade
@@ -309,7 +334,7 @@ export default function Docs() {
           </section>
 
           <section id="privacy">
-            <h2>Data &amp; privacy</h2>
+            <Clause id="privacy">Data &amp; privacy</Clause>
             <p>
               Your library — liked songs, playlists, history and settings — is stored
               locally using Android DataStore. There is no account inside the app and no
@@ -329,7 +354,7 @@ export default function Docs() {
           </section>
 
           <section id="troubleshooting">
-            <h2>Troubleshooting</h2>
+            <Clause id="troubleshooting">Troubleshooting</Clause>
 
             <h3>Sign-up is rejected</h3>
             <p>
@@ -370,6 +395,6 @@ export default function Docs() {
           </section>
         </article>
       </div>
-    </div>
+    </Sheet>
   )
 }

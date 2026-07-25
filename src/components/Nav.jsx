@@ -1,23 +1,26 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Download, LogOut, Menu, ShieldCheck, X } from 'lucide-react'
-import { Button, buttonVariants } from '@heroui/react'
+import { Menu, X } from 'lucide-react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import Waveform from './Waveform'
+import { DOC_NO } from './Sheet'
+
+/**
+ * The document header, not a marketing nav bar.
+ *
+ * It carries the document number on the left and sheet tabs on the right,
+ * under a 2px rule. Deliberately not floating, not rounded, and not blurred —
+ * it is the header of the sheet you are reading, so it behaves like one.
+ */
 
 const LINKS = [
-  { to: '/docs', label: 'Documentation' },
-  { to: '/changelog', label: 'Changelog' },
-  { to: '/license', label: 'License' },
+  { to: '/docs', label: 'Specification' },
+  { to: '/changelog', label: 'Revisions' },
+  { to: '/license', label: 'Terms' },
 ]
 
-/* HeroUI's Button is a react-aria button and takes no `as` prop, so routed
-   links use react-router's Link carrying HeroUI's button classes. That keeps a
-   real <a> for middle-click / open-in-new-tab instead of a fake button. */
-const linkBtn = (variant, size = 'md') => buttonVariants({ variant, size })
-
-/** Hairline reading-progress bar pinned to the top of the viewport. */
+/** Reading-progress rule pinned to the very top of the viewport. */
 function ScrollProgress() {
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 220, damping: 40, mass: 0.2 })
@@ -25,7 +28,7 @@ function ScrollProgress() {
   return (
     <motion.div
       style={{ scaleX }}
-      className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-gradient-to-r from-accent to-accent-hi"
+      className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-stamp"
       aria-hidden="true"
     />
   )
@@ -33,18 +36,10 @@ function ScrollProgress() {
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
   const { user, signOut, isAdmin } = useAuth()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  // Lock body scroll while the mobile sheet is open.
+  // Lock body scroll while the sheet menu is open.
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
     return () => {
@@ -52,7 +47,7 @@ export default function Nav() {
     }
   }, [open])
 
-  // Escape closes the mobile sheet (a11y: overlays must be dismissible).
+  // Escape closes the menu (a11y: overlays must be dismissible).
   useEffect(() => {
     if (!open) return
     const onKey = (e) => e.key === 'Escape' && setOpen(false)
@@ -66,56 +61,38 @@ export default function Nav() {
     navigate('/')
   }
 
-  const linkClass = ({ isActive }) =>
-    `relative text-sm font-medium transition-colors duration-200 hover:text-fg ${
-      isActive ? 'text-fg' : 'text-muted'
-    }`
+  /* The active tab takes a survey-orange rule. Tabs are flush to the header's
+     bottom border, so the active rule reads as part of the frame. */
+  const tabClass = ({ isActive }) =>
+    `flex items-center border-b-2 px-3 font-mono text-[0.6875rem] font-medium uppercase
+     tracking-[0.18em] transition-colors duration-150 lg:px-4 ${
+       isActive
+         ? 'border-stamp text-chalk'
+         : 'border-transparent text-chalk-3 hover:text-chalk'
+     }`
 
   return (
     <>
       <ScrollProgress />
 
-      {/* Floating pill bar — detached from the viewport edges, so page content
-          scrolls beneath it behind glass rather than under a full-width slab. */}
-      <header className="sticky top-0 z-40 pt-3 sm:pt-4">
+      <header className="sticky top-0 z-40 -mb-px border-b-2 border-rule bg-sheet">
         <div className="container-x">
-          <nav
-            aria-label="Main"
-            className={`flex h-14 items-center justify-between rounded-2xl pl-4 pr-3 transition-all duration-300 sm:pl-5 sm:pr-4 ${
-              scrolled
-                ? 'border border-border/80 bg-bg/70 shadow-lg shadow-black/20 backdrop-blur-xl'
-                : 'border border-transparent bg-transparent'
-            }`}
-          >
-            <Link
-              to="/"
-              className="group flex items-center gap-2.5 font-display text-[0.95rem] font-bold tracking-tight"
-            >
-              <Waveform
-                bars={4}
-                height={16}
-                barWidth={2.5}
-                gap={2}
-                className="opacity-90 transition-opacity group-hover:opacity-100"
-              />
-              <span className="text-gradient">MusicStream</span>
+          <nav aria-label="Main" className="flex h-14 items-stretch justify-between gap-6">
+            {/* Document identity: the mark is a level plot, the number is real. */}
+            <Link to="/" className="group flex items-center gap-3">
+              <Waveform bars={5} height={16} barWidth={2.5} gap={2} barClassName="bg-stamp" />
+              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-chalk">
+                MusicStream
+              </span>
+              <span className="hidden font-mono text-[0.6875rem] tracking-[0.18em] text-chalk-3 sm:inline">
+                {DOC_NO}
+              </span>
             </Link>
 
-            <div className="hidden items-center gap-8 md:flex">
+            <div className="hidden items-stretch md:flex">
               {LINKS.map((l) => (
-                <NavLink key={l.to} to={l.to} className={linkClass}>
-                  {({ isActive }) => (
-                    <>
-                      {l.label}
-                      {isActive && (
-                        <motion.span
-                          layoutId="nav-active"
-                          className="absolute -bottom-1.5 left-0 right-0 h-px bg-accent"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </>
-                  )}
+                <NavLink key={l.to} to={l.to} className={tabClass}>
+                  {l.label}
                 </NavLink>
               ))}
             </div>
@@ -124,42 +101,33 @@ export default function Nav() {
               {user ? (
                 <>
                   {isAdmin && (
-                    <NavLink to="/admin" className={linkClass}>
-                      <span className="flex items-center gap-1.5">
-                        <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                        Admin
-                      </span>
+                    <NavLink to="/admin" className={tabClass}>
+                      Approvals
                     </NavLink>
                   )}
-                  <Link to="/download" className={linkBtn('primary', 'sm')}>
-                    <Download className="h-4 w-4" aria-hidden="true" />
+                  <Link to="/download" className="btn btn-sm btn-issue">
                     Download
                   </Link>
-                  <Button variant="ghost" size="sm" isIconOnly onPress={handleSignOut} aria-label="Sign out">
-                    <LogOut className="h-4 w-4" aria-hidden="true" />
-                  </Button>
+                  <button type="button" className="btn btn-sm btn-quiet" onClick={handleSignOut}>
+                    Sign out
+                  </button>
                 </>
               ) : (
                 <>
-                  <Link to="/login" className={linkBtn('ghost', 'sm')}>
+                  <Link to="/login" className="btn btn-sm btn-quiet">
                     Sign in
                   </Link>
-                  <Link to="/signup" className={linkBtn('primary', 'sm')}>
-                    Get access
+                  <Link to="/signup" className="btn btn-sm btn-issue">
+                    Request access
                   </Link>
                 </>
               )}
             </div>
 
-            {/* 44px minimum touch target. Carries its own border/background so
-                it reads as a deliberate control — without them the focus ring
-                lands on nothing and looks like a stray circle after a tap. */}
+            {/* 44px minimum touch target, square like everything else. */}
             <button
-              /* bg-elevated! needs the important modifier: importing
-                 @heroui/styles after tailwindcss re-declares the `base` layer,
-                 which puts preflight's `button { background: transparent }`
-                 after `utilities` in the cascade. The plain utility loses. */
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-elevated! text-fg transition-colors hover:border-accent/40 md:hidden"
+              type="button"
+              className="my-2 flex h-11 w-11 items-center justify-center border border-rule text-chalk transition-colors hover:border-stamp md:hidden"
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? 'Close menu' : 'Open menu'}
               aria-expanded={open}
@@ -168,82 +136,77 @@ export default function Nav() {
             </button>
           </nav>
         </div>
-
-        {open && (
-          <div className="container-x md:hidden">
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-2 rounded-2xl border border-border bg-bg/95 p-3 shadow-xl backdrop-blur-xl"
-            >
-              <div className="flex flex-col gap-1">
-                {LINKS.map((l) => (
-                  <NavLink
-                    key={l.to}
-                    to={l.to}
-                    onClick={() => setOpen(false)}
-                    className={({ isActive }) =>
-                      `rounded-xl px-3 py-3 text-base font-medium ${
-                        isActive ? 'bg-elevated text-accent' : 'text-muted'
-                      }`
-                    }
-                  >
-                    {l.label}
-                  </NavLink>
-                ))}
-              </div>
-
-              <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
-                {user ? (
-                  <>
-                    {isAdmin && (
-                      <Link
-                        to="/admin"
-                        onClick={() => setOpen(false)}
-                        className={`${linkBtn('outline')} h-12 w-full`}
-                      >
-                        <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                        Admin
-                      </Link>
-                    )}
-                    <Link
-                      to="/download"
-                      onClick={() => setOpen(false)}
-                      className={`${linkBtn('primary')} h-12 w-full`}
-                    >
-                      <Download className="h-4 w-4" aria-hidden="true" />
-                      Download
-                    </Link>
-                    {/* h-12: matches the 48px nav links above and clears the
-                        44px minimum touch target. */}
-                    <Button variant="outline" fullWidth className="h-12" onPress={handleSignOut}>
-                      Sign out
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      to="/signup"
-                      onClick={() => setOpen(false)}
-                      className={`${linkBtn('primary')} h-12 w-full`}
-                    >
-                      Get access
-                    </Link>
-                    <Link
-                      to="/login"
-                      onClick={() => setOpen(false)}
-                      className={`${linkBtn('outline')} h-12 w-full`}
-                    >
-                      Sign in
-                    </Link>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        )}
       </header>
+
+      {/* Sheet menu: ruled rows butting together, no gaps, no rounding. */}
+      {open && (
+        <div className="sticky top-14 z-40 border-b border-rule bg-sheet md:hidden">
+          <div className="container-x">
+            <div className="border-x border-rule">
+              {LINKS.map((l) => (
+                <NavLink
+                  key={l.to}
+                  to={l.to}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    `flex min-h-12 items-center border-b border-rule-soft px-4 font-mono
+                     text-[0.6875rem] uppercase tracking-[0.18em] ${
+                       isActive ? 'bg-sheet-raised text-stamp' : 'text-chalk-2'
+                     }`
+                  }
+                >
+                  {l.label}
+                </NavLink>
+              ))}
+
+              {user ? (
+                <>
+                  {isAdmin && (
+                    <NavLink
+                      to="/admin"
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-12 items-center border-b border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-chalk-2"
+                    >
+                      Approvals
+                    </NavLink>
+                  )}
+                  <Link
+                    to="/download"
+                    onClick={() => setOpen(false)}
+                    className="btn btn-issue w-full"
+                  >
+                    Download
+                  </Link>
+                  <button
+                    type="button"
+                    className="btn btn-line w-full border-x-0 border-b-0"
+                    onClick={handleSignOut}
+                  >
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/signup"
+                    onClick={() => setOpen(false)}
+                    className="btn btn-issue w-full"
+                  >
+                    Request access
+                  </Link>
+                  <Link
+                    to="/login"
+                    onClick={() => setOpen(false)}
+                    className="btn btn-line w-full border-x-0 border-b-0"
+                  >
+                    Sign in
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

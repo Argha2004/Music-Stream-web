@@ -1,72 +1,56 @@
-/* Tailwind v4 + HeroUI v3.
-   Import order is load-bearing: Tailwind must come before HeroUI styles. */
-@import 'tailwindcss';
-@import '@heroui/styles';
-
 /* ---------------------------------------------------------------------------
-   Brand tokens. Replaces the old tailwind.config.js `theme.extend` block —
-   in v4 the theme lives in CSS. Each --color-* here generates the matching
-   utilities (bg-bg, text-fg, border-border, …) exactly as before.
+   MusicStream — "The Controlled Copy"
 
-   The palette is a warm, near-black editorial dark: neutrals carry a faint
-   warm cast (rather than the old blue-black) so the coral accent sits in the
-   same temperature family instead of fighting it. Coral is used sparingly —
-   as ink, not as glow.
+   The site is the app's controlled specification document: a cyanotype drawing
+   sheet, issued to a named holder, carrying a revision history and an approval
+   stamp. Deep blueprint blue ground, white drafting lettering, one survey
+   orange that means "live action" or "approved" and nothing else.
+
+   Two hard inversions of the system this replaced, both load-bearing:
+     - Every corner is square. Radius is 0 site-wide.
+     - There are no shadows. A printed sheet does not cast one; depth comes
+       from line weight, tonal recess, and 45° hatching.
+
+   HeroUI is deliberately NOT imported. Every control is rebuilt below in the
+   drafting vocabulary, so a stock component library would only add weight and
+   a cascade to fight. See DESIGN.md.
    --------------------------------------------------------------------------- */
+@import 'tailwindcss';
+
 @theme {
-  /* Semantic tokens — never use raw hex in components. */
-  --color-bg: #0b0a09;
-  --color-surface: #131110;
-  --color-elevated: #1c1917;
-  --color-border: #2a2623;
-  --color-fg: #f7f3ee;
-  --color-muted: #a8a097;
-  --color-dim: #6f6a63;
+  /* --- The sheet ------------------------------------------------------- */
+  --color-sheet: #0a2440;
+  --color-sheet-deep: #06172a;
+  --color-sheet-raised: #0e3055;
 
-  /* Brand accent, matched to the Android app's coral. */
-  --color-accent: #ff6b5b;
-  --color-accent-hi: #ff8a72;
-  --color-on-accent: #23150f;
-  /* Secondary brand hue — a violet that pairs with coral for the new "aurora"
-     gradient system (sunset: coral → magenta → violet). Used only in gradients,
-     glows and glass edges; coral stays the single flat brand colour. */
-  --color-accent-2: #8b6cff;
-  --color-accent-2-hi: #a98cff;
-  --color-success: #4ade80;
-  --color-danger: #f87171;
+  /* --- Line work ------------------------------------------------------- */
+  --color-rule: #3a6f9e;
+  --color-rule-soft: #1e4770;
 
-  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  /* Editorial display face for headings — a grotesque, not the body sans, so
-     titles read as set with intent rather than defaulted. Generates the
-     `font-display` utility. */
-  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --container-content: 1120px;
+  /* --- Lettering ------------------------------------------------------- */
+  --color-chalk: #eef6ff;
+  --color-chalk-2: #a8c9e8;
+  --color-chalk-3: #7099c0;
 
-  --animate-fade-up: fade-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* --- The one accent: action + approval ------------------------------- */
+  --color-stamp: #ff5a1f;
+  --color-stamp-hi: #ff7c47;
+  --color-on-stamp: #180701;
 
-  /* Cheap, GPU-only equalizer bar bounce for the waveform motif. Animating
-     scaleY on a handful of thin bars costs nothing to composite — the polar
-     opposite of the old blurred aurora blobs it replaces. */
+  /* --- Correction ink + verification ----------------------------------- */
+  --color-void: #ff4d4d;
+  --color-checked: #35d39a;
+
+  --font-sans: Archivo, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Azeret Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --container-content: 1240px;
+
+  /* Rules draw themselves along their length rather than fading in. */
+  --animate-plot-x: plot-x 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-stamp-in: stamp-in 300ms cubic-bezier(0.2, 0, 0, 1) both;
+  /* The level plot's needle movement. scaleY only — no layout, no paint. */
   --animate-bar: bar 1.1s ease-in-out infinite;
-
-  /* Hero showcase motion. All transform/opacity only so the compositor keeps
-     them on the GPU; every one is disabled by the reduced-motion block below. */
-  --animate-shimmer: shimmer 5.5s linear infinite;
-  --animate-aurora: aurora 20s ease-in-out infinite;
-  --animate-aurora-slow: aurora 28s ease-in-out infinite reverse;
-  /* Slow left-right pan for gradient-clipped text and gradient borders. */
-  --animate-gradient: gradient-pan 8s ease infinite;
-}
-
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 @keyframes bar {
@@ -79,167 +63,28 @@
   }
 }
 
-/* Sweeps a light band across clipped heading text (used via .text-shimmer). */
-@keyframes shimmer {
+@keyframes plot-x {
+  from {
+    transform: scaleX(0);
+  }
   to {
-    background-position: 200% center;
+    transform: scaleX(1);
   }
 }
 
-/* Slow drift + breathe for the hero's coral wash. Only translate/scale, so an
-   already-painted blurred layer is just re-composited each frame, not repainted. */
-@keyframes aurora {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
+/* A decision landing: arrives oversized and slightly turned, then settles. */
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    transform: scale(1.5) rotate(-9deg);
   }
-  33% {
-    transform: translate3d(6%, -4%, 0) scale(1.12);
+  60% {
+    opacity: 0.85;
   }
-  66% {
-    transform: translate3d(-5%, 5%, 0) scale(0.94);
+  to {
+    opacity: 0.85;
+    transform: scale(1) rotate(-3.5deg);
   }
-}
-
-/* Pans a wide gradient back and forth under clip-text / border-box fills. */
-@keyframes gradient-pan {
-  0%,
-  100% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
-}
-
-/* ---------------------------------------------------------------------------
-   Point HeroUI's semantic variables at the brand palette above, so every
-   HeroUI component inherits the site's look without per-component overrides.
-   The site is dark-only, so these are declared once on :root and mirrored to
-   HeroUI's dark selectors rather than split across light/dark themes.
-   --------------------------------------------------------------------------- */
-:root,
-.dark,
-[data-theme='dark'] {
-  --background: var(--color-bg);
-  --background-secondary: var(--color-surface);
-  --background-tertiary: var(--color-elevated);
-  --foreground: var(--color-fg);
-  --muted: var(--color-muted);
-
-  --surface: var(--color-surface);
-  --surface-foreground: var(--color-fg);
-  --surface-secondary: var(--color-elevated);
-  --surface-secondary-foreground: var(--color-fg);
-  --surface-hover: var(--color-elevated);
-
-  --border: var(--color-border);
-  --border-secondary: var(--color-border);
-  --separator: var(--color-border);
-
-  --accent: var(--color-accent);
-  --accent-foreground: var(--color-on-accent);
-  --accent-hover: var(--color-accent-hi);
-
-  --danger: var(--color-danger);
-  --success: var(--color-success);
-  --focus: var(--color-accent);
-  --link: var(--color-accent);
-
-  /* Fields: dark, pill-adjacent, coral focus — matches the old .field class. */
-  --field-background: var(--color-elevated);
-  --field-foreground: var(--color-fg);
-  --field-placeholder: var(--color-dim);
-  --field-border: var(--color-border);
-  --field-border-hover: color-mix(in oklab, var(--color-accent) 50%, transparent);
-  --field-border-focus: var(--color-accent);
-  --field-radius: 0.75rem;
-  /* HeroUI ships 0px here — a filled, borderless field. On this dark surface a
-     borderless input is indistinguishable from the card behind it, so give
-     every field back a real edge. */
-  --field-border-width: 1px;
-
-  --radius: 0.75rem;
-}
-
-/* Field sizing. Deliberately unlayered so it outranks HeroUI's layered rules,
-   which set .input to 14px with 8px vertical padding — about 36px tall. That
-   reads as cramped next to a full-width button, and 16px also stops iOS from
-   zooming the viewport on focus. Restores the comfort of the old .field. */
-.input,
-.textarea {
-  padding-block: 0.75rem;
-  padding-inline: 0.875rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  transition: border-color 200ms ease;
-}
-
-/* HeroUI defines --field-border-hover/-focus but never applies them to .input,
-   which leaves a field with outline:none and no focus indication of its own.
-   Keyed off :focus rather than :focus-visible: for text inputs a visible focus
-   state is wanted for pointer users too, and it must not depend on the
-   heuristic. The global :focus-visible ring in @layer base still applies. */
-.input:hover,
-.textarea:hover {
-  border-color: var(--field-border-hover);
-}
-
-.input:focus,
-.textarea:focus {
-  border-color: var(--field-border-focus);
-}
-
-/* ---------------------------------------------------------------------------
-   Bolder refresh (unlayered so these outrank HeroUI's layered component rules).
-   --------------------------------------------------------------------------- */
-
-/* Primary buttons become a coral→magenta→violet "sunset" gradient with a soft
-   two-tone glow, so every CTA on the site reads as a lit, tactile control. */
-.button--primary {
-  background-image: linear-gradient(
-    120deg,
-    var(--color-accent-hi) 0%,
-    var(--color-accent) 45%,
-    var(--color-accent-2) 115%
-  );
-  background-size: 160% auto;
-  box-shadow:
-    0 10px 30px -12px color-mix(in oklab, var(--color-accent) 70%, transparent),
-    0 8px 24px -14px color-mix(in oklab, var(--color-accent-2) 70%, transparent);
-  transition:
-    background-position 400ms ease,
-    filter 200ms ease,
-    box-shadow 200ms ease,
-    transform 150ms ease;
-}
-.button--primary:hover {
-  background-position: 100% center;
-  filter: brightness(1.06) saturate(1.05);
-  box-shadow:
-    0 16px 38px -12px color-mix(in oklab, var(--color-accent) 78%, transparent),
-    0 12px 30px -14px color-mix(in oklab, var(--color-accent-2) 78%, transparent);
-}
-.button--primary:active {
-  transform: translateY(1px);
-}
-
-/* Glassmorphic panel: a translucent, blurred, top-lit surface with a soft
-   inner highlight, so cards read as frosted glass floating over the aurora mesh
-   rather than flat rectangles. Unlayered so it beats HeroUI's Card fill. */
-.card-lift {
-  background-color: color-mix(in oklab, var(--color-surface) 72%, transparent);
-  background-image: linear-gradient(
-    158deg,
-    rgba(255, 255, 255, 0.07),
-    rgba(255, 255, 255, 0.012) 60%
-  );
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  border-color: color-mix(in oklab, var(--color-fg) 14%, transparent);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.09),
-    0 28px 56px -30px rgba(0, 0, 0, 0.92);
 }
 
 @layer base {
@@ -249,43 +94,46 @@
   }
 
   body {
-    @apply bg-bg text-fg font-sans antialiased;
-    /* A single, static, low-cost brand wash at the very top of the page.
-       No `background-attachment: fixed` — that forces a full-viewport repaint
-       on every scroll frame and was a real source of jank on phones. This
-       gradient scrolls away with the hero, where it belongs. */
-    /* Two-hue aurora mesh: a coral wash from the top-left and a violet wash from
-       the top-right, so the whole page sits under a soft sunset glow. Static and
-       non-fixed, so it costs nothing on scroll. */
+    @apply bg-sheet text-chalk font-sans antialiased;
+    /* The blueprint grid. Two hairline sets at 34px, drawn once and scrolled
+       with the page — no fixed attachment, which would repaint every frame. */
     background-image:
-      radial-gradient(58% 42% at 12% -6%, rgba(255, 107, 91, 0.22), transparent 60%),
-      radial-gradient(52% 40% at 92% 4%, rgba(139, 108, 255, 0.2), transparent 62%),
-      radial-gradient(90% 60% at 50% -12%, rgba(255, 107, 91, 0.06), transparent 66%);
-    background-repeat: no-repeat;
-    background-attachment: scroll;
+      linear-gradient(to right, var(--color-rule-soft) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-rule-soft) 1px, transparent 1px);
+    background-size: 34px 34px;
+    background-position: -1px -1px;
   }
 
-  /* Editorial headings default to the display face and tight tracking, so any
-     h1–h3 on the site reads consistently without repeating classes. */
+  /* Structure is uppercase; content is sentence case. The case difference is
+     how you tell the frame from what it holds, so headings carry it here. */
   h1,
   h2,
   h3 {
-    font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    @apply font-sans uppercase;
+    letter-spacing: 0.01em;
   }
 
-  /* Visible focus ring for keyboard users on every interactive element. */
+  /* Square, like everything else. */
   :focus-visible {
-    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg rounded-md;
+    outline: 2px solid var(--color-stamp);
+    outline-offset: 2px;
+    border-radius: 0;
   }
 
   ::selection {
-    @apply bg-accent text-on-accent;
+    background: var(--color-stamp);
+    color: var(--color-on-stamp);
   }
 
-  /* iOS zooms the viewport when a focused control's text is under 16px. The old
-     .field class set this per-input; HeroUI's Input doesn't, so enforce it here
-     for every text control instead of losing the behaviour in the migration. */
+  /* Figures are read from an instrument, not spoken. */
+  code,
+  kbd,
+  samp,
+  pre {
+    @apply font-mono;
+  }
+
+  /* 16px stops iOS zooming the viewport when a control takes focus. */
   @media (max-width: 767px) {
     input,
     textarea,
@@ -297,174 +145,358 @@
 
 @layer components {
   .container-x {
-    @apply mx-auto w-[92%] max-w-content;
+    @apply mx-auto w-[94%] max-w-content;
   }
 
-  /* Editorial section eyebrow — a hairline tick, a two-digit index, and a
-     tracked label. Used across every page in place of the old lone coral
-     mini-caps line, so sections read like numbered chapters. */
-  .eyebrow {
-    @apply flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-dim;
-    font-family: var(--font-display);
-  }
-  .eyebrow-index {
-    @apply text-accent tabular-nums;
+  /* --- Type roles ------------------------------------------------------ */
+
+  /* Title-block field names, table headers, callout tags, button lettering. */
+  .label {
+    @apply font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-chalk-3;
   }
 
-  /* Animated coral gradient clipped to text — used for the hero's accent line.
-     Falls back to a solid coral fill wherever background-clip:text is missing. */
-  .text-shimmer {
-    color: var(--color-accent);
-    background: linear-gradient(
-      100deg,
-      var(--color-accent) 0%,
-      var(--color-accent-hi) 28%,
-      #ffd9cf 50%,
-      var(--color-accent-hi) 72%,
-      var(--color-accent) 100%
+  /* Every numeral on the site. */
+  .figure {
+    @apply font-mono tabular-nums text-chalk;
+  }
+
+  /* The subject of a sheet. One per page. */
+  .drawing-title {
+    font-family: var(--font-sans);
+    font-size: clamp(2.75rem, 9vw, 6rem);
+    font-weight: 800;
+    font-stretch: 110%;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--color-chalk);
+  }
+
+  .sheet-heading {
+    @apply font-sans text-[1.75rem] font-bold uppercase;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+  }
+
+  .clause-heading {
+    @apply font-sans text-lg font-bold uppercase tracking-[0.06em];
+  }
+
+  /* --- The sheet frame ------------------------------------------------- */
+
+  /* A drawn frame with an inset hairline. Corner registration ticks are
+     placed by .sheet-ticks below, the way a print carries crop marks. */
+  .sheet-frame {
+    position: relative;
+    border: 1px solid var(--color-rule);
+    box-shadow: inset 0 0 0 6px var(--color-sheet), inset 0 0 0 7px var(--color-rule-soft);
+    background-color: color-mix(in oklab, var(--color-sheet) 92%, transparent);
+  }
+
+  .sheet-ticks::before,
+  .sheet-ticks::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--color-stamp);
+    pointer-events: none;
+  }
+  .sheet-ticks::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+  }
+  .sheet-ticks::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+  }
+
+  /* --- Plates (the container primitive) -------------------------------- */
+
+  .plate {
+    @apply border border-rule bg-sheet-deep;
+  }
+
+  /* A plate announces what it is with a raised, ruled header strip. */
+  .plate-hd {
+    @apply flex items-center gap-2.5 border-b border-rule bg-sheet-raised px-4 py-2.5;
+  }
+
+  .plate-bd {
+    @apply p-5 sm:p-6;
+  }
+
+  /* Interactive plates take an orange edge — nothing lifts, nothing glows. */
+  .plate-link {
+    transition: border-color 160ms ease, background-color 160ms ease;
+  }
+  .plate-link:hover {
+    border-color: var(--color-stamp);
+    background-color: var(--color-sheet-raised);
+  }
+
+  /* --- Controls -------------------------------------------------------- */
+
+  .btn {
+    @apply inline-flex h-12 items-center justify-center gap-2.5 px-6 text-center
+           font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em];
+    border-radius: 0;
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease,
+      color 160ms ease, transform 120ms ease;
+  }
+
+  .btn-sm {
+    @apply h-10 gap-2 px-4 text-[0.6875rem];
+  }
+
+  /* The single live action on a sheet. */
+  .btn-issue {
+    @apply bg-stamp text-on-stamp;
+    font-weight: 700;
+    border: 1px solid var(--color-stamp);
+  }
+  .btn-issue:hover {
+    @apply bg-stamp-hi;
+    border-color: var(--color-stamp-hi);
+  }
+  .btn-issue:active {
+    transform: translateY(1px);
+  }
+
+  .btn-line {
+    @apply border border-rule bg-transparent text-chalk;
+  }
+  .btn-line:hover {
+    @apply bg-sheet-raised;
+    border-color: var(--color-stamp);
+  }
+  .btn-line:active {
+    transform: translateY(1px);
+  }
+
+  .btn-void {
+    @apply border bg-transparent text-void;
+    border-color: color-mix(in oklab, var(--color-void) 55%, transparent);
+  }
+  .btn-void:hover {
+    background-color: color-mix(in oklab, var(--color-void) 12%, transparent);
+    border-color: var(--color-void);
+  }
+
+  .btn-quiet {
+    @apply border border-transparent bg-transparent text-chalk-3;
+  }
+  .btn-quiet:hover {
+    @apply text-chalk;
+    border-color: var(--color-rule);
+  }
+
+  /* Unavailable takes the hatch, the way a drawing marks a void area. */
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    @apply cursor-not-allowed text-chalk-3;
+    background-color: var(--color-sheet-deep);
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--color-rule-soft) 0,
+      var(--color-rule-soft) 1px,
+      transparent 1px,
+      transparent 6px
     );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: var(--animate-shimmer);
+    border-color: var(--color-rule-soft);
+    transform: none;
   }
 
-  /* Coral→violet gradient clipped to text — for headline keywords and section
-     titles. Slowly pans so the sunset drifts across the letters. */
-  .text-gradient {
-    color: var(--color-accent);
-    background: linear-gradient(
-      100deg,
-      var(--color-accent-hi) 0%,
-      var(--color-accent) 38%,
-      var(--color-accent-2-hi) 78%,
-      var(--color-accent-2) 100%
+  /* --- Fields ---------------------------------------------------------- */
+
+  .field-label {
+    @apply mb-2 block font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-chalk-3;
+  }
+
+  .field-input {
+    @apply block w-full border border-rule bg-sheet-deep px-3.5 py-3 font-mono text-base text-chalk;
+    border-radius: 0;
+    transition: border-color 160ms ease;
+  }
+  .field-input::placeholder {
+    color: var(--color-chalk-3);
+  }
+  .field-input:hover {
+    border-color: var(--color-chalk-3);
+  }
+  /* Keyed to :focus, not :focus-visible — for a text field a pointer user
+     wants the same confirmation a keyboard user gets. */
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-stamp);
+  }
+  .field-input[aria-invalid='true'] {
+    border-color: var(--color-void);
+  }
+
+  /* --- Stamps ---------------------------------------------------------- */
+
+  /* Drawn at 85% so the sheet reads through the ink. Applied, never centred. */
+  .stamp {
+    @apply inline-block px-4 py-2 font-mono text-sm font-bold uppercase tracking-[0.2em];
+    border: 2px solid var(--color-stamp);
+    box-shadow: inset 0 0 0 1px var(--color-stamp);
+    color: var(--color-stamp);
+    opacity: 0.85;
+    transform: rotate(-3.5deg);
+  }
+
+  .stamp-void {
+    border-color: var(--color-void);
+    box-shadow: inset 0 0 0 1px var(--color-void);
+    color: var(--color-void);
+    transform: rotate(3deg);
+  }
+
+  /* --- Title block ------------------------------------------------------ */
+
+  .title-block {
+    @apply grid border-l border-t border-rule bg-sheet-deep;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 640px) {
+    .title-block {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  /* Cells butt against a shared rule — no gaps inside a ruled object. */
+  .tb-cell {
+    @apply flex min-w-0 flex-col gap-1.5 border-b border-r border-rule px-4 py-3;
+  }
+
+  .tb-k {
+    @apply font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-chalk-3;
+  }
+
+  .tb-v {
+    @apply font-mono text-[0.875rem] font-medium tabular-nums text-chalk;
+    overflow-wrap: anywhere;
+  }
+
+  /* --- Register (admin rows, revision table) ---------------------------- */
+
+  .reg {
+    @apply border border-rule bg-sheet-deep;
+  }
+
+  .reg-hd {
+    @apply border-b border-rule bg-sheet-raised px-4 py-2.5
+           font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-chalk-3;
+  }
+
+  .reg-row {
+    @apply border-b border-rule-soft px-4 py-4;
+  }
+  .reg-row:last-child {
+    border-bottom: 0;
+  }
+
+  /* --- Dimension callout ------------------------------------------------ */
+
+  .callout-line {
+    @apply relative h-px min-w-6 flex-1 bg-rule;
+  }
+  /* The terminator tick at the measured end. */
+  .callout-line::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+    background: var(--color-rule);
+  }
+
+  /* --- Hatch (unavailable / not yet issued) ----------------------------- */
+
+  .hatch {
+    background-color: var(--color-sheet-deep);
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--color-rule-soft) 0,
+      var(--color-rule-soft) 1px,
+      transparent 1px,
+      transparent 6px
     );
-    background-size: 220% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: var(--animate-gradient);
   }
 
-  /* Gradient hairline border over a glass fill — the "bento" tile edge. The
-     padding-box/border-box double background paints a coral→violet rim without
-     an extra wrapper element. */
-  .gradient-border {
-    border: 1px solid transparent;
-    border-radius: 1.25rem;
-    background:
-      linear-gradient(
-          158deg,
-          color-mix(in oklab, var(--color-surface) 72%, transparent),
-          color-mix(in oklab, var(--color-bg) 60%, transparent)
-        )
-        padding-box,
-      linear-gradient(
-          135deg,
-          color-mix(in oklab, var(--color-accent) 55%, transparent),
-          color-mix(in oklab, var(--color-accent-2) 55%, transparent)
-        )
-        border-box;
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    transition:
-      transform 240ms ease,
-      box-shadow 240ms ease;
-  }
-  .gradient-border:hover {
-    transform: translateY(-4px);
-    box-shadow:
-      0 30px 60px -30px rgba(0, 0, 0, 0.9),
-      0 0 40px -12px color-mix(in oklab, var(--color-accent) 40%, transparent);
-  }
-
-  /* Gradient icon chip used inside bento tiles. */
-  .icon-badge {
-    @apply flex h-11 w-11 items-center justify-center rounded-xl text-on-accent;
-    background-image: linear-gradient(135deg, var(--color-accent-hi), var(--color-accent-2));
-    box-shadow: 0 8px 20px -10px color-mix(in oklab, var(--color-accent) 60%, transparent);
-  }
-
-  /* Editorial card: hairline edge on the base surface, no glow. Hover lifts the
-     border to coral rather than casting shadow. */
-  .card-edit {
-    @apply rounded-2xl border border-border bg-surface transition-colors duration-300;
-  }
-  .card-edit-hover {
-    @apply hover:border-accent/40;
-  }
-
-  /* Content panels: a hairline top highlight plus a soft, deep shadow so cards
-     read as lifted off the near-black background instead of floating flat.
-     Applied on top of HeroUI's <Card>, which supplies the surface + border. */
-  .card-lift {
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.045),
-      0 20px 44px -30px rgba(0, 0, 0, 0.85);
-  }
-
-  /* Interactive panels gain a coral edge and a gentle rise on hover. Pair with
-     .card-lift for the resting depth. */
-  .card-interactive {
-    transition:
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      transform 220ms ease;
-  }
-  .card-interactive:hover {
-    border-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
-    transform: translateY(-3px);
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
-      0 28px 52px -28px rgba(0, 0, 0, 0.9);
-  }
+  /* --- Documentation prose ---------------------------------------------- */
 
   .prose-doc h2 {
-    @apply mt-12 mb-4 text-2xl font-bold tracking-tight text-fg scroll-mt-24;
+    @apply mt-14 mb-5 font-sans text-2xl font-bold uppercase tracking-[0.02em] text-chalk scroll-mt-28;
   }
   .prose-doc h3 {
-    @apply mt-8 mb-3 text-lg font-semibold text-fg scroll-mt-24;
+    @apply mt-9 mb-3 font-sans text-base font-bold uppercase tracking-[0.06em] text-chalk scroll-mt-28;
   }
+  /* Content is sentence case and set for reading, not for structure. */
   .prose-doc p,
   .prose-doc li {
-    @apply text-muted leading-relaxed;
+    @apply font-sans text-base leading-[1.7] text-chalk-2 normal-case;
   }
   .prose-doc p {
     @apply mb-4;
   }
   .prose-doc ul {
-    @apply mb-4 list-disc space-y-2 pl-6;
+    @apply mb-4 space-y-2 pl-5;
+    list-style: none;
+  }
+  /* A square marker, not a disc — nothing in this system is round. */
+  .prose-doc ul > li {
+    position: relative;
+  }
+  .prose-doc ul > li::before {
+    content: '';
+    position: absolute;
+    left: -1.25rem;
+    top: 0.6875em;
+    width: 5px;
+    height: 5px;
+    background: var(--color-stamp);
   }
   .prose-doc ol {
-    @apply mb-4 list-decimal space-y-2 pl-6;
+    @apply mb-4 list-decimal space-y-2 pl-5;
+  }
+  .prose-doc ol::marker,
+  .prose-doc ol > li::marker {
+    @apply font-mono text-chalk-3;
   }
   .prose-doc code {
-    @apply rounded bg-elevated px-1.5 py-0.5 text-sm text-accent-hi;
-    /* Inline code is often one long unbreakable token (paths, env var names).
-       Allow a mid-token break so it can't set a min-content floor wider than
-       a phone. Block code in <pre> scrolls instead — see below. */
+    @apply border border-rule-soft bg-sheet-deep px-1.5 py-0.5 font-mono text-[0.875rem] text-chalk;
+    /* Paths and env names are one long token; let them break rather than
+       setting a min-content floor wider than a phone. */
     overflow-wrap: anywhere;
   }
   .prose-doc pre {
-    @apply mb-4 overflow-x-auto rounded-xl border border-border bg-elevated p-4 text-sm;
+    @apply mb-4 overflow-x-auto border border-rule bg-sheet-deep p-4 text-[0.875rem];
   }
   .prose-doc pre code {
-    @apply bg-transparent p-0 text-muted;
-    /* Undo the inline-code wrapping: code blocks keep their formatting and
-       scroll inside the <pre>, which is already overflow-x-auto. */
+    @apply border-0 bg-transparent p-0 text-chalk-2;
     overflow-wrap: normal;
   }
   .prose-doc a {
-    @apply text-accent hover:underline;
+    @apply text-stamp underline decoration-stamp/40 underline-offset-4;
+  }
+  .prose-doc a:hover {
+    @apply decoration-stamp;
   }
   .prose-doc strong {
-    @apply text-fg;
+    @apply font-semibold text-chalk;
   }
 }
 
-/* Honour the user's motion preference across every animation on the site. */
+/* Honour the motion preference across every animation on the site. Rules
+   render fully drawn and stamps render already landed. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

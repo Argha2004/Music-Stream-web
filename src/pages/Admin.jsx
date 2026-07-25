@@ -1,21 +1,35 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { AlertCircle, Check, Hourglass, RefreshCw, ShieldCheck, UserX, Users } from 'lucide-react'
-import { Alert, Button, Card, Chip, Skeleton } from '@heroui/react'
 import { fetchProfiles, notifyDecision, setProfileStatus } from '../lib/supabase'
+import Sheet from '../components/Sheet'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 
+/**
+ * The approvals register — the operator's sheet.
+ *
+ * This is Operate mode: the task outranks expression. The world contributes the
+ * ruled register and the vocabulary of stamping a decision, but the row layout,
+ * the readable email, and the per-row busy state are all driven by what the job
+ * actually needs at 1am.
+ */
+
 const FILTERS = [
-  { id: 'pending', label: 'Pending' },
+  { id: 'pending', label: 'Undecided' },
   { id: 'approved', label: 'Approved' },
-  { id: 'rejected', label: 'Rejected' },
+  { id: 'rejected', label: 'Refused' },
   { id: 'all', label: 'All' },
 ]
 
-const STATUS_COLOR = {
-  pending: 'accent',
-  approved: 'success',
-  rejected: 'danger',
+const STATUS_TONE = {
+  pending: 'text-chalk-3',
+  approved: 'text-stamp',
+  rejected: 'text-void',
+}
+
+const STATUS_WORD = {
+  pending: 'Undecided',
+  approved: 'Approved',
+  rejected: 'Refused',
 }
 
 export default function Admin() {
@@ -24,7 +38,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [notice, setNotice] = useState(null)
-  // Per-row busy state so one action doesn't disable the whole table.
+  // Per-row busy state so one action doesn't disable the whole register.
   const [busyId, setBusyId] = useState(null)
 
   const load = useCallback(async () => {
@@ -89,127 +103,113 @@ export default function Admin() {
   const visible = filter === 'all' ? profiles : profiles.filter((p) => p.status === filter)
 
   return (
-    <div className="container-x py-16">
+    <Sheet label="Approvals register">
       <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <SectionLabel>Developer</SectionLabel>
-            <h1 className="mt-4 flex items-center gap-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              <ShieldCheck className="h-7 w-7 shrink-0 text-accent" aria-hidden="true" />
-              Access requests
-            </h1>
-            <p className="mt-4 text-muted">
-              Approve who can download MusicStream. Changes take effect immediately.
+            <SectionLabel index={8}>Sheet</SectionLabel>
+            <h1 className="drawing-title mt-6">Approvals</h1>
+          </div>
+          <button type="button" className="btn btn-line btn-sm" onClick={load}>
+            Refresh
+          </button>
+        </div>
+
+        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-chalk-2">
+          Approve who can download MusicStream. Changes take effect immediately.
+        </p>
+      </Reveal>
+
+      {/* Filters double as counters. aria-pressed keeps toggle semantics that a
+          plain styled button would otherwise lose. */}
+      <div className="mt-10 flex flex-wrap">
+        {FILTERS.map((f) => {
+          const active = filter === f.id
+          return (
+            <button
+              key={f.id}
+              type="button"
+              aria-pressed={active}
+              onClick={() => setFilter(f.id)}
+              className={`btn btn-sm -ml-px flex-1 border sm:flex-none ${
+                active
+                  ? 'border-stamp bg-stamp/10 text-stamp'
+                  : 'border-rule text-chalk-3 hover:text-chalk'
+              }`}
+            >
+              {f.label}
+              <span className="tabular-nums">{counts[f.id]}</span>
+            </button>
+          )
+        })}
+      </div>
+
+      {error && (
+        <div className="mt-8 border border-void bg-void/10 px-4 py-3" role="alert">
+          <p className="font-mono text-[0.875rem] leading-relaxed text-void">{error}</p>
+        </div>
+      )}
+
+      {/* aria-live so the outcome is announced without stealing focus. */}
+      {notice && (
+        <div
+          className={`mt-8 border px-4 py-3 ${
+            notice.tone === 'ok'
+              ? 'border-checked bg-checked/10'
+              : 'border-stamp bg-stamp/10'
+          }`}
+          aria-live="polite"
+        >
+          <p
+            className={`font-mono text-[0.875rem] leading-relaxed ${
+              notice.tone === 'ok' ? 'text-checked' : 'text-stamp'
+            }`}
+          >
+            {notice.text}
+          </p>
+        </div>
+      )}
+
+      <div className="mt-8">
+        {loading ? (
+          <div className="reg" aria-hidden="true">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="reg-row hatch h-20" />
+            ))}
+          </div>
+        ) : visible.length === 0 ? (
+          <div className="hatch flex flex-col items-center justify-center border border-rule px-6 py-16 text-center">
+            <span className="bg-sheet-deep px-3 py-1.5 label">
+              {filter === 'pending' ? 'No undecided requests' : `No ${filter} accounts`}
+            </span>
+            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+              {filter === 'pending'
+                ? "You're all caught up. New sign-ups will appear here."
+                : 'Nothing to show for this filter.'}
             </p>
           </div>
-
-          <Button variant="outline" className="h-11" onPress={load}>
-            <RefreshCw className="h-4 w-4" aria-hidden="true" />
-            Refresh
-          </Button>
-        </div>
-
-        {/* Filters double as counters. aria-pressed keeps the toggle semantics
-            that a plain styled button would otherwise lose. */}
-        <div className="mt-10 flex flex-wrap gap-2">
-          {FILTERS.map((f) => {
-            const active = filter === f.id
-            return (
-              <Button
-                key={f.id}
-                className="h-11"
-                variant={active ? 'primary' : 'outline'}
-                aria-pressed={active}
-                onPress={() => setFilter(f.id)}
-              >
-                {f.label}
-                <span className={`ml-1.5 tabular-nums ${active ? 'opacity-70' : 'text-dim'}`}>
-                  {counts[f.id]}
-                </span>
-              </Button>
-            )
-          })}
-        </div>
-
-        {error && (
-          <Alert status="danger" className="mt-6" role="alert">
-            <Alert.Indicator>
-              <AlertCircle className="h-4 w-4" aria-hidden="true" />
-            </Alert.Indicator>
-            <Alert.Content>
-              <Alert.Description>{error}</Alert.Description>
-            </Alert.Content>
-          </Alert>
-        )}
-
-        {/* aria-live so the outcome is announced without stealing focus. */}
-        {notice && (
-          <Alert
-            status={notice.tone === 'ok' ? 'success' : 'accent'}
-            className="mt-6"
-            aria-live="polite"
-          >
-            <Alert.Indicator>
-              {notice.tone === 'ok' ? (
-                <Check className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <AlertCircle className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Alert.Indicator>
-            <Alert.Content>
-              <Alert.Description>{notice.text}</Alert.Description>
-            </Alert.Content>
-          </Alert>
-        )}
-
-        <div className="mt-8">
-          {loading ? (
-            <div className="space-y-3">
-              {[0, 1, 2].map((i) => (
-                <Card key={i} variant="secondary" className="border border-border p-6">
-                  <Skeleton className="h-4 w-1/3" />
-                  <Skeleton className="mt-3 h-3 w-1/4" />
-                </Card>
-              ))}
+        ) : (
+          <div className="reg">
+            <div className="reg-hd hidden grid-cols-[1fr_8rem_14rem] gap-4 lg:grid">
+              <span>Account</span>
+              <span>Status</span>
+              <span className="text-right">Decision</span>
             </div>
-          ) : visible.length === 0 ? (
-            <Card variant="secondary" className="card-lift border border-border p-10 text-center">
-              {filter === 'pending' ? (
-                <Hourglass className="mx-auto h-10 w-10 text-dim" aria-hidden="true" />
-              ) : (
-                <Users className="mx-auto h-10 w-10 text-dim" aria-hidden="true" />
-              )}
-              <p className="mt-4 font-semibold">
-                {filter === 'pending' ? 'No pending requests' : `No ${filter} accounts`}
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                {filter === 'pending'
-                  ? "You're all caught up. New sign-ups will appear here."
-                  : 'Nothing to show for this filter.'}
-              </p>
-            </Card>
-          ) : (
-            <ul className="space-y-3">
+
+            <ul>
               {visible.map((p) => (
-                <li key={p.id}>
-                  {/* Stacked on phones: side-by-side crushed the email to ~40px
-                      and truncated it, so you couldn't read who you were
-                      approving. Row layout only once there's width for both. */}
-                  <Card
-                    variant="secondary"
-                    className="card-lift card-interactive flex flex-col items-stretch gap-3 border border-border p-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-3">
-                        {/* break-all, not truncate: you're deciding access
-                            based on this address, so a hidden tail could mean
-                            approving the wrong account. Wrap it instead. */}
-                        <p className="break-all font-semibold">{p.email}</p>
-                        <Chip color={STATUS_COLOR[p.status] || 'default'} size="sm">
-                          {p.status}
-                        </Chip>
-                      </div>
-                      <p className="mt-1 text-xs text-dim">
+                <li key={p.id} className="reg-row">
+                  {/* Stacked on phones: side-by-side crushed the email and
+                      truncated it, so you couldn't read who you were approving. */}
+                  <div className="grid gap-4 lg:grid-cols-[1fr_8rem_14rem] lg:items-center">
+                    <div className="min-w-0">
+                      {/* break-all, not truncate: you're deciding access based on
+                          this address, so a hidden tail could mean approving the
+                          wrong account. */}
+                      <p className="break-all font-mono text-[0.875rem] text-chalk">
+                        {p.email}
+                      </p>
+                      <p className="mt-1.5 font-mono text-[0.6875rem] tabular-nums tracking-[0.08em] text-chalk-3">
                         Requested {new Date(p.requested_at).toLocaleString()}
                         {p.decided_at
                           ? ` · decided ${new Date(p.decided_at).toLocaleDateString()}`
@@ -217,44 +217,50 @@ export default function Admin() {
                       </p>
                     </div>
 
-                    {/* h-11 clears the 44px touch minimum; flex-1 splits the
-                        width evenly on phones, natural width from sm up. */}
-                    <div className="flex shrink-0 gap-2">
+                    <div>
+                      <span
+                        className={`font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] ${
+                          STATUS_TONE[p.status] || 'text-chalk-3'
+                        }`}
+                      >
+                        {STATUS_WORD[p.status] || p.status}
+                      </span>
+                    </div>
+
+                    <div className="flex gap-0 lg:justify-end">
                       {p.status !== 'approved' && (
-                        <Button
-                          variant="secondary"
-                          className="h-11 flex-1 sm:flex-none"
-                          isDisabled={busyId === p.id}
-                          onPress={() => decide(p.id, p.email, 'approved')}
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-line flex-1 lg:flex-none"
+                          disabled={busyId === p.id}
+                          onClick={() => decide(p.id, p.email, 'approved')}
                         >
-                          <Check className="h-4 w-4" aria-hidden="true" />
                           Approve
-                        </Button>
+                        </button>
                       )}
                       {p.status !== 'rejected' && (
-                        <Button
-                          variant="danger-soft"
-                          className="h-11 flex-1 sm:flex-none"
-                          isDisabled={busyId === p.id}
-                          onPress={() => decide(p.id, p.email, 'rejected')}
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-void -ml-px flex-1 lg:flex-none"
+                          disabled={busyId === p.id}
+                          onClick={() => decide(p.id, p.email, 'rejected')}
                         >
-                          <UserX className="h-4 w-4" aria-hidden="true" />
-                          Reject
-                        </Button>
+                          Refuse
+                        </button>
                       )}
                     </div>
-                  </Card>
+                  </div>
                 </li>
               ))}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
 
-        <p className="mt-10 text-sm text-dim">
-          Approval is enforced in the database, not the browser — a rejected user cannot
-          reach the download page even by editing client state.
-        </p>
-      </Reveal>
-    </div>
+      <p className="mt-10 max-w-2xl font-sans text-base normal-case leading-[1.7] text-chalk-3">
+        Approval is enforced in the database, not the browser — a rejected user cannot
+        reach the download page even by editing client state.
+      </p>
+    </Sheet>
   )
 }

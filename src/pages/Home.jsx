@@ -1,95 +1,86 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  animate,
-  motion,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from 'framer-motion'
-import {
-  ArrowRight,
-  Download,
-  ListMusic,
-  Lock,
-  Mic2,
-  Moon,
-  Palette,
-  RefreshCw,
-  ShieldCheck,
-  SlidersHorizontal,
-  Smartphone,
-  Zap,
-} from 'lucide-react'
-import { buttonVariants } from '@heroui/react'
-import Reveal, { RevealGroup, RevealItem } from '../components/Reveal'
+import { animate, useInView, useReducedMotion } from 'framer-motion'
+import { useAuth } from '../context/AuthContext'
+import Sheet from '../components/Sheet'
+import Reveal, { Rule, RevealGroup, RevealItem } from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 import Waveform from '../components/Waveform'
-import HeroBackdrop from '../components/HeroBackdrop'
-import { useAuth } from '../context/AuthContext'
 
-/* HeroUI's Button takes no `as` prop, so routed CTAs are react-router Links
-   wearing HeroUI's button classes — keeps a real <a> for middle-click. */
-const linkBtn = (variant, size = 'lg') => buttonVariants({ variant, size })
+/* ---------------------------------------------------------------------------
+   DIRECTION CONTRACT — "The Controlled Copy"
 
-const FEATURES = [
+   THESIS: This is the app's controlled specification document, not a landing
+   page about an app. It refuses the category arrangement it replaced: centred
+   hero, angled phone mockup, icon feature-card grid, gradient CTA.
+
+   OWN-WORLD: Cyanotype blue drenched ground, white drafting lettering, one
+   survey orange meaning action or approval. Square corners, no shadows, no
+   glass. Depth from line weight, tonal recess and 45° hatching.
+
+   STORY: A visitor reads a spec'd, versioned, finished piece of software, sees
+   that access is issued rather than open, and requests issue.
+
+   FIRST VIEWPORT: Drawn sheet frame; the claim set as the drawing title at
+   display scale; the real screenshot as FIG. 1, the drawing's subject; the
+   app's actual figures pinned around it as dimension callouts. Primary action
+   sits directly under the title.
+
+   FORM: Technical standards document, candidate 5 of the grounded list, seed
+   key 9c0436ff, staged as a drawing sheet with title block.
+   --------------------------------------------------------------------------- */
+
+/* The app's real, measured specification. These are the figures that already
+   appeared on the site — presented here as what they are: measurements. */
+const SPEC = [
+  { value: '320', unit: 'kbps', label: 'Max bitrate' },
+  { value: '0', unit: '', label: 'Trackers' },
+  { value: '100', unit: '%', label: 'Ad-free' },
+  { value: '7.0', unit: '+', label: 'Android' },
+]
+
+/* Numbered clauses, not feature cards. Each is a capability the shipped APK
+   actually has. */
+const CLAUSES = [
   {
-    icon: Smartphone,
     title: 'Background playback',
     body: 'Full lock-screen and notification controls, powered by Media3 and ExoPlayer. Music keeps going when you leave the app.',
   },
   {
-    icon: Mic2,
     title: 'Synced lyrics',
     body: 'Karaoke-style lyrics that scroll and highlight the current line. Tap any line to jump straight to it.',
   },
   {
-    icon: Download,
     title: 'Offline downloads',
     body: 'Save tracks as original M4A, or convert to MP3 on-device with full metadata embedded.',
   },
   {
-    icon: SlidersHorizontal,
     title: 'Real equalizer',
     body: 'Five-band EQ plus bass boost, wired straight into the Android audio pipeline.',
   },
   {
-    icon: Palette,
     title: 'Make it yours',
     body: 'Pick from seven accent colours, or let Material You match the app to your wallpaper.',
   },
   {
-    icon: ListMusic,
     title: 'Playlists & library',
     body: 'Liked songs, listening history, and your own playlists — all stored locally on your device.',
   },
   {
-    icon: Moon,
     title: 'Built for dark',
     body: 'A true OLED-friendly dark theme, with an optional light mode that is just as considered.',
   },
   {
-    icon: RefreshCw,
     title: 'Updates in-app',
     body: 'The app checks this site on launch and tells you the moment a new version ships.',
   },
   {
-    icon: Zap,
     title: 'Genuinely fast',
     body: 'Native Kotlin and Jetpack Compose throughout. No web views, no bridges, no lag.',
   },
 ]
 
-const STATS = [
-  { value: '100%', label: 'Ad-free' },
-  { value: '0', label: 'Trackers' },
-  { value: '320', label: 'kbps audio' },
-  { value: '7.0+', label: 'Android' },
-]
-
-const PRIVACY_POINTS = [
+const DATA_HANDLING = [
   'No advertising or ad SDKs',
   'No third-party analytics or tracking',
   'No account required to use the app',
@@ -98,91 +89,18 @@ const PRIVACY_POINTS = [
 ]
 
 /**
- * Phone mockup wrapping a real screenshot of the app's home screen. The device
- * tilts in 3D toward the pointer (springed, so it settles rather than snapping)
- * and floats gently at rest — both disabled under reduced motion.
+ * Counts a figure up to its measured value when it first scrolls into view —
+ * an instrument settling on a reading. Keeps any non-numeric suffix and
+ * matches the source's decimals. Renders verbatim under reduced motion.
  */
-function PhoneMockup() {
-  const reduce = useReducedMotion()
-
-  // Pointer position within the card, normalised to [-0.5, 0.5].
-  const px = useMotionValue(0)
-  const py = useMotionValue(0)
-  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [9, -9]), {
-    stiffness: 150,
-    damping: 16,
-  })
-  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-11, 11]), {
-    stiffness: 150,
-    damping: 16,
-  })
-
-  function handleMove(e) {
-    if (reduce) return
-    const r = e.currentTarget.getBoundingClientRect()
-    px.set((e.clientX - r.left) / r.width - 0.5)
-    py.set((e.clientY - r.top) / r.height - 0.5)
-  }
-  function reset() {
-    px.set(0)
-    py.set(0)
-  }
-
-  return (
-    <motion.div
-      onPointerMove={handleMove}
-      onPointerLeave={reset}
-      initial={reduce ? false : { opacity: 0, y: 24 }}
-      animate={reduce ? false : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-      style={reduce ? undefined : { rotateX, rotateY, transformPerspective: 1000 }}
-      className="group relative mx-auto w-[220px] [transform-style:preserve-3d] sm:w-[248px] lg:w-[270px]"
-    >
-      {/* Coral wash behind the device, pushed back in Z so the tilt parallaxes it. */}
-      <div
-        className="absolute -inset-8 rounded-[3rem] bg-accent/10 blur-2xl transition-opacity duration-500 group-hover:bg-accent/20"
-        style={{ transform: 'translateZ(-40px)' }}
-        aria-hidden="true"
-      />
-
-      <motion.div
-        style={reduce ? undefined : { transform: 'translateZ(36px)' }}
-        animate={reduce ? undefined : { y: [0, -10, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        className="relative rounded-[2.5rem] border border-border bg-surface p-2.5 shadow-2xl shadow-black/40"
-      >
-        {/* The screenshot carries its own status bar, so the frame draws no
-            notch — one would sit on top of the real one. */}
-        <img
-          src="/Home.jpeg"
-          alt="The MusicStream app's home screen, showing Quick Picks, Trending Now and Made For You sections."
-          width={1080}
-          height={2340}
-          /* Above the fold: load eagerly and early rather than lazily. */
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-          className="block w-full rounded-[2rem] object-cover"
-        />
-      </motion.div>
-    </motion.div>
-  )
-}
-
-/**
- * Counts up from zero to the stat's value when it first scrolls into view.
- * Keeps any non-numeric suffix ("%", "+") and matches the source's decimals.
- * Renders the value verbatim under reduced motion or if it isn't number-led.
- */
-function CountUp({ value }) {
+function Reading({ value }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const reduce = useReducedMotion()
 
   const match = /^([\d.]+)(.*)$/.exec(value)
-  // Derive only primitives from the regex match — the match array itself is a
-  // fresh object every render, so it must never go in the effect deps below or
-  // each setText re-render would restart the animation from 0 forever.
+  // Derive only primitives from the match — the array itself is a fresh object
+  // each render and must never land in the effect deps below.
   const isNumeric = match != null
   const target = match ? parseFloat(match[1]) : 0
   const suffix = match ? match[2] : ''
@@ -195,7 +113,7 @@ function CountUp({ value }) {
   useEffect(() => {
     if (!isNumeric || reduce || !inView) return
     const controls = animate(0, target, {
-      duration: 1.1,
+      duration: 1,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (v) => setText(`${v.toFixed(decimals)}${suffix}`),
     })
@@ -205,196 +123,220 @@ function CountUp({ value }) {
   return <span ref={ref}>{!isNumeric || reduce ? value : text}</span>
 }
 
+/** A measurement with a leader line running to the subject it measures. */
+function Callout({ value, unit, label }) {
+  return (
+    <div className="flex items-center gap-4 border-b border-rule-soft py-4 last:border-b-0">
+      <div className="flex w-24 shrink-0 items-baseline gap-1">
+        <span className="font-mono text-2xl font-bold tabular-nums text-chalk">
+          <Reading value={value} />
+        </span>
+        {unit && <span className="font-mono text-[0.6875rem] text-chalk-3">{unit}</span>}
+      </div>
+      <span className="callout-line" aria-hidden="true" />
+      <span className="label shrink-0">{label}</span>
+    </div>
+  )
+}
+
 export default function Home() {
-  const { user } = useAuth()
-  const reduce = useReducedMotion()
+  const { user, isApproved } = useAuth()
 
   return (
-    <>
-      {/* ---------------- Hero ---------------- */}
-      <section className="relative overflow-hidden pb-16 pt-12 sm:pt-20">
-        <HeroBackdrop />
-        <div className="container-x grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-          <div>
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 16 }}
-              animate={reduce ? false : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-balance">
-                <Waveform bars={5} height={14} barWidth={2.5} gap={2} />
-                <span className="font-display">Native Android · Invite only</span>
-              </div>
+    <Sheet label="Specification — MusicStream for Android">
+      {/* ---------------- Title field ---------------- */}
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16">
+        <div>
+          <SectionLabel index={1}>Subject</SectionLabel>
 
-              <h1 className="mt-6 text-balance text-[2.9rem] font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.75rem]">
-                Your music.
-                <br />
-                No ads.
-                <br />
-                <span className="text-gradient">No noise.</span>
-              </h1>
+          <h1 className="drawing-title mt-6">
+            Your music.
+            <br />
+            No ads.
+            <br />
+            No noise.
+          </h1>
 
-              <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-                A fast, native music player for Android — background playback, synced
-                lyrics, a real equalizer and offline downloads. Built in Kotlin, with
-                nothing between you and the music.
-              </p>
+          <p className="mt-8 max-w-xl font-sans text-base leading-[1.7] normal-case text-chalk-2">
+            A fast, native music player for Android — background playback, synced lyrics, a
+            real equalizer and offline downloads. Built in Kotlin, with nothing between you
+            and the music.
+          </p>
 
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  to={user ? '/download' : '/signup'}
-                  className={`${linkBtn('primary')} group/cta transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0`}
-                >
-                  <Download className="h-4 w-4" aria-hidden="true" />
-                  {user ? 'Download the app' : 'Get access'}
-                </Link>
-                <Link
-                  to="/docs"
-                  className={`${linkBtn('outline')} group/docs transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0`}
-                >
-                  Read the docs
-                  <ArrowRight
-                    className="h-4 w-4 transition-transform duration-200 group-hover/docs:translate-x-0.5"
-                    aria-hidden="true"
-                  />
-                </Link>
-              </div>
-
-              <p className="mt-6 flex items-center gap-2 text-sm text-dim">
-                <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-                Sign-in required — access is limited to approved accounts.
-              </p>
-            </motion.div>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
+              {user ? 'Go to download' : 'Request issue'}
+            </Link>
+            <Link to="/docs" className="btn btn-line">
+              Read the manual
+            </Link>
           </div>
 
-          <PhoneMockup />
+          {/* Access stated as document control, not as fine print. */}
+          <div className="mt-10 max-w-md border border-rule bg-sheet-deep">
+            <div className="plate-hd">
+              <span className="label">Document control</span>
+            </div>
+            <div className="px-4 py-3.5">
+              <p className="font-mono text-[0.6875rem] leading-[1.8] tracking-[0.06em] text-chalk-2">
+                {isApproved
+                  ? 'This copy is controlled. The current build is issued to your account.'
+                  : 'Issue is controlled. Access is granted per account by the developer; this copy is uncontrolled until yours is approved.'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* FIG. 1 — the drawing's subject. Presented flat and framed, the way a
+            document presents a figure, not floating at a three-quarter angle. */}
+        <figure className="m-0">
+          <div className="border border-rule bg-sheet-deep p-3">
+            <img
+              src="/Home.jpeg"
+              alt="The MusicStream app's home screen, showing Quick Picks, Trending Now and Made For You sections."
+              width={1080}
+              height={2340}
+              /* Above the fold: load eagerly and early rather than lazily. */
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="block w-full"
+            />
+          </div>
+          <figcaption className="mt-3 flex items-center gap-3">
+            <span className="font-mono text-[0.6875rem] font-bold tracking-[0.18em] text-stamp">
+              FIG. 1
+            </span>
+            <span aria-hidden="true" className="h-px flex-1 bg-rule" />
+            <span className="label">Home screen, as shipped</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      {/* ---------------- Measured specification ---------------- */}
+      <section className="mt-20">
+        <Reveal>
+          <SectionLabel index={2}>Measured specification</SectionLabel>
+        </Reveal>
+        <Rule className="mt-5" />
+
+        <div className="mt-2 grid gap-x-14 sm:grid-cols-2">
+          {SPEC.map((s) => (
+            <Callout key={s.label} {...s} />
+          ))}
         </div>
       </section>
 
-      {/* ---------------- Stats ---------------- */}
-      <section className="border-y border-border">
-        <div className="container-x">
-          <RevealGroup className="grid grid-cols-2 divide-border sm:grid-cols-4 sm:divide-x">
-            {STATS.map((s, i) => (
-              <RevealItem
-                key={s.label}
-                className={`py-8 text-center sm:py-10 ${i % 2 === 1 ? 'border-l border-border sm:border-l-0' : ''} ${
-                  i >= 2 ? 'border-t border-border sm:border-t-0' : ''
-                }`}
+      {/* ---------------- Capabilities ---------------- */}
+      <section className="mt-20">
+        <Reveal className="max-w-2xl">
+          <SectionLabel index={3}>Capabilities</SectionLabel>
+          <h2 className="sheet-heading mt-5">Everything you expect. Nothing you don't.</h2>
+          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            Built as a proper Android app, not a wrapped website — so it feels fast, behaves
+            correctly, and respects the platform.
+          </p>
+        </Reveal>
+
+        {/* Numbered clauses in a ruled register. Rows butt against shared rules;
+            no cards, no icons, no equal-height grid of tiles. */}
+        <RevealGroup className="reg mt-10">
+          <div className="reg-hd grid grid-cols-[3rem_1fr] gap-4 sm:grid-cols-[4rem_16rem_1fr]">
+            <span>No.</span>
+            <span>Capability</span>
+            <span className="hidden sm:block">Description</span>
+          </div>
+
+          {CLAUSES.map((c, i) => (
+            <RevealItem key={c.title}>
+              <div className="reg-row grid grid-cols-[3rem_1fr] items-baseline gap-x-4 gap-y-1 sm:grid-cols-[4rem_16rem_1fr]">
+                <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="min-w-0 font-sans text-base font-bold uppercase tracking-[0.04em] text-chalk">
+                  {c.title}
+                </h3>
+                <p className="col-start-2 min-w-0 font-sans text-base normal-case leading-[1.7] text-chalk-2 sm:col-start-3">
+                  {c.body}
+                </p>
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </section>
+
+      {/* ---------------- Data handling ---------------- */}
+      <section className="mt-20 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
+        <Reveal>
+          <SectionLabel index={4}>Data handling</SectionLabel>
+          <h2 className="sheet-heading mt-5">Your library stays on your phone</h2>
+          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            Liked songs, playlists and listening history are stored locally on your device
+            using Android DataStore. There is no cloud sync, no account inside the app, and
+            no analytics SDK bundled in.
+          </p>
+          <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            The only network calls the app makes are for music data, artwork, lyrics,
+            optional region detection, and checking this site for updates.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <div className="plate">
+            <div className="plate-hd">
+              <span className="label">Verified conditions</span>
+            </div>
+            {DATA_HANDLING.map((item) => (
+              <div
+                key={item}
+                className="flex items-center gap-3 border-b border-rule-soft px-4 py-3.5 last:border-b-0"
               >
-                <p className="text-gradient font-display text-4xl font-bold tracking-tight tabular-nums sm:text-5xl">
-                  <CountUp value={s.value} />
-                </p>
-                <p className="mt-1.5 text-xs font-medium uppercase tracking-[0.15em] text-dim">
-                  {s.label}
-                </p>
-              </RevealItem>
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 shrink-0 bg-checked"
+                />
+                <span className="font-sans text-base normal-case text-chalk-2">
+                  {item}
+                </span>
+              </div>
             ))}
-          </RevealGroup>
-        </div>
+          </div>
+        </Reveal>
       </section>
 
-      {/* ---------------- Features ---------------- */}
-      <section className="py-20 sm:py-28">
-        <div className="container-x">
-          <Reveal className="max-w-2xl">
-            <SectionLabel index={1}>Features</SectionLabel>
-            <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
-              Everything you expect.
-              <br className="hidden sm:block" />{' '}
-              <span className="text-gradient">Nothing you don't.</span>
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-muted">
-              Built as a proper Android app, not a wrapped website — so it feels fast,
-              behaves correctly, and respects the platform.
-            </p>
-          </Reveal>
-
-          {/* Bento grid of frosted-glass tiles, each with a coral→violet gradient
-              rim and a gradient icon badge. Hover floats the tile and casts a
-              coral glow. */}
-          <RevealGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ icon: Icon, title, body }, i) => (
-              <RevealItem key={title} className="group gradient-border p-6">
-                <div className="flex items-center justify-between">
-                  <span className="icon-badge">
-                    <Icon className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <span className="font-display text-sm font-semibold tabular-nums text-dim transition-colors duration-300 group-hover:text-accent">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
-
-      {/* ---------------- Privacy ---------------- */}
-      <section className="border-t border-border py-20 sm:py-28">
-        <div className="container-x grid items-start gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-          <Reveal>
-            <SectionLabel index={2}>Privacy</SectionLabel>
-            <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
-              Your library stays on your phone
-            </h2>
-            <p className="mt-5 leading-relaxed text-muted">
-              Liked songs, playlists and listening history are stored locally on your
-              device using Android DataStore. There is no cloud sync, no account inside
-              the app, and no analytics SDK bundled in.
-            </p>
-            <p className="mt-4 leading-relaxed text-muted">
-              The only network calls the app makes are for music data, artwork, lyrics,
-              optional region detection, and checking this site for updates.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <ul className="card-lift divide-y divide-border overflow-hidden rounded-2xl border border-border">
-              {PRIVACY_POINTS.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-center gap-3.5 bg-surface px-5 py-4 transition-colors hover:bg-elevated"
-                >
-                  <ShieldCheck className="h-4 w-4 shrink-0 text-accent" aria-hidden="true" />
-                  <span className="text-sm text-fg">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ---------------- CTA ---------------- */}
-      <section className="py-20 sm:py-28">
-        <div className="container-x">
-          <Reveal>
-            <div className="card-lift relative overflow-hidden rounded-3xl border border-border bg-surface px-6 py-16 sm:px-14">
-              <div className="relative max-w-xl">
-                <SectionLabel>Ready to listen?</SectionLabel>
-                <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-5xl">
-                  Sign in and start playing.
-                </h2>
-                <p className="mt-5 text-lg leading-relaxed text-muted">
-                  Sign in with an approved account to download the latest build. Access is
-                  invite-only — ask the developer to add your email.
-                </p>
-                <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                  <Link to={user ? '/download' : '/signup'} className={linkBtn('primary')}>
-                    <Download className="h-4 w-4" aria-hidden="true" />
-                    {user ? 'Go to download' : 'Get access'}
-                  </Link>
-                  <Link to="/changelog" className={linkBtn('outline')}>
-                    See what's new
-                  </Link>
-                </div>
+      {/* ---------------- Issue ---------------- */}
+      <section className="mt-20">
+        <Reveal>
+          <div className="border border-rule bg-sheet-deep">
+            <div className="plate-hd justify-between">
+              <span className="label">Issue</span>
+              <Waveform
+                bars={16}
+                height={14}
+                barWidth={2}
+                gap={3}
+                barClassName="bg-rule"
+                className="hidden sm:flex"
+              />
+            </div>
+            <div className="p-6 sm:p-10">
+              <h2 className="sheet-heading max-w-xl">Sign in and start playing.</h2>
+              <p className="mt-5 max-w-xl font-sans text-base normal-case leading-[1.7] text-chalk-2">
+                Sign in with an approved account to download the latest build. Access is
+                invite-only — ask the developer to add your email.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
+                  {user ? 'Go to download' : 'Request issue'}
+                </Link>
+                <Link to="/changelog" className="btn btn-line">
+                  Revision history
+                </Link>
               </div>
             </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
       </section>
-    </>
+    </Sheet>
   )
 }
