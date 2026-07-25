@@ -106,9 +106,11 @@ function Reading({ value }) {
   const suffix = match ? match[2] : ''
   const decimals = match && match[1].includes('.') ? match[1].split('.')[1].length : 0
 
-  const [text, setText] = useState(
-    !isNumeric || reduce ? value : `0${decimals ? '.' + '0'.repeat(decimals) : ''}${suffix}`,
-  )
+  /* Seeded with the TRUE value, never with zero. These are the product's real
+     measurements: if the observer never fires, the animation is skipped and
+     never started, or JS is slow, the sheet must still state 320 kbps rather
+     than 0 kbps. The count-up is an enhancement on top of a correct figure. */
+  const [text, setText] = useState(value)
 
   useEffect(() => {
     if (!isNumeric || reduce || !inView) return
@@ -116,9 +118,11 @@ function Reading({ value }) {
       duration: 1,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (v) => setText(`${v.toFixed(decimals)}${suffix}`),
+      // Land exactly on the source string, not on a re-formatted float.
+      onComplete: () => setText(value),
     })
     return () => controls.stop()
-  }, [inView, reduce, isNumeric, target, suffix, decimals])
+  }, [inView, reduce, isNumeric, target, suffix, decimals, value])
 
   return <span ref={ref}>{!isNumeric || reduce ? value : text}</span>
 }

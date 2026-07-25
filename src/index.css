@@ -24,7 +24,10 @@
   --color-sheet-raised: #0e3055;
 
   /* --- Line work ------------------------------------------------------- */
-  --color-rule: #3a6f9e;
+  /* Lightened from #3a6f9e so borders clear the 3:1 non-text contrast floor
+     against the sheet (measured 3.28:1). Line work carries structure here, so
+     it has to be a real boundary, not a suggestion. */
+  --color-rule: #3f76a6;
   --color-rule-soft: #1e4770;
 
   /* --- Lettering ------------------------------------------------------- */
