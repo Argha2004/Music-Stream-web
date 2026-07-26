@@ -53,7 +53,7 @@ export default function Login() {
         <Reveal>
           <SectionLabel index={6}>Sheet</SectionLabel>
           <h1 className="drawing-title mt-6">Sign in</h1>
-          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
             Sign in to collect your issued build.
           </p>
         </Reveal>
@@ -66,9 +66,9 @@ export default function Login() {
               </span>
             </div>
             <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
                 The{' '}
-                <code className="border border-rule-soft bg-sheet px-1.5 py-0.5 font-mono text-[0.875rem] text-chalk">
+                <code className="border border-rule-soft bg-sheet px-1.5 py-0.5 font-mono text-[0.875rem] text-ink">
                   VITE_SUPABASE_*
                 </code>{' '}
                 environment variables are missing, so sign-in cannot work.
@@ -93,14 +93,14 @@ export default function Login() {
             >
               <span
                 className={`font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] ${
-                  blocked === 'rejected' ? 'text-void' : 'text-chalk-2'
+                  blocked === 'rejected' ? 'text-void' : 'text-ink-2'
                 }`}
               >
                 {blocked === 'rejected' ? 'Request not approved' : 'Request pending'}
               </span>
             </div>
             <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
                 {blocked === 'rejected'
                   ? "Your account exists but the developer hasn't granted access. Contact them if you think this is a mistake."
                   : "Your account is waiting for the developer to approve it. You'll get an email once a decision is made — try signing in again then."}
@@ -156,7 +156,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-0 top-0 flex h-full w-12 items-center justify-center border-l border-rule text-chalk-3 transition-colors hover:text-chalk"
+                  className="absolute right-0 top-0 flex h-full w-12 items-center justify-center border-l border-rule text-ink-3 transition-colors hover:text-ink"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -170,7 +170,7 @@ export default function Login() {
           </button>
         </form>
 
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
           Don't have an account?{' '}
           <Link
             to="/signup"

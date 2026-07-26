@@ -21,7 +21,7 @@ const FILTERS = [
 ]
 
 const STATUS_TONE = {
-  pending: 'text-chalk-3',
+  pending: 'text-ink-3',
   approved: 'text-stamp',
   rejected: 'text-void',
 }
@@ -115,7 +115,7 @@ export default function Admin() {
           </button>
         </div>
 
-        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-ink-2">
           Approve who can download MusicStream. Changes take effect immediately.
         </p>
       </Reveal>
@@ -134,7 +134,7 @@ export default function Admin() {
               className={`btn btn-sm -ml-px flex-1 border sm:flex-none ${
                 active
                   ? 'border-stamp bg-stamp/10 text-stamp'
-                  : 'border-rule text-chalk-3 hover:text-chalk'
+                  : 'border-rule text-ink-3 hover:text-ink'
               }`}
             >
               {f.label}
@@ -182,7 +182,7 @@ export default function Admin() {
             <span className="bg-sheet-deep px-3 py-1.5 label">
               {filter === 'pending' ? 'No undecided requests' : `No ${filter} accounts`}
             </span>
-            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-ink-2">
               {filter === 'pending'
                 ? "You're all caught up. New sign-ups will appear here."
                 : 'Nothing to show for this filter.'}
@@ -206,10 +206,10 @@ export default function Admin() {
                       {/* break-all, not truncate: you're deciding access based on
                           this address, so a hidden tail could mean approving the
                           wrong account. */}
-                      <p className="break-all font-mono text-[0.875rem] text-chalk">
+                      <p className="break-all font-mono text-[0.875rem] text-ink">
                         {p.email}
                       </p>
-                      <p className="mt-1.5 font-mono text-[0.6875rem] tabular-nums tracking-[0.08em] text-chalk-3">
+                      <p className="mt-1.5 font-mono text-[0.6875rem] tabular-nums tracking-[0.08em] text-ink-3">
                         Requested {new Date(p.requested_at).toLocaleString()}
                         {p.decided_at
                           ? ` · decided ${new Date(p.decided_at).toLocaleDateString()}`
@@ -220,7 +220,7 @@ export default function Admin() {
                     <div>
                       <span
                         className={`font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] ${
-                          STATUS_TONE[p.status] || 'text-chalk-3'
+                          STATUS_TONE[p.status] || 'text-ink-3'
                         }`}
                       >
                         {STATUS_WORD[p.status] || p.status}
@@ -257,7 +257,7 @@ export default function Admin() {
         )}
       </div>
 
-      <p className="mt-10 max-w-2xl font-sans text-base normal-case leading-[1.7] text-chalk-3">
+      <p className="mt-10 max-w-2xl font-sans text-base normal-case leading-[1.7] text-ink-3">
         Approval is enforced in the database, not the browser — a rejected user cannot
         reach the download page even by editing client state.
       </p>

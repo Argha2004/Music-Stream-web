@@ -49,7 +49,7 @@ export default function Footer() {
                   <li key={l.to}>
                     <Link
                       to={l.to}
-                      className="inline-flex min-h-9 items-center font-sans text-sm text-chalk-2 transition-colors hover:text-stamp"
+                      className="inline-flex min-h-9 items-center font-sans text-sm text-ink-2 transition-colors hover:text-stamp"
                     >
                       {l.label}
                     </Link>
@@ -71,12 +71,12 @@ export default function Footer() {
               animated={false}
               barClassName="bg-rule"
             />
-            <span className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-chalk">
+            <span className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink">
               {DOC_NO}
             </span>
           </div>
 
-          <div className="flex flex-col gap-1 font-mono text-[0.6875rem] tracking-[0.12em] text-chalk-3 sm:items-end">
+          <div className="flex flex-col gap-1 font-mono text-[0.6875rem] tracking-[0.12em] text-ink-3 sm:items-end">
             <p>© {new Date().getFullYear()} Arghadeep Pakhira. All rights reserved.</p>
             <p className="uppercase">Personal and educational use only</p>
           </div>

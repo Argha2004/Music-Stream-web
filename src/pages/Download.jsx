@@ -47,7 +47,7 @@ function AwaitingIssue({ email, status, onRecheck }) {
           <div className="bg-sheet-deep">
             <div className="flex flex-col gap-1.5 border-b border-rule-soft px-4 py-3.5 sm:flex-row sm:items-baseline sm:gap-4">
               <span className="label w-32 shrink-0">Account</span>
-              <span className="min-w-0 break-all font-mono text-[0.875rem] text-chalk">
+              <span className="min-w-0 break-all font-mono text-[0.875rem] text-ink">
                 {email}
               </span>
             </div>
@@ -55,7 +55,7 @@ function AwaitingIssue({ email, status, onRecheck }) {
               <span className="label w-32 shrink-0">Status</span>
               <span
                 className={`font-mono text-[0.875rem] uppercase tracking-[0.12em] ${
-                  rejected ? 'text-void' : 'text-chalk-2'
+                  rejected ? 'text-void' : 'text-ink-2'
                 }`}
               >
                 {rejected ? 'Not approved' : 'Awaiting decision'}
@@ -64,15 +64,15 @@ function AwaitingIssue({ email, status, onRecheck }) {
           </div>
         </div>
 
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
           {rejected ? (
             <>
-              Your request for <strong className="text-chalk">{email}</strong> wasn't
+              Your request for <strong className="text-ink">{email}</strong> wasn't
               approved. Contact the developer if you think this is a mistake.
             </>
           ) : (
             <>
-              Your account <strong className="text-chalk">{email}</strong> has been created
+              Your account <strong className="text-ink">{email}</strong> has been created
               and your request is waiting for the developer to review it. You'll be able to
               download as soon as it's approved.
             </>
@@ -95,7 +95,7 @@ function AwaitingIssue({ email, status, onRecheck }) {
           </button>
         )}
 
-        <p className="mt-10 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-10 font-sans text-base normal-case leading-[1.7] text-ink-2">
           In the meantime, read the{' '}
           <Link to="/docs" className="text-stamp underline decoration-stamp/40 underline-offset-4">
             manual
@@ -142,7 +142,7 @@ export default function Download() {
       <Reveal className="max-w-2xl">
         <SectionLabel index={5}>Sheet</SectionLabel>
         <h1 className="drawing-title mt-6">Issue</h1>
-        <p className="mt-8 font-mono text-[0.875rem] tracking-[0.06em] text-chalk-2">
+        <p className="mt-8 font-mono text-[0.875rem] tracking-[0.06em] text-ink-2">
           Issued to <span className="text-stamp">{user?.email}</span>
         </p>
       </Reveal>
@@ -159,7 +159,7 @@ export default function Download() {
               </span>
             </div>
             <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
                 Couldn't load the latest release. {error}
               </p>
               <button
@@ -174,7 +174,7 @@ export default function Download() {
         ) : !release ? (
           <div className="hatch flex flex-col items-center justify-center border border-rule px-6 py-16 text-center">
             <span className="bg-sheet-deep px-3 py-1.5 label">No release published yet</span>
-            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-ink-2">
               Once the first build is uploaded it will appear here automatically.
             </p>
           </div>
@@ -189,7 +189,7 @@ export default function Download() {
 
             <div className="bg-sheet-deep">
               <div className="border-b border-rule-soft px-5 py-5">
-                <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.02em] text-chalk">
+                <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.02em] text-ink">
                   {release.name}
                 </h2>
               </div>
@@ -207,7 +207,7 @@ export default function Download() {
                     className="min-w-0 border-r border-rule-soft px-4 py-3.5 last:border-r-0"
                   >
                     <dt className="label">{f.k}</dt>
-                    <dd className="mt-1.5 font-mono text-[0.875rem] font-medium tabular-nums text-chalk">
+                    <dd className="mt-1.5 font-mono text-[0.875rem] font-medium tabular-nums text-ink">
                       {f.v}
                     </dd>
                   </div>
@@ -227,7 +227,7 @@ export default function Download() {
                     .map((line, i) => (
                       <li key={i} className="flex gap-3">
                         <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 bg-stamp" />
-                        <span className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+                        <span className="font-sans text-base normal-case leading-[1.7] text-ink-2">
                           {line}
                         </span>
                       </li>
@@ -256,14 +256,14 @@ export default function Download() {
           <ol className="bg-sheet-deep">
             {[
               <>
-                Open the downloaded <code className="font-mono text-chalk">.apk</code> file.
+                Open the downloaded <code className="font-mono text-ink">.apk</code> file.
               </>,
               <>
                 Android will ask to allow installing unknown apps — allow it for your
                 browser, and for MusicStream so in-app updates work later.
               </>,
               <>
-                Tap <strong className="text-chalk">Install</strong>. Done.
+                Tap <strong className="text-ink">Install</strong>. Done.
               </>,
             ].map((step, i) => (
               <li
@@ -273,7 +273,7 @@ export default function Download() {
                 <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="min-w-0 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+                <span className="min-w-0 font-sans text-base normal-case leading-[1.7] text-ink-2">
                   {step}
                 </span>
               </li>
@@ -289,7 +289,7 @@ export default function Download() {
             </span>
           </div>
           <div className="p-5">
-            <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
               If the install fails with "App not installed", you have a version signed with
               a different key. Uninstall the old MusicStream first — this is a one-time
               step.
@@ -297,7 +297,7 @@ export default function Download() {
           </div>
         </div>
 
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
           Looking for older versions?{' '}
           <Link
             to="/changelog"

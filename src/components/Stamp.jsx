@@ -11,6 +11,11 @@ import { motion, useReducedMotion } from 'framer-motion'
  * The impact motion is reserved for real decisions and is disabled under
  * reduced motion, where the stamp simply renders already landed.
  */
+/* Must track the `.stamp` rule in index.css — this animates to an inline style,
+   which wins over the class. On the paper ground a lighter impression drops the
+   mark under 4.5:1, so the two values are not free to drift apart. */
+const STAMP_OPACITY = 0.92
+
 export default function Stamp({ children, tone = 'approve', className = '' }) {
   const reduce = useReducedMotion()
   const void_ = tone === 'void'
@@ -22,7 +27,7 @@ export default function Stamp({ children, tone = 'approve', className = '' }) {
       aria-label={`Stamped ${String(children)}`}
       className={`stamp ${void_ ? 'stamp-void' : ''} ${className}`}
       initial={reduce ? false : { opacity: 0, scale: 1.5, rotate: void_ ? 9 : -9 }}
-      animate={reduce ? false : { opacity: 0.85, scale: 1, rotate: settled }}
+      animate={reduce ? false : { opacity: STAMP_OPACITY, scale: 1, rotate: settled }}
       transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
     >
       {children}

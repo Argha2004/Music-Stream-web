@@ -6,6 +6,7 @@ import Sheet from '../components/Sheet'
 import Reveal, { Rule, RevealGroup, RevealItem } from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 import Waveform from '../components/Waveform'
+import Figure from '../components/Figure'
 
 /* ---------------------------------------------------------------------------
    DIRECTION CONTRACT — "The Controlled Copy"
@@ -14,17 +15,17 @@ import Waveform from '../components/Waveform'
    page about an app. It refuses the category arrangement it replaced: centred
    hero, angled phone mockup, icon feature-card grid, gradient CTA.
 
-   OWN-WORLD: Cyanotype blue drenched ground, white drafting lettering, one
-   survey orange meaning action or approval. Square corners, no shadows, no
-   glass. Depth from line weight, tonal recess and 45° hatching.
+   OWN-WORLD: Warm vellum ground, blue-black drafting line work and lettering,
+   one survey vermilion meaning action or approval. Square corners, no shadows,
+   no glass. Depth from line weight, tonal recess and 45° hatching.
 
    STORY: A visitor reads a spec'd, versioned, finished piece of software, sees
    that access is issued rather than open, and requests issue.
 
    FIRST VIEWPORT: Drawn sheet frame; the claim set as the drawing title at
-   display scale; the real screenshot as FIG. 1, the drawing's subject; the
-   app's actual figures pinned around it as dimension callouts. Primary action
-   sits directly under the title.
+   display scale; three real screenshots pasted up as a ruled figure plate,
+   sized as specimens rather than as a hero image; the app's actual figures
+   pinned below as dimension callouts. Primary action sits under the title.
 
    FORM: Technical standards document, candidate 5 of the grounded list, seed
    key 9c0436ff, staged as a drawing sheet with title block.
@@ -36,7 +37,7 @@ const SPEC = [
   { value: '320', unit: 'kbps', label: 'Max bitrate' },
   { value: '0', unit: '', label: 'Trackers' },
   { value: '100', unit: '%', label: 'Ad-free' },
-  { value: '7.0', unit: '+', label: 'Android' },
+  { value: '12.0', unit: '+', label: 'Android' },
 ]
 
 /* Numbered clauses, not feature cards. Each is a capability the shipped APK
@@ -77,6 +78,31 @@ const CLAUSES = [
   {
     title: 'Genuinely fast',
     body: 'Native Kotlin and Jetpack Compose throughout. No web views, no bridges, no lag.',
+  },
+]
+
+/* The figure plate. FIG. 1 is the screenshot the site already shipped; the
+   other two prints are expected at these exact paths in `public/` and render as
+   NOT ISSUED cells until they are dropped in — nothing breaks in the meantime.
+   Case-sensitive, like the R2 object names. */
+const FIGURES = [
+  {
+    no: '1',
+    src: '/Home1.png',
+    caption: 'Home screen',
+    alt: "The MusicStream app's home screen, showing Quick Picks, Trending Now and Made For You sections.",
+  },
+  {
+    no: '2',
+    src: '/Now-Player.png',
+    caption: 'Now playing',
+    alt: "The MusicStream app's now-playing screen, showing the current track with playback controls.",
+  },
+  {
+    no: '3',
+    src: '/Artist.png',
+    caption: 'Artist',
+    alt: "The MusicStream app's artist screen, showing the artist's albums and related content.",
   },
 ]
 
@@ -132,10 +158,10 @@ function Callout({ value, unit, label }) {
   return (
     <div className="flex items-center gap-4 border-b border-rule-soft py-4 last:border-b-0">
       <div className="flex w-24 shrink-0 items-baseline gap-1">
-        <span className="font-mono text-2xl font-bold tabular-nums text-chalk">
+        <span className="font-mono text-2xl font-bold tabular-nums text-ink">
           <Reading value={value} />
         </span>
-        {unit && <span className="font-mono text-[0.6875rem] text-chalk-3">{unit}</span>}
+        {unit && <span className="font-mono text-[0.6875rem] text-ink-3">{unit}</span>}
       </div>
       <span className="callout-line" aria-hidden="true" />
       <span className="label shrink-0">{label}</span>
@@ -149,72 +175,278 @@ export default function Home() {
   return (
     <Sheet label="Specification — MusicStream for Android">
       {/* ---------------- Title field ---------------- */}
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16">
-        <div>
-          <SectionLabel index={1}>Subject</SectionLabel>
+      {/* The base column is minmax(0,1fr), not the implicit `auto`: the figure
+          plate below is `w-fit`, and an auto-sized column would let it size to
+          max-content and push the whole document wider than the phone instead
+          of letting the plate's own scroller take over. */}
+      <div data-impeccable-variants="a657c20f" data-impeccable-variant-count="2" style={{ display: "contents" }}>
+        {/* impeccable-variants-start a657c20f */}
+        {/* Original */}
+        <div data-impeccable-variant="original">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14">
+            {/* The title field runs on one spacing unit (u = 1rem), so the grouping
+                is a rule rather than a set of ad-hoc margins:
+                  eyebrow → title   0.5u  (one unit: the label names this title)
+                  title   → lead    2u
+                  lead    → actions 2u    (lead and its action are one group)
+                  actions → control 4u    (document control is a separate object)
+                Space above a heading always exceeds the space below it. */}
+            <div>
+              <SectionLabel index={1}>Subject</SectionLabel>
 
-          <h1 className="drawing-title mt-6">
-            Your music.
-            <br />
-            No ads.
-            <br />
-            No noise.
-          </h1>
+              <h1 className="drawing-title mt-2 stamp-title">
+                <span className="stamp-tick" aria-hidden="true" />
+                <span className="stamp-line" style={{ '--i': 0 }}>Your music.</span>
+                <span className="stamp-line" style={{ '--i': 1 }}>No ads.</span>
+                <span className="stamp-line" style={{ '--i': 2 }}>No noise.</span>
+              </h1>
 
-          <p className="mt-8 max-w-xl font-sans text-base leading-[1.7] normal-case text-chalk-2">
-            A fast, native music player for Android — background playback, synced lyrics, a
-            real equalizer and offline downloads. Built in Kotlin, with nothing between you
-            and the music.
-          </p>
-
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
-              {user ? 'Go to download' : 'Request issue'}
-            </Link>
-            <Link to="/docs" className="btn btn-line">
-              Read the manual
-            </Link>
-          </div>
-
-          {/* Access stated as document control, not as fine print. */}
-          <div className="mt-10 max-w-md border border-rule bg-sheet-deep">
-            <div className="plate-hd">
-              <span className="label">Document control</span>
-            </div>
-            <div className="px-4 py-3.5">
-              <p className="font-mono text-[0.6875rem] leading-[1.8] tracking-[0.06em] text-chalk-2">
-                {isApproved
-                  ? 'This copy is controlled. The current build is issued to your account.'
-                  : 'Issue is controlled. Access is granted per account by the developer; this copy is uncontrolled until yours is approved.'}
+              {/* 52ch holds the lead inside a comfortable reading measure. */}
+              <p className="mt-8 max-w-[52ch] font-sans text-base leading-[1.7] normal-case text-ink-2">
+                A fast, native music player for Android — background playback, synced lyrics, a
+                real equalizer and offline downloads. Built in Kotlin, with nothing between you
+                and the music.
               </p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
+                  {user ? 'Go to download' : 'Request issue'}
+                </Link>
+                <Link to="/docs" className="btn btn-line">
+                  Read the manual
+                </Link>
+              </div>
+
+              {/* Access stated as document control, not as fine print. */}
+              <div className="mt-16 max-w-md border border-rule bg-sheet-deep">
+                <div className="plate-hd">
+                  <span className="label">Document control</span>
+                </div>
+                <div className="px-4 py-3.5">
+                  <p className="font-mono text-[0.6875rem] leading-[1.8] tracking-[0.06em] text-ink-2">
+                    {isApproved
+                      ? 'This copy is controlled. The current build is issued to your account.'
+                      : 'Issue is controlled. Access is granted per account by the developer; this copy is uncontrolled until yours is approved.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* The figure plate: three specimens of the shipped app, pasted up as
+                one ruled object. Sized to its contents rather than stretched to the
+                column, so the drawing sits off-centre in its frame — and each print
+                is small enough to read as a specimen rather than as a hero image.
+                Scrolls inside itself on a narrow phone instead of shrinking the
+                prints to illegibility. */}
+            <div className="plate w-fit max-w-full self-start">
+              <div className="plate-hd justify-between gap-4">
+                <span className="label">Figure plate</span>
+                <span className="label">FIG. 1–3</span>
+              </div>
+              <div className="flex overflow-x-auto">
+                {FIGURES.map((f, i) => (
+                  <div
+                    key={f.no}
+                    className={`w-[152px] shrink-0 p-3 sm:w-[180px] sm:p-4 ${
+                      i > 0 ? 'border-l border-rule' : ''
+                    }`}
+                  >
+                    <Figure {...f} priority={i === 0} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
+          {/* Variants: insert below this line */}
+          <style data-impeccable-css="a657c20f">{`
+            /* V1 — BANDED SHEET: strictly linear top-to-bottom reading, the way
+               a sheet is actually read. The title field spans the full width so
+               the drawing title reaches its display scale unconstrained; the
+               figure plate becomes a full-width ruled register beneath it, and
+               each print turns horizontal — print left, caption right — so the
+               band stays dense without enlarging the specimens. */
+            @scope ([data-impeccable-variant="1"]) {
+              :scope > .lv1 { display: block; }
+              :scope > .lv1 .lv-plate {
+                margin-top: calc(3.5rem * var(--p-density, 1));
+                width: 100%;
+                max-width: none;
+              }
+              :scope > .lv1[data-p-band="inset"] .lv-plate { max-width: 52rem; }
+              :scope > .lv1 .lv-strip {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                overflow: visible;
+              }
+              :scope > .lv1 .lv-cell {
+                width: auto;
+                padding: calc(1rem * var(--p-density, 1));
+              }
+              /* Print and caption sit side by side inside each ruled cell. */
+              :scope > .lv1 .lv-cell figure { flex-direction: row; gap: 0.875rem; align-items: flex-start; }
+              :scope > .lv1 .lv-cell figure > img,
+              :scope > .lv1 .lv-cell figure > [role="img"] { width: 104px; flex: none; }
+              :scope > .lv1 .lv-cell figcaption { margin-top: 0; flex: 1 1 auto; min-width: 0; }
+              @media (max-width: 767px) {
+                :scope > .lv1 .lv-strip { grid-template-columns: minmax(0, 1fr); }
+                :scope > .lv1 .lv-cell + .lv-cell { border-left: 0; border-top: 1px solid var(--color-rule); }
+              }
+            }
 
-        {/* FIG. 1 — the drawing's subject. Presented flat and framed, the way a
-            document presents a figure, not floating at a three-quarter angle. */}
-        <figure className="m-0">
-          <div className="border border-rule bg-sheet-deep p-3">
-            <img
-              src="/Home.jpeg"
-              alt="The MusicStream app's home screen, showing Quick Picks, Trending Now and Made For You sections."
-              width={1080}
-              height={2340}
-              /* Above the fold: load eagerly and early rather than lazily. */
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              className="block w-full"
-            />
+            /* V2 — OFFSET DRAFTING GRID: a real 12-column field. The title
+               field holds columns 1–7; the plate takes 8–12 and DROPS, so the
+               title overhangs it and the sheet reads diagonally rather than as
+               two balanced blocks. A drawing is never centred in its frame. */
+            @scope ([data-impeccable-variant="2"]) {
+              :scope > .lv2 {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr);
+                gap: calc(2.5rem * var(--p-density, 1));
+                align-items: start;
+              }
+              @media (min-width: 1024px) {
+                :scope > .lv2 {
+                  grid-template-columns: repeat(12, minmax(0, 1fr));
+                  column-gap: calc(2rem * var(--p-density, 1));
+                }
+                :scope > .lv2 .lv-field { grid-column: 1 / span 7; }
+                :scope > .lv2 .lv-plate {
+                  grid-column: 8 / span 5;
+                  margin-top: calc(var(--p-offset, 7) * 1rem);
+                  justify-self: end;
+                }
+              }
+            }
+          `}</style>
+          <div
+            data-impeccable-variant="1"
+            data-impeccable-params='[{"id":"density","kind":"range","min":0.6,"max":1.4,"step":0.05,"default":1,"label":"Density"},{"id":"band","kind":"steps","default":"full","label":"Band width","options":[{"value":"full","label":"Full sheet"},{"value":"inset","label":"Inset"}]}]'
+          >
+            <div className="lv1">
+              <div className="lv-field">
+                <SectionLabel index={1}>Subject</SectionLabel>
+
+                <h1 className="drawing-title mt-2 stamp-title">
+                  <span className="stamp-tick" aria-hidden="true" />
+                  <span className="stamp-line" style={{ '--i': 0 }}>Your music.</span>
+                  <span className="stamp-line" style={{ '--i': 1 }}>No ads.</span>
+                  <span className="stamp-line" style={{ '--i': 2 }}>No noise.</span>
+                </h1>
+
+                <p className="mt-8 max-w-[52ch] font-sans text-base leading-[1.7] normal-case text-ink-2">
+                  A fast, native music player for Android — background playback, synced lyrics, a
+                  real equalizer and offline downloads. Built in Kotlin, with nothing between you
+                  and the music.
+                </p>
+
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
+                    {user ? 'Go to download' : 'Request issue'}
+                  </Link>
+                  <Link to="/docs" className="btn btn-line">
+                    Read the manual
+                  </Link>
+                </div>
+
+                <div className="mt-16 max-w-md border border-rule bg-sheet-deep">
+                  <div className="plate-hd">
+                    <span className="label">Document control</span>
+                  </div>
+                  <div className="px-4 py-3.5">
+                    <p className="font-mono text-[0.6875rem] leading-[1.8] tracking-[0.06em] text-ink-2">
+                      {isApproved
+                        ? 'This copy is controlled. The current build is issued to your account.'
+                        : 'Issue is controlled. Access is granted per account by the developer; this copy is uncontrolled until yours is approved.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lv-plate plate self-start">
+                <div className="plate-hd justify-between gap-4">
+                  <span className="label">Figure plate</span>
+                  <span className="label">FIG. 1–3</span>
+                </div>
+                <div className="lv-strip flex">
+                  {FIGURES.map((f, i) => (
+                    <div
+                      key={f.no}
+                      className={`lv-cell shrink-0 ${i > 0 ? 'border-l border-rule' : ''}`}
+                    >
+                      <Figure {...f} priority={i === 0} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <figcaption className="mt-3 flex items-center gap-3">
-            <span className="font-mono text-[0.6875rem] font-bold tracking-[0.18em] text-stamp">
-              FIG. 1
-            </span>
-            <span aria-hidden="true" className="h-px flex-1 bg-rule" />
-            <span className="label">Home screen, as shipped</span>
-          </figcaption>
-        </figure>
+          <div
+            data-impeccable-variant="2"
+            style={{ display: 'none' }}
+            data-impeccable-params='[{"id":"density","kind":"range","min":0.6,"max":1.4,"step":0.05,"default":1,"label":"Density"},{"id":"offset","kind":"range","min":0,"max":16,"step":0.5,"default":7,"label":"Plate drop"}]'
+          >
+            <div className="lv2">
+              <div className="lv-field">
+                <SectionLabel index={1}>Subject</SectionLabel>
+
+                <h1 className="drawing-title mt-2 stamp-title">
+                  <span className="stamp-tick" aria-hidden="true" />
+                  <span className="stamp-line" style={{ '--i': 0 }}>Your music.</span>
+                  <span className="stamp-line" style={{ '--i': 1 }}>No ads.</span>
+                  <span className="stamp-line" style={{ '--i': 2 }}>No noise.</span>
+                </h1>
+
+                <p className="mt-8 max-w-[52ch] font-sans text-base leading-[1.7] normal-case text-ink-2">
+                  A fast, native music player for Android — background playback, synced lyrics, a
+                  real equalizer and offline downloads. Built in Kotlin, with nothing between you
+                  and the music.
+                </p>
+
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
+                    {user ? 'Go to download' : 'Request issue'}
+                  </Link>
+                  <Link to="/docs" className="btn btn-line">
+                    Read the manual
+                  </Link>
+                </div>
+
+                <div className="mt-16 max-w-md border border-rule bg-sheet-deep">
+                  <div className="plate-hd">
+                    <span className="label">Document control</span>
+                  </div>
+                  <div className="px-4 py-3.5">
+                    <p className="font-mono text-[0.6875rem] leading-[1.8] tracking-[0.06em] text-ink-2">
+                      {isApproved
+                        ? 'This copy is controlled. The current build is issued to your account.'
+                        : 'Issue is controlled. Access is granted per account by the developer; this copy is uncontrolled until yours is approved.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lv-plate plate w-fit max-w-full self-start">
+                <div className="plate-hd justify-between gap-4">
+                  <span className="label">Figure plate</span>
+                  <span className="label">FIG. 1–3</span>
+                </div>
+                <div className="flex overflow-x-auto">
+                  {FIGURES.map((f, i) => (
+                    <div
+                      key={f.no}
+                      className={`w-[152px] shrink-0 p-3 sm:w-[180px] sm:p-4 ${
+                        i > 0 ? 'border-l border-rule' : ''
+                      }`}
+                    >
+                      <Figure {...f} priority={i === 0} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        {/* impeccable-variants-end a657c20f */}
       </div>
 
       {/* ---------------- Measured specification ---------------- */}
@@ -236,7 +468,7 @@ export default function Home() {
         <Reveal className="max-w-2xl">
           <SectionLabel index={3}>Capabilities</SectionLabel>
           <h2 className="sheet-heading mt-5">Everything you expect. Nothing you don't.</h2>
-          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-ink-2">
             Built as a proper Android app, not a wrapped website — so it feels fast, behaves
             correctly, and respects the platform.
           </p>
@@ -257,10 +489,10 @@ export default function Home() {
                 <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <h3 className="min-w-0 font-sans text-base font-bold uppercase tracking-[0.04em] text-chalk">
+                <h3 className="min-w-0 font-sans text-base font-bold uppercase tracking-[0.04em] text-ink">
                   {c.title}
                 </h3>
-                <p className="col-start-2 min-w-0 font-sans text-base normal-case leading-[1.7] text-chalk-2 sm:col-start-3">
+                <p className="col-start-2 min-w-0 font-sans text-base normal-case leading-[1.7] text-ink-2 sm:col-start-3">
                   {c.body}
                 </p>
               </div>
@@ -274,12 +506,12 @@ export default function Home() {
         <Reveal>
           <SectionLabel index={4}>Data handling</SectionLabel>
           <h2 className="sheet-heading mt-5">Your library stays on your phone</h2>
-          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-ink-2">
             Liked songs, playlists and listening history are stored locally on your device
             using Android DataStore. There is no cloud sync, no account inside the app, and
             no analytics SDK bundled in.
           </p>
-          <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+          <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-ink-2">
             The only network calls the app makes are for music data, artwork, lyrics,
             optional region detection, and checking this site for updates.
           </p>
@@ -299,7 +531,7 @@ export default function Home() {
                   aria-hidden="true"
                   className="h-1.5 w-1.5 shrink-0 bg-checked"
                 />
-                <span className="font-sans text-base normal-case text-chalk-2">
+                <span className="font-sans text-base normal-case text-ink-2">
                   {item}
                 </span>
               </div>
@@ -325,7 +557,7 @@ export default function Home() {
             </div>
             <div className="p-6 sm:p-10">
               <h2 className="sheet-heading max-w-xl">Sign in and start playing.</h2>
-              <p className="mt-5 max-w-xl font-sans text-base normal-case leading-[1.7] text-chalk-2">
+              <p className="mt-5 max-w-xl font-sans text-base normal-case leading-[1.7] text-ink-2">
                 Sign in with an approved account to download the latest build. Access is
                 invite-only — ask the developer to add your email.
               </p>

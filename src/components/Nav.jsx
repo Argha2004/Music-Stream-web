@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import Waveform from './Waveform'
+import ThemeToggle from './ThemeToggle'
 import { DOC_NO } from './Sheet'
 
 /**
@@ -67,8 +68,8 @@ export default function Nav() {
     `flex items-center border-b-2 px-3 font-mono text-[0.6875rem] font-medium uppercase
      tracking-[0.18em] transition-colors duration-150 lg:px-4 ${
        isActive
-         ? 'border-stamp text-chalk'
-         : 'border-transparent text-chalk-3 hover:text-chalk'
+         ? 'border-stamp text-ink'
+         : 'border-transparent text-ink-3 hover:text-ink'
      }`
 
   return (
@@ -81,10 +82,10 @@ export default function Nav() {
             {/* Document identity: the mark is a level plot, the number is real. */}
             <Link to="/" className="group flex items-center gap-3">
               <Waveform bars={5} height={16} barWidth={2.5} gap={2} barClassName="bg-stamp" />
-              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-chalk">
+              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink">
                 MusicStream
               </span>
-              <span className="hidden font-mono text-[0.6875rem] tracking-[0.18em] text-chalk-3 sm:inline">
+              <span className="hidden font-mono text-[0.6875rem] tracking-[0.18em] text-ink-3 sm:inline">
                 {DOC_NO}
               </span>
             </Link>
@@ -98,6 +99,7 @@ export default function Nav() {
             </div>
 
             <div className="hidden items-center gap-2 md:flex">
+              <ThemeToggle className="my-1.5 h-11" />
               {user ? (
                 <>
                   {isAdmin && (
@@ -124,16 +126,22 @@ export default function Nav() {
               )}
             </div>
 
-            {/* 44px minimum touch target, square like everything else. */}
-            <button
-              type="button"
-              className="my-2 flex h-11 w-11 items-center justify-center border border-rule text-chalk transition-colors hover:border-stamp md:hidden"
-              onClick={() => setOpen((v) => !v)}
-              aria-label={open ? 'Close menu' : 'Open menu'}
-              aria-expanded={open}
-            >
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+            {/* Sits in the bar rather than inside the menu: the process is a
+                persistent preference, not a navigation destination. */}
+            <div className="flex items-center gap-2 md:hidden">
+              <ThemeToggle className="my-1.5 h-11" />
+
+              {/* 44px minimum touch target, square like everything else. */}
+              <button
+                type="button"
+                className="my-2 flex h-11 w-11 items-center justify-center border border-rule text-ink transition-colors hover:border-stamp"
+                onClick={() => setOpen((v) => !v)}
+                aria-label={open ? 'Close menu' : 'Open menu'}
+                aria-expanded={open}
+              >
+                {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </nav>
         </div>
       </header>
@@ -151,7 +159,7 @@ export default function Nav() {
                   className={({ isActive }) =>
                     `flex min-h-12 items-center border-b border-rule-soft px-4 font-mono
                      text-[0.6875rem] uppercase tracking-[0.18em] ${
-                       isActive ? 'bg-sheet-raised text-stamp' : 'text-chalk-2'
+                       isActive ? 'bg-hover text-stamp' : 'text-ink-2'
                      }`
                   }
                 >
@@ -165,7 +173,7 @@ export default function Nav() {
                     <NavLink
                       to="/admin"
                       onClick={() => setOpen(false)}
-                      className="flex min-h-12 items-center border-b border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-chalk-2"
+                      className="flex min-h-12 items-center border-b border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-2"
                     >
                       Approvals
                     </NavLink>

@@ -42,7 +42,7 @@ function ClauseHead({ no, children }) {
       <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
         § {no}
       </span>
-      <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.02em] text-chalk">
+      <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.02em] text-ink">
         {children}
       </h2>
     </div>
@@ -55,7 +55,7 @@ export default function License() {
       <Reveal className="max-w-3xl">
         <SectionLabel index={4}>Sheet</SectionLabel>
         <h1 className="drawing-title mt-6">Terms</h1>
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
           Terms covering your use of the MusicStream application and this website.
         </p>
       </Reveal>
@@ -70,7 +70,7 @@ export default function License() {
             <span className="label">Personal &amp; educational use licence</span>
           </div>
           <div className="plate-bd">
-            <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
               Copyright © {new Date().getFullYear()} Arghadeep Pakhira. All rights
               reserved. MusicStream is proprietary software provided free of charge to
               approved individuals for personal, non-commercial use. It is not open source
@@ -95,7 +95,7 @@ export default function License() {
                 className="flex gap-3 border-b border-rule-soft px-4 py-3.5 last:border-b-0"
               >
                 <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 bg-checked" />
-                <span className="font-sans text-base normal-case leading-[1.6] text-chalk-2">
+                <span className="font-sans text-base normal-case leading-[1.6] text-ink-2">
                   {item}
                 </span>
               </div>
@@ -112,7 +112,7 @@ export default function License() {
                 className="flex gap-3 border-b border-rule-soft px-4 py-3.5 last:border-b-0"
               >
                 <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 bg-void" />
-                <span className="font-sans text-base normal-case leading-[1.6] text-chalk-2">
+                <span className="font-sans text-base normal-case leading-[1.6] text-ink-2">
                   {item}
                 </span>
               </div>
@@ -130,13 +130,13 @@ export default function License() {
             </span>
           </div>
           <div className="p-5 sm:p-6">
-            <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
               MusicStream does not host, own, or distribute any music. It is a client that
               retrieves publicly accessible data from an unofficial selfmade API. All
               music, artwork, and metadata remain the property of their respective owners
               and rights holders.
             </p>
-            <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-ink-2">
               This project exists for personal and educational purposes only. It is not
               affiliated with, endorsed by, or connected to any music service or label. You
               are responsible for ensuring your use complies with the laws and licensing
@@ -205,7 +205,7 @@ export default function License() {
       <section className="mt-12 max-w-3xl">
         <ClauseHead no="04">Third-party licences</ClauseHead>
 
-        <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
           MusicStream is built with the following open-source components, used under
           their respective licences:
         </p>
@@ -220,17 +220,17 @@ export default function License() {
               key={row.name}
               className="reg-row grid grid-cols-1 gap-1 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-4"
             >
-              <span className="min-w-0 font-sans text-base normal-case text-chalk">
+              <span className="min-w-0 font-sans text-base normal-case text-ink">
                 {row.name}
               </span>
-              <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-chalk-3">
+              <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-ink-3">
                 {row.licence}
               </span>
             </div>
           ))}
         </div>
 
-        <p className="mt-8 font-mono text-[0.6875rem] tracking-[0.12em] text-chalk-3">
+        <p className="mt-8 font-mono text-[0.6875rem] tracking-[0.12em] text-ink-3">
           Last updated{' '}
           {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long' })}.
         </p>

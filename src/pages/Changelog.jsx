@@ -52,7 +52,7 @@ export default function Changelog() {
       <Reveal>
         <SectionLabel index={3}>Sheet</SectionLabel>
         <h1 className="drawing-title mt-6">Revisions</h1>
-        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-ink-2">
           Every published build of MusicStream. The app checks this list on launch and
           tells you when a newer version is available.
         </p>
@@ -69,7 +69,7 @@ export default function Changelog() {
               </span>
             </div>
             <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
                 Couldn't load the revision table. {error}
               </p>
               <button
@@ -84,7 +84,7 @@ export default function Changelog() {
         ) : releases.length === 0 ? (
           <div className="hatch flex flex-col items-center justify-center border border-rule px-6 py-16 text-center">
             <span className="bg-sheet-deep px-3 py-1.5 label">No revisions issued</span>
-            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-ink-2">
               Published builds will show up here with their release notes.
             </p>
           </div>
@@ -110,7 +110,7 @@ export default function Changelog() {
                       <span className="label sm:hidden">Rev</span>
                       <span
                         className={`font-mono text-[0.875rem] font-bold tabular-nums ${
-                          superseded ? 'text-chalk-3 line-through decoration-void' : 'text-stamp'
+                          superseded ? 'text-ink-3 line-through decoration-void' : 'text-stamp'
                         }`}
                       >
                         {r.version_name}
@@ -119,7 +119,7 @@ export default function Changelog() {
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-3">
-                        <h2 className="font-sans text-base font-bold uppercase tracking-[0.04em] text-chalk">
+                        <h2 className="font-sans text-base font-bold uppercase tracking-[0.04em] text-ink">
                           {r.name}
                         </h2>
                         {index === 0 && (
@@ -127,7 +127,7 @@ export default function Changelog() {
                         )}
                       </div>
 
-                      <p className="mt-1 font-mono text-[0.6875rem] tracking-[0.1em] text-chalk-3">
+                      <p className="mt-1 font-mono text-[0.6875rem] tracking-[0.1em] text-ink-3">
                         Build {r.version_code}
                       </p>
 
@@ -143,7 +143,7 @@ export default function Changelog() {
                                   aria-hidden="true"
                                   className="mt-2 h-1 w-1 shrink-0 bg-stamp"
                                 />
-                                <span className="font-sans text-base normal-case leading-[1.7] text-chalk-2">
+                                <span className="font-sans text-base normal-case leading-[1.7] text-ink-2">
                                   {line}
                                 </span>
                               </li>
@@ -163,14 +163,14 @@ export default function Changelog() {
 
                     <div className="flex items-center gap-2 sm:block">
                       <span className="label sm:hidden">Issued</span>
-                      <span className="font-mono text-[0.6875rem] tabular-nums text-chalk-2">
+                      <span className="font-mono text-[0.6875rem] tabular-nums text-ink-2">
                         {r.published_at}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2 sm:block sm:text-right">
                       <span className="label sm:hidden">Size</span>
-                      <span className="font-mono text-[0.6875rem] tabular-nums text-chalk-2">
+                      <span className="font-mono text-[0.6875rem] tabular-nums text-ink-2">
                         {formatBytes(r.apk_size) ?? '—'}
                       </span>
                     </div>

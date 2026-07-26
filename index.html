@@ -1,10 +1,33 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpeg" href="/Logo-final.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0a2440" />
+    <meta name="theme-color" content="#f3f0e6" />
+    <!-- Resolves the issued process before first paint. Without this the light
+         palette renders for a frame and then swaps, which on a full-bleed
+         ground is a whole-screen flash rather than a subtle one. Kept inline
+         and synchronous on purpose — a deferred module is already too late.
+         Mirrors readStoredTheme() in src/lib/theme.js. -->
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem('ms-theme')
+          var t =
+            s === 'light' || s === 'dark'
+              ? s
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+          document.documentElement.dataset.theme = t
+          var m = document.querySelector('meta[name="theme-color"]')
+          if (m) m.content = t === 'dark' ? '#0a2440' : '#f3f0e6'
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
     <title>MusicStream</title>
     <meta
       name="description"
@@ -31,5 +54,8 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-  </body>
+  <!-- impeccable-live-start -->
+<script src="http://localhost:8400/live.js?token=1d42384a-5698-4ce3-a09c-8fe2048a5841"></script>
+<!-- impeccable-live-end -->
+</body>
 </html>

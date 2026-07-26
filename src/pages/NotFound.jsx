@@ -23,7 +23,7 @@ export default function NotFound() {
             <Stamp tone="void">Void</Stamp>
           </div>
 
-          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-chalk-2">
+          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
             That page doesn't exist. It may have been moved or the link is out of date.
           </p>
 

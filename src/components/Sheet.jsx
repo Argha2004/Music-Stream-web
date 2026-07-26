@@ -64,7 +64,7 @@ function TitleBlock({ sheetNo, rev }) {
       </div>
       <div className="tb-cell">
         <span className="tb-k">Issued to</span>
-        <span className={`tb-v ${isApproved ? 'text-stamp' : 'text-chalk-3'}`}>
+        <span className={`tb-v ${isApproved ? 'text-stamp' : 'text-ink-3'}`}>
           {issuedTo}
           {!user && ' — not signed in'}
           {user && !isApproved && status === 'rejected' && ' — not approved'}
@@ -88,7 +88,7 @@ export default function Sheet({ children, label, rev }) {
       <div className="sheet-frame sheet-ticks px-5 py-8 sm:px-8 sm:py-10 lg:px-12">
         {/* Header strip: what this sheet is, and where it sits in the document. */}
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-rule pb-4">
-          <span className="label text-chalk">{label}</span>
+          <span className="label text-ink">{label}</span>
           <span className="label">
             Sheet {sheetNo} of {SHEET_TOTAL}
           </span>

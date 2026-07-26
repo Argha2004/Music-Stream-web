@@ -60,7 +60,7 @@ function Clause({ id, children }) {
       <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
         § {clauseNo(id)}
       </span>
-      <h2 className="m-0 border-0 p-0 font-sans text-2xl font-bold uppercase tracking-[0.02em] text-chalk">
+      <h2 className="m-0 border-0 p-0 font-sans text-2xl font-bold uppercase tracking-[0.02em] text-ink">
         {children}
       </h2>
     </div>
@@ -75,7 +75,7 @@ export default function Docs() {
       <Reveal>
         <SectionLabel index={2}>Sheet</SectionLabel>
         <h1 className="drawing-title mt-6">Manual</h1>
-        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-chalk-2">
+        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-ink-2">
           Everything you need to install, use and troubleshoot MusicStream on Android.
         </p>
       </Reveal>
@@ -94,8 +94,8 @@ export default function Docs() {
                                 font-mono text-[0.6875rem] uppercase tracking-[0.12em]
                                 transition-colors last:border-b-0 ${
                                   active === s.id
-                                    ? 'bg-sheet-raised text-stamp'
-                                    : 'text-chalk-3 hover:text-chalk'
+                                    ? 'bg-hover text-stamp'
+                                    : 'text-ink-3 hover:text-ink'
                                 }`}
                   >
                     <span className="tabular-nums">{String(i + 1).padStart(2, '0')}</span>
