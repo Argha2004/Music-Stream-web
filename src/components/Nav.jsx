@@ -190,7 +190,7 @@ export default function Nav() {
 
       {/* Mobile Drawer */}
       {open && (
-        <div className="fixed inset-x-0 top-16 z-40 border-b border-rule bg-sheet/95 backdrop-blur-xl p-5 shadow-xl md:hidden">
+        <div className="fixed inset-x-0 top-16 z-40 border-b border-rule bg-sheet/95 backdrop-blur-xl p-4 sm:p-5 shadow-xl md:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto">
           <div className="flex flex-col gap-2">
             <NavLink
               to="/"

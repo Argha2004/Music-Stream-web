@@ -18,24 +18,24 @@ export default function NotFound() {
         <Reveal>
           <SectionLabel index={9}>Sheet</SectionLabel>
 
-          <div className="mt-6 flex flex-wrap items-center gap-8">
-            <h1 className="drawing-title">Not issued</h1>
+          <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-3 sm:gap-6">
+            <h1 className="drawing-title text-2xl sm:text-4xl lg:text-5xl">Not issued</h1>
             <Stamp tone="void">Void</Stamp>
           </div>
 
-          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
+          <p className="mt-4 sm:mt-8 font-sans text-sm sm:text-base normal-case leading-[1.7] text-ink-2">
             That page doesn't exist. It may have been moved or the link is out of date.
           </p>
 
-          <div className="hatch mt-10 flex items-center justify-center border border-rule px-6 py-16">
-            <span className="label bg-sheet-deep px-3 py-1.5">No such sheet in this document</span>
+          <div className="hatch mt-6 sm:mt-10 flex items-center justify-center border border-rule px-4 py-12 sm:py-16 text-center">
+            <span className="label bg-sheet-deep px-3 py-1.5 text-center">No such sheet in this document</span>
           </div>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link to="/" className="btn btn-primary">
+          <div className="mt-6 sm:mt-8 flex flex-col gap-2.5 sm:flex-row">
+            <Link to="/" className="btn btn-primary justify-center">
               Back to Home
             </Link>
-            <Link to="/docs" className="btn btn-secondary">
+            <Link to="/docs" className="btn btn-secondary justify-center">
               Open the manual
             </Link>
           </div>

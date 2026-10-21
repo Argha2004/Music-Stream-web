@@ -19,7 +19,7 @@ const SECTIONS = [
   { id: 'updates', label: 'How updates work' },
   { id: 'playback', label: 'Playback & queue' },
   { id: 'library', label: 'Library & playlists' },
-  { id: 'downloads', label: 'Downloads & quality' },
+  { id: 'import-playlists', label: 'Import playlist option' },
   { id: 'equalizer', label: 'Equalizer' },
   { id: 'appearance', label: 'Appearance' },
   { id: 'permissions', label: 'Permissions' },
@@ -56,11 +56,11 @@ function useActiveSection() {
 /** A clause heading carrying its own number, so it can be cited. */
 function Clause({ id, children }) {
   return (
-    <div className="mb-6 mt-14 flex items-center gap-3 border-b border-rule pb-3 first:mt-0">
-      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary">
+    <div className="mb-5 sm:mb-6 mt-10 sm:mt-14 flex items-center gap-2.5 sm:gap-3 border-b border-rule pb-3 first:mt-0">
+      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary shrink-0">
         § {clauseNo(id)}
       </span>
-      <h2 className="m-0 border-0 p-0 font-display text-2xl font-bold tracking-tight text-ink">
+      <h2 className="m-0 border-0 p-0 font-display text-xl sm:text-2xl font-bold tracking-tight text-ink min-w-0">
         {children}
       </h2>
     </div>
@@ -74,13 +74,13 @@ export default function Docs() {
     <Sheet label="Documentation">
       <Reveal>
         <SectionLabel index={2}>Operating manual</SectionLabel>
-        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">Manual & Guide</h1>
-        <p className="mt-3 max-w-2xl text-base text-ink-2">
+        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Manual & Guide</h1>
+        <p className="mt-2.5 sm:mt-3 max-w-2xl text-sm sm:text-base text-ink-2">
           Everything you need to install, use, and troubleshoot MusicStream on Android.
         </p>
       </Reveal>
 
-      <div className="mt-12 grid gap-12 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-16">
+      <div className="mt-8 sm:mt-12 grid gap-8 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-16">
         {/* Clause index — sticky on desktop, hidden on mobile so content leads. */}
         <aside className="hidden lg:block">
           <nav className="sticky top-24 rounded-3xl border border-rule bg-card-subtle p-4" aria-label="Clause index">
@@ -92,11 +92,10 @@ export default function Docs() {
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
-                    className={`flex items-center gap-2.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-                      active === s.id
-                        ? 'bg-primary-pill text-primary font-bold shadow-xs'
-                        : 'text-ink-3 hover:text-ink hover:bg-hover'
-                    }`}
+                    className={`flex items-center gap-2.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${active === s.id
+                      ? 'bg-primary-pill text-primary font-bold shadow-xs'
+                      : 'text-ink-3 hover:text-ink hover:bg-hover'
+                      }`}
                   >
                     <span className="font-mono text-[0.6875rem] opacity-70">{String(i + 1).padStart(2, '0')}</span>
                     <span className="truncate">{s.label}</span>
@@ -126,7 +125,7 @@ export default function Docs() {
               <li>Confirm your email, sign in, then open the download page.</li>
             </ol>
             <p>
-              <strong>Requirements:</strong> Android 7.0 (API 24) or newer, roughly 100 MB
+              <strong>Requirements:</strong> Android 7.0 (API 24) or newer, roughly 20 MB
               of free space, and an internet connection for streaming.
             </p>
           </section>
@@ -182,7 +181,7 @@ export default function Docs() {
             <p>
               For reference, the app polls <code>/api/latest</code>, which returns JSON:
             </p>
-            <pre>
+            <pre className="max-w-full overflow-x-auto text-xs sm:text-sm">
               <code>{`{
   "schema": 1,
   "versionCode": 20103,
@@ -251,31 +250,88 @@ export default function Docs() {
             <p>All of this is stored locally on your device, not in the cloud.</p>
           </section>
 
-          <section id="downloads">
-            <Clause id="downloads">Downloads &amp; quality</Clause>
+          <section id="import-playlists">
+            <Clause id="import-playlists">Import playlist option</Clause>
             <p>
-              Downloaded songs are saved to your device's shared Music library, so any
-              other player can read them too.
+              Migrating your music from Spotify, Apple Music, YouTube Music, or other services
+              is straightforward. MusicStream allows you to import existing playlists directly
+              using standard CSV spreadsheets or simple plain text (<code>.txt</code>) files.
+            </p>
+
+            <h3>How to import a playlist</h3>
+            <ol>
+              <li>
+                Open the <strong>Library</strong> tab in MusicStream and tap <strong>Playlists</strong>.
+              </li>
+              <li>
+                Tap the <strong>↓</strong> menu icon in the top corner and select{' '}
+                <strong>Import playlist</strong>.
+              </li>
+              <li>
+                Choose <strong>Select file</strong> and browse for your <code>.csv</code> or{' '}
+                <code>.txt</code> file using your device's file manager.
+              </li>
+              <li>
+                Review the detected tracks and tap <strong>Import</strong>. MusicStream will
+                automatically query the streaming catalog and match every track into your new local playlist.
+              </li>
+            </ol>
+
+            <h3>CSV file format (.csv)</h3>
+            <p>
+              CSV files are the standard export format generated by tools like Soundiiz,
+              TuneMyMusic, or Exportify. The file should include a header row containing track
+              and artist column names. Column ordering is flexible:
+            </p>
+            <pre className="max-w-full overflow-x-auto text-xs sm:text-sm">
+              <code>{`Track Name,Artist Name,Album Name
+Starboy,The Weeknd,Starboy
+Blinding Lights,The Weeknd,After Hours
+Levitating,Dua Lipa,Future Nostalgia
+Yellow,Coldplay,Parachutes`}</code>
+            </pre>
+            <p>
+              MusicStream recognizes common header variations such as <code>Title</code>,{' '}
+              <code>Track Name</code>, <code>Song</code>, and <code>Artist</code>.
+            </p>
+
+            <h3>Plain text file format (.txt)</h3>
+            <p>
+              Text files are ideal for fast, manual transfers or custom lists. List each song on a
+              new line using a standard <code>Track - Artist</code> or <code>Artist - Track</code> structure:
+            </p>
+            <pre className="max-w-full overflow-x-auto text-xs sm:text-sm">
+              <code>{`The Weeknd - Blinding Lights
+Dua Lipa - Levitating
+Coldplay - Yellow
+Adele - Easy On Me`}</code>
+            </pre>
+
+            <h3>Exporting from other provider apps</h3>
+            <p>
+              If your current music provider doesn't offer direct export options, several free tools
+              generate compatible files in seconds:
             </p>
             <ul>
               <li>
-                <strong>M4A (AAC)</strong> — the default. Keeps the original audio with no
-                re-encoding, so there's no quality loss.
+                <strong>Spotify:</strong> Open your playlist in free web utilities such as{' '}
+                <em>Exportify</em> or <em>Soundiiz</em>, click <strong>Export to CSV</strong>, and transfer the file to your Android phone.
               </li>
               <li>
-                <strong>MP3</strong> — converted on-device with FFmpeg, with full metadata
-                (title, artist, album, artwork) embedded.
-              </li>
-              <li>
-                <strong>Bitrate</strong> — selectable from 12 to 320 kbps. The source streams
-                at up to 320 kbps AAC; lossless is not available.
-              </li>
-              <li>
-                <strong>Folder</strong> — defaults to <code>Music/MusicStream</code>. You can
-                pick a different folder in Settings.
+                <strong>Apple Music &amp; YouTube Music:</strong> Use free migration tools like{' '}
+                <em>TuneMyMusic</em> or <em>Soundiiz</em> to download your playlists as CSV or text files.
               </li>
             </ul>
+
+            <h3>Matching &amp; local storage</h3>
+            <p>
+              During import, MusicStream searches for the closest high-quality official audio stream
+              for each song. If an item cannot be found, a summary report lists the skipped tracks so
+              you can search for alternatives manually. Like all playlists in MusicStream, imported
+              playlists are stored locally on your device with complete privacy.
+            </p>
           </section>
+
 
           <section id="equalizer">
             <Clause id="equalizer">Equalizer</Clause>

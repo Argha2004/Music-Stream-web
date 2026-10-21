@@ -3,6 +3,10 @@
 Marketing site, documentation, gated downloads, and the update endpoint for the
 MusicStream Android app.
 
+<p align="center">
+  <img src="public/web.png" alt="Home View of the Portfolio" width="900">
+</p>
+
 **Stack:** React 19 + Vite · React Router · Tailwind CSS v4 · HeroUI v3 ·
 Framer Motion · Supabase (auth + database) · deployed on Vercel.
 

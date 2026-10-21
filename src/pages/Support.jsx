@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 import {
   Heart,
-  Copy,
-  Check,
   Smartphone,
   ArrowRight,
   ShieldCheck,
@@ -26,20 +24,12 @@ const PRESET_AMOUNTS = [
   { amt: 100, label: 'Supporter' },
 ]
 
-const APPS = [
-  'Google Pay',
-  'PhonePe',
-  'Paytm',
-  'BHIM UPI',
-  'Cred / Navi',
-]
 
 export default function Support() {
   const { user } = useAuth()
   const [selectedAmount, setSelectedAmount] = useState(50)
   const [customAmount, setCustomAmount] = useState('')
   const [isCustom, setIsCustom] = useState(false)
-  const [copied, setCopied] = useState(false)
 
   const activeAmount = isCustom ? Number(customAmount) || 0 : selectedAmount
 
@@ -65,12 +55,6 @@ export default function Support() {
     setIsCustom(true)
   }
 
-  function handleCopyUpi() {
-    navigator.clipboard.writeText(UPI_ID)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2200)
-  }
-
   return (
     <Sheet label="Support & Donate">
       <Reveal className="max-w-3xl">
@@ -88,7 +72,7 @@ export default function Support() {
       <section className="mt-7 sm:mt-12">
         {!user ? (
           /* Sign-In Required Gate Card */
-          <div className="rounded-2xl sm:rounded-3xl border border-rule bg-card p-6 sm:p-10 text-center max-w-xl mx-auto shadow-sm">
+          <div className="rounded-2xl sm:rounded-3xl border border-rule bg-card p-5 sm:p-10 text-center max-w-xl mx-auto shadow-sm">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-pill text-primary shadow-xs">
               <Lock className="h-6 w-6" />
             </div>
@@ -101,7 +85,7 @@ export default function Support() {
               Sign in to support MusicStream
             </h2>
             <p className="mt-2 text-xs sm:text-sm text-ink-2 leading-relaxed max-w-md mx-auto">
-              Please sign in with your account to view the UPI QR code, copy the payment VPA, and make a contribution.
+              Please sign in with your account to view the UPI QR code and make a contribution.
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -130,7 +114,7 @@ export default function Support() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start">
             {/* Column 1: Choose Amount & UPI Options (lg:col-span-7) */}
             <div className="lg:col-span-7 flex flex-col gap-5">
-              <div className="rounded-2xl sm:rounded-3xl border border-rule bg-card p-4 sm:p-7 shadow-xs">
+              <div className="rounded-2xl sm:rounded-3xl border border-rule bg-card p-3.5 sm:p-7 shadow-xs">
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-primary">
                     Step 1: Choose Amount
@@ -148,7 +132,7 @@ export default function Support() {
                 </p>
 
                 {/* Preset Buttons - 20, 50, 100 */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-3.5 mt-4 sm:mt-5">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-3.5 mt-3.5 sm:mt-5">
                   {PRESET_AMOUNTS.map(({ amt, label }) => {
                     const isCurrent = !isCustom && selectedAmount === amt
                     return (
@@ -156,21 +140,21 @@ export default function Support() {
                         key={amt}
                         type="button"
                         onClick={() => handleSelectPreset(amt)}
-                        className={`relative flex flex-col items-center justify-center py-2.5 px-1.5 sm:py-4 sm:px-3 rounded-xl sm:rounded-2xl border transition-all cursor-pointer ${
+                        className={`relative flex flex-col items-center justify-center py-2 px-1 sm:py-4 sm:px-3 rounded-xl sm:rounded-2xl border transition-all cursor-pointer ${
                           isCurrent
                             ? 'border-primary bg-primary-pill shadow-xs ring-2 ring-primary/20 scale-[1.01]'
                             : 'border-rule bg-card-subtle hover:bg-hover hover:border-primary/40'
                         }`}
                       >
                         <span
-                          className={`font-display text-lg sm:text-2xl lg:text-3xl font-extrabold ${
+                          className={`font-display text-base sm:text-2xl lg:text-3xl font-extrabold ${
                             isCurrent ? 'text-primary-pill-text' : 'text-ink'
                           }`}
                         >
                           ₹{amt}
                         </span>
                         <span
-                          className={`text-[10px] sm:text-xs font-semibold mt-0.5 sm:mt-1 ${
+                          className={`text-[9px] sm:text-xs font-semibold mt-0.5 sm:mt-1 ${
                             isCurrent ? 'text-primary' : 'text-ink-3'
                           }`}
                         >
@@ -221,64 +205,16 @@ export default function Support() {
                     Opens Google Pay, PhonePe, Paytm, or BHIM directly
                   </p>
                 </div>
-
-                {/* Direct UPI ID Box */}
-                <div className="mt-4 pt-3.5 border-t border-rule/60">
-                  <div className="rounded-xl sm:rounded-2xl bg-card-subtle/80 border border-rule p-3 sm:p-4">
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-ink-3">
-                        Direct UPI VPA
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] font-medium text-primary">
-                        All UPI Apps
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <code className="flex-1 min-w-0 font-mono text-xs sm:text-sm font-bold text-ink bg-sheet px-2.5 sm:px-3 py-2 rounded-lg sm:rounded-xl border border-rule/80 truncate select-all">
-                        {UPI_ID}
-                      </code>
-                      <button
-                        type="button"
-                        onClick={handleCopyUpi}
-                        className="btn btn-sm btn-secondary px-3 sm:px-3.5 py-2 shrink-0 flex items-center gap-1.5 text-xs font-semibold cursor-pointer shadow-2xs"
-                        title="Copy UPI ID"
-                      >
-                        {copied ? (
-                          <>
-                            <Check className="h-3.5 w-3.5 text-primary" />
-                            <span className="text-primary font-bold">Copied</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="h-3.5 w-3.5" />
-                            <span>Copy</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Supported Apps Pills */}
-                <div className="mt-4 pt-3 border-t border-rule/50 flex flex-wrap items-center gap-1.5 text-xs">
-                  <span className="font-semibold text-ink-2 text-[11px] sm:text-xs mr-1">
-                    Supported:
-                  </span>
-                  {APPS.map((app) => (
-                    <span
-                      key={app}
-                      className="inline-flex items-center px-2 py-0.5 rounded-full bg-sheet text-ink-2 font-mono text-[10px] sm:text-[11px] border border-rule/70"
-                    >
-                      {app}
-                    </span>
-                  ))}
-                </div>
+                {/* Supported UPI Apps in one line */}
+                <p className="mt-4 pt-3 border-t border-rule/60 text-[11px] sm:text-xs text-ink-3 leading-relaxed">
+                  <span className="font-semibold text-ink-2">Supported UPI Apps:</span> Google Pay, PhonePe, Paytm, BHIM UPI, CRED, Navi &amp; all Indian bank apps.
+                </p>
               </div>
             </div>
 
             {/* Column 2: Live Generated QR Code (lg:col-span-5) */}
             <div className="lg:col-span-5 flex flex-col items-center w-full">
-              <div className="w-full rounded-2xl sm:rounded-3xl border border-rule bg-card p-4 sm:p-7 flex flex-col items-center shadow-md">
+              <div className="w-full rounded-2xl sm:rounded-3xl border border-rule bg-card p-3.5 sm:p-7 flex flex-col items-center shadow-md">
                 <div className="w-full flex items-center justify-between pb-3 border-b border-rule">
                   <div className="flex items-center gap-2">
                     <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
@@ -293,7 +229,7 @@ export default function Support() {
 
                 {/* The QR Code Card Frame */}
                 <div className="mt-4 sm:mt-5 p-3 sm:p-4 rounded-2xl bg-white border border-black/10 shadow-inner flex flex-col items-center justify-center">
-                  <div className="w-[160px] h-[160px] sm:w-[200px] sm:h-[200px] flex items-center justify-center">
+                  <div className="w-[140px] h-[140px] sm:w-[200px] sm:h-[200px] flex items-center justify-center">
                     <QRCodeSVG
                       value={upiUri}
                       size={200}
@@ -331,7 +267,7 @@ export default function Support() {
         )}
 
         {/* Full-width "Where does your support go?" Section Below */}
-        <div className="mt-7 sm:mt-10 rounded-2xl sm:rounded-3xl border border-rule bg-card p-4 sm:p-7 shadow-2xs">
+        <div className="mt-6 sm:mt-10 rounded-2xl sm:rounded-3xl border border-rule bg-card p-3.5 sm:p-7 shadow-2xs">
           <div className="flex items-center gap-2">
             <Heart className="h-4 w-4 text-primary fill-primary" />
             <h3 className="font-display text-base sm:text-lg font-bold text-ink">

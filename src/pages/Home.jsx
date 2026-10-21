@@ -157,23 +157,23 @@ export default function Home() {
       <section className="container-x">
         <div className="max-w-3xl">
           {/* Main Title with crystal clear dark/light mode visibility */}
-          <h1 className="font-display text-4xl sm:text-6xl lg:text-[4.5rem] font-extrabold tracking-tight text-ink leading-[1.08]">
+          <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold tracking-tight text-ink leading-[1.1] sm:leading-[1.08]">
             Your music,
             <br />
             <span className="text-primary">No Ads, No Trackers.</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-6 text-base sm:text-lg leading-relaxed text-ink-2 max-w-2xl font-normal">
+          <p className="mt-4 sm:mt-6 text-sm sm:text-lg leading-relaxed text-ink-2 max-w-2xl font-normal">
             MusicStream is a fast, native Android music player with background playback,
             liquid glass Material design, 10-band equalizer, and in-app updates.
           </p>
 
           {/* CTA Buttons */}
-          <div className="mt-8 flex flex-wrap items-center gap-3.5">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3.5">
             <Link
               to={user ? '/download' : '/signup'}
-              className="btn btn-primary px-7 py-3.5 text-sm font-semibold flex items-center gap-2.5 shadow-sm hover:shadow-md"
+              className="btn btn-primary w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 text-sm font-semibold flex items-center justify-center gap-2.5 shadow-sm hover:shadow-md"
             >
               <Download className="h-4 w-4" />
               <span>{user ? 'Download APK' : 'Request Access'}</span>
@@ -181,7 +181,7 @@ export default function Home() {
 
             <Link
               to="/support"
-              className="btn px-6 py-3.5 text-sm font-semibold flex items-center gap-2.5 rounded-full border border-rose-200/90 dark:border-rose-900/50 bg-rose-50/70 hover:bg-rose-100/90 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-rose-800 dark:text-rose-200 transition-all shadow-2xs group"
+              className="btn w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 text-sm font-semibold flex items-center justify-center gap-2.5 rounded-full border border-rose-200/90 dark:border-rose-900/50 bg-rose-50/70 hover:bg-rose-100/90 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-rose-800 dark:text-rose-200 transition-all shadow-2xs group"
             >
               <Heart className="h-4 w-4 text-rose-500 fill-rose-500/30 group-hover:fill-rose-500 group-hover:scale-110 transition-transform" />
               <span>Support</span>
@@ -189,7 +189,7 @@ export default function Home() {
 
             <Link
               to="/docs"
-              className="btn btn-secondary px-7 py-3.5 text-sm font-semibold flex items-center gap-2.5"
+              className="btn btn-secondary w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 text-sm font-semibold flex items-center justify-center gap-2.5"
             >
               <BookOpen className="h-4 w-4" />
               <span>Read documentation</span>
@@ -197,24 +197,24 @@ export default function Home() {
           </div>
 
           {/* Platform Pills row with all key features */}
-          <div className="mt-8 flex flex-wrap items-center gap-2 text-xs font-semibold">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+          <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-semibold">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-2.5 sm:px-3 py-1 text-ink-2 shadow-2xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               Android 7.0+
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-2.5 sm:px-3 py-1 text-ink-2 shadow-2xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               Real 10-Band EQ
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-2.5 sm:px-3 py-1 text-ink-2 shadow-2xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               Liquid Glass UI
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-2.5 sm:px-3 py-1 text-ink-2 shadow-2xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               100% Ad-Free
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-2.5 sm:px-3 py-1 text-ink-2 shadow-2xs">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               In-App Updates
             </span>
@@ -223,21 +223,21 @@ export default function Home() {
       </section>
 
       {/* ---------------- 2. FEATURES SECTION ("What the app does") ---------------- */}
-      <section id="features" className="container-x mt-28 sm:mt-36 scroll-mt-24">
+      <section id="features" className="container-x mt-16 sm:mt-28 lg:mt-36 scroll-mt-24">
         <div>
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#4A7854] dark:text-primary">
             FEATURES
           </span>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">
+          <h2 className="mt-1.5 sm:mt-2 text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
             What the app does
           </h2>
-          <p className="mt-3 text-base text-ink-2 max-w-2xl">
+          <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-ink-2 max-w-2xl">
             Built with native Kotlin and Jetpack Compose. Everything you expect, nothing you don't.
           </p>
         </div>
 
         {/* 3x2 Grid with pastel geometric icon badges */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+        <div className="mt-8 sm:mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
           {FEATURES.map((item) => {
             const Icon = item.icon
             return (
@@ -262,21 +262,21 @@ export default function Home() {
       </section>
 
       {/* ---------------- 3. SCREENS SHOWCASE (Screens from 3.0.2 - Fixed no cut off, clean screenshots) ---------------- */}
-      <section id="screens" className="container-x mt-28 sm:mt-36 scroll-mt-24">
+      <section id="screens" className="container-x mt-16 sm:mt-28 lg:mt-36 scroll-mt-24">
         <div>
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#4A7854] dark:text-primary">
             INTERFACE TOUR
           </span>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">
+          <h2 className="mt-1.5 sm:mt-2 text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
             Screens from {currentVersion}
           </h2>
-          <p className="mt-3 text-base text-ink-2 max-w-2xl">
+          <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-ink-2 max-w-2xl">
             Clean views from the current release, running in pure native high fidelity.
           </p>
         </div>
 
         {/* Responsive 4-Column Grid: fits 100% inside container on desktop without cutting off */}
-        <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="mt-8 sm:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {SCREENS.map((screen) => (
             <div key={screen.id} className="flex flex-col group">
               {/* Clean app capture without mobile mockup frame */}
@@ -299,8 +299,8 @@ export default function Home() {
       </section>
 
       {/* ---------------- 4. DOWNLOAD BANNER CARD ---------------- */}
-      <section className="container-x mt-20 sm:mt-32">
-        <div className="relative rounded-[28px] sm:rounded-[36px] bg-[#C1E5A5] dark:bg-[#1A3821] text-[#1B3E21] dark:text-[#EEF5EE] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-sm">
+      <section className="container-x mt-14 sm:mt-24 lg:mt-32">
+        <div className="relative rounded-[24px] sm:rounded-[36px] bg-[#C1E5A5] dark:bg-[#1A3821] text-[#1B3E21] dark:text-[#EEF5EE] p-5 sm:p-10 lg:p-12 overflow-hidden shadow-sm">
           {/* Subtle organic background wave contours */}
           <div
             className="pointer-events-none absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-[#AEDE8E] dark:bg-[#254C2D] opacity-50 blur-2xl"
@@ -311,17 +311,17 @@ export default function Home() {
             aria-hidden="true"
           />
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 lg:gap-8 items-center">
             {/* Left side details */}
             <div className="lg:col-span-7">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B3E21]/10 dark:bg-white/10 px-3 py-1 text-xs font-semibold text-[#1B3E21] dark:text-[#A8F0BC] mb-3">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B3E21]/10 dark:bg-white/10 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold text-[#1B3E21] dark:text-[#A8F0BC] mb-2.5 sm:mb-3">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#1B3E21] dark:bg-[#52c46f]" />
                 Latest Release
               </span>
-              <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1B3E21] dark:text-white">
+              <h3 className="font-display text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1B3E21] dark:text-white">
                 Get MusicStream {currentVersion}
               </h3>
-              <p className="mt-2 text-xs sm:text-sm text-[#315738] dark:text-[#B2C9B5] font-medium">
+              <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-[#315738] dark:text-[#B2C9B5] font-medium">
                 Released {latestRelease?.published_at || 'July 2026'} • SHA-256 Checksum verified
               </p>
 
@@ -373,23 +373,23 @@ export default function Home() {
       </section>
 
       {/* ---------------- 4.5 SUPPORT & DONATE CALLOUT SECTION ---------------- */}
-      <section className="container-x mt-20 sm:mt-28">
-        <div className="rounded-[28px] sm:rounded-[36px] border border-rose-200/80 dark:border-rose-900/40 bg-gradient-to-br from-rose-50/50 via-card to-card dark:from-rose-950/20 dark:via-card dark:to-card p-6 sm:p-10 lg:p-12 relative overflow-hidden shadow-2xs">
+      <section className="container-x mt-14 sm:mt-24 lg:mt-28">
+        <div className="rounded-[24px] sm:rounded-[36px] border border-rose-200/80 dark:border-rose-900/40 bg-gradient-to-br from-rose-50/50 via-card to-card dark:from-rose-950/20 dark:via-card dark:to-card p-5 sm:p-10 lg:p-12 relative overflow-hidden shadow-2xs">
           <div
             className="pointer-events-none absolute -right-16 -top-16 w-64 h-64 rounded-full bg-rose-200/30 dark:bg-rose-900/10 blur-3xl"
             aria-hidden="true"
           />
 
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
             <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100/80 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/50 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100/80 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/50 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-bold text-rose-700 dark:text-rose-300">
                 <Heart className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />
                 Support Development
               </span>
-              <h3 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+              <h3 className="mt-2.5 sm:mt-3 font-display text-xl sm:text-3xl font-extrabold tracking-tight text-ink">
                 Help keep MusicStream free & open-source
               </h3>
-              <p className="mt-2 text-sm sm:text-base text-ink-2 leading-relaxed">
+              <p className="mt-2 text-xs sm:text-base text-ink-2 leading-relaxed">
                 MusicStream is 100% ad-free with zero trackers or subscriptions. If you enjoy using the player, support continued development with a quick UPI contribution.
               </p>
             </div>
@@ -397,7 +397,7 @@ export default function Home() {
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0">
               <Link
                 to="/support"
-                className="btn px-6 py-3.5 rounded-full text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-2 shadow-sm hover:shadow-md transition-all group"
+                className="btn w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 justify-center rounded-full text-xs sm:text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-2 shadow-sm hover:shadow-md transition-all group"
               >
                 <Heart className="h-4 w-4 fill-white/30 group-hover:fill-white group-hover:scale-110 transition-transform" />
                 <span>Support via UPI</span>
@@ -409,21 +409,21 @@ export default function Home() {
       </section>
 
       {/* ---------------- 5. FAQ / ACCORDION SECTION ---------------- */}
-      <section id="faq" className="container-x mt-28 sm:mt-36 scroll-mt-24">
+      <section id="faq" className="container-x mt-16 sm:mt-28 lg:mt-36 scroll-mt-24">
         <div>
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#4A7854] dark:text-primary">
             FAQ
           </span>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">
+          <h2 className="mt-1.5 sm:mt-2 text-2xl sm:text-4xl font-extrabold tracking-tight text-ink">
             Common questions
           </h2>
-          <p className="mt-3 text-base text-ink-2 max-w-2xl">
+          <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-ink-2 max-w-2xl">
             Frequently asked questions about access, installation, and privacy.
           </p>
         </div>
 
         {/* Accordion List */}
-        <div className="mt-10 max-w-3xl space-y-3">
+        <div className="mt-8 sm:mt-10 max-w-3xl space-y-3">
           {FAQS.map((faq, index) => {
             const isOpen = openFaq === index
             return (
@@ -434,11 +434,11 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? null : index)}
-                  className="flex w-full items-center justify-between p-5 sm:p-6 text-left font-display text-base font-bold text-ink hover:text-primary transition-colors cursor-pointer"
+                  className="flex w-full items-center justify-between p-4 sm:p-6 text-left font-display text-sm sm:text-base font-bold text-ink hover:text-primary transition-colors cursor-pointer"
                   aria-expanded={isOpen}
                 >
-                  <span>{faq.q}</span>
-                  <div className="ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sheet text-ink-2">
+                  <span className="min-w-0 pr-2">{faq.q}</span>
+                  <div className="ml-2 sm:ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sheet text-ink-2">
                     {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                   </div>
                 </button>

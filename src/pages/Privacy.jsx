@@ -73,11 +73,11 @@ const ZERO_COLLECTION = [
 
 function ClauseHead({ no, children }) {
   return (
-    <div className="mb-5 flex items-center gap-3 border-b border-rule pb-3">
-      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary">
+    <div className="mb-4 sm:mb-5 flex items-center gap-2.5 sm:gap-3 border-b border-rule pb-3">
+      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary shrink-0">
         § {no}
       </span>
-      <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink">
+      <h2 className="font-display text-lg sm:text-2xl font-bold tracking-tight text-ink min-w-0">
         {children}
       </h2>
     </div>
@@ -89,27 +89,27 @@ export default function Privacy() {
     <Sheet label="Data Privacy & Policy">
       <Reveal className="max-w-3xl">
         <SectionLabel index={5}>Compliance &amp; Trust</SectionLabel>
-        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight text-ink">
+        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-ink">
           Data &amp; Privacy Policy
         </h1>
-        <p className="mt-3 text-base text-ink-2 leading-relaxed">
+        <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-ink-2 leading-relaxed">
           MusicStream is built on the principle of minimal data footprint. We believe your music
           habits, playlists, and listening history belong exclusively to you.
         </p>
-        <p className="mt-1 font-mono text-xs text-ink-3">
+        <p className="mt-1 font-mono text-[11px] sm:text-xs text-ink-3">
           Last revised: October 2026 • Effective immediately
         </p>
       </Reveal>
 
       {/* --- Key Privacy Pillars --- */}
-      <section className="mt-12 max-w-4xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+      <section className="mt-8 sm:mt-12 max-w-4xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-6">
           {HIGHLIGHTS.map((item) => {
             const Icon = item.icon
             return (
               <div
                 key={item.title}
-                className="rounded-2xl border border-rule bg-card p-5 sm:p-6 shadow-2xs transition-shadow hover:shadow-xs"
+                className="rounded-2xl border border-rule bg-card p-4 sm:p-6 shadow-2xs transition-shadow hover:shadow-xs"
               >
                 <div
                   className={`flex h-11 w-11 items-center justify-center rounded-xl ${item.badgeBg} ${item.badgeText}`}
@@ -231,14 +231,14 @@ export default function Privacy() {
         <div className="rounded-2xl border border-rule bg-card overflow-hidden">
           <div className="divide-y divide-rule-soft">
             {PERMISSIONS.map((p) => (
-              <div key={p.permission} className="p-4 sm:p-5">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-mono text-xs font-bold text-primary bg-primary-pill px-2.5 py-0.5 rounded-full">
+              <div key={p.permission} className="p-3.5 sm:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2">
+                  <span className="font-mono text-[11px] sm:text-xs font-bold text-primary bg-primary-pill px-2.5 py-0.5 rounded-full break-all">
                     {p.permission}
                   </span>
-                  <span className="text-xs text-ink-3 font-mono">{p.scope}</span>
+                  <span className="text-[11px] sm:text-xs text-ink-3 font-mono">{p.scope}</span>
                 </div>
-                <p className="mt-2 text-xs sm:text-sm text-ink-2 leading-relaxed">{p.purpose}</p>
+                <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2 leading-relaxed">{p.purpose}</p>
               </div>
             ))}
           </div>

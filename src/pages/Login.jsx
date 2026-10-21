@@ -44,20 +44,20 @@ export default function Login() {
       <div className="mx-auto max-w-md">
         <Reveal>
           <SectionLabel index={6}>Authentication</SectionLabel>
-          <h1 className="drawing-title mt-4 text-3xl sm:text-4xl">Sign in</h1>
-          <p className="mt-2 text-sm text-ink-2">
+          <h1 className="drawing-title mt-2 sm:mt-4 text-2xl sm:text-4xl">Sign in</h1>
+          <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2">
             Sign in with your approved account to download MusicStream.
           </p>
         </Reveal>
 
         {!isConfigured && (
-          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-4 text-xs text-red-800 dark:text-red-300">
+          <div className="mt-5 sm:mt-6 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-3.5 sm:p-4 text-xs text-red-800 dark:text-red-300">
             <strong>Supabase not connected.</strong> Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.
           </div>
         )}
 
         {blocked && (
-          <div className={`mt-6 rounded-2xl p-5 border text-sm ${
+          <div className={`mt-5 sm:mt-6 rounded-2xl p-4 sm:p-5 border text-xs sm:text-sm ${
             blocked === 'rejected'
               ? 'border-red-200 bg-red-50 text-red-900 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300'
               : 'border-primary/30 bg-primary-pill text-primary-pill-text'
@@ -74,7 +74,7 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={onSubmit} className="mt-8 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8 shadow-xs">
+        <form onSubmit={onSubmit} className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-4 sm:p-8 shadow-xs">
           {error && (
             <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-3.5 text-xs text-red-800 dark:text-red-300">
               {error}

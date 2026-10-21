@@ -27,23 +27,23 @@ export default function Sheet({ children, label }) {
   const sheetNo = sheetNumberFor(pathname)
 
   return (
-    <div className="container-x py-6 sm:py-12">
-      <div className="rounded-[28px] sm:rounded-[40px] border border-rule bg-card p-4 sm:p-10 lg:p-12 shadow-sm">
+    <div className="container-x py-4 sm:py-8 lg:py-12">
+      <div className="rounded-2xl sm:rounded-[36px] lg:rounded-[40px] border border-rule bg-card p-3.5 sm:p-8 lg:p-12 shadow-sm">
         {/* Header strip */}
-        <div className="flex items-center justify-between gap-2 border-b border-rule pb-4 sm:pb-5">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-ink-2 font-mono">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-rule pb-3.5 sm:pb-5">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="h-2 w-2 rounded-full bg-primary shrink-0" />
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-ink-2 font-mono truncate">
               {label}
             </span>
           </div>
 
-          <span className="text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-card-subtle text-ink-3 border border-rule font-mono">
+          <span className="text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-1 rounded-full bg-card-subtle text-ink-3 border border-rule font-mono shrink-0">
             Section {sheetNo}
           </span>
         </div>
 
-        <div className="pt-6 sm:pt-8">{children}</div>
+        <div className="pt-5 sm:pt-8 min-w-0">{children}</div>
       </div>
     </div>
   )

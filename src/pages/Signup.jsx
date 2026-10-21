@@ -51,20 +51,20 @@ export default function Signup() {
         <div className="mx-auto max-w-md">
           <Reveal>
             <SectionLabel index={7}>Submitted</SectionLabel>
-            <h1 className="drawing-title mt-4 text-3xl sm:text-4xl">Request filed</h1>
+            <h1 className="drawing-title mt-2 sm:mt-4 text-2xl sm:text-4xl">Request filed</h1>
 
-            <div className="mt-8 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8 text-center">
+            <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-4 sm:p-8 text-center">
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-pill text-primary">
                 <MailCheck className="h-7 w-7" />
               </div>
-              <h2 className="mt-4 font-display text-xl font-bold text-ink">
+              <h2 className="mt-4 font-display text-lg sm:text-xl font-bold text-ink">
                 Check your email
               </h2>
-              <p className="mt-2 text-sm text-ink-2 leading-relaxed">
+              <p className="mt-2 text-xs sm:text-sm text-ink-2 leading-relaxed">
                 We sent a confirmation link to <strong className="text-ink break-all">{email}</strong>.
                 Click the link to verify your email, then wait for developer approval.
               </p>
-              <Link to="/login" className="btn btn-primary w-full mt-6 py-3.5">
+              <Link to="/login" className="btn btn-primary w-full mt-6 py-3.5 text-sm font-semibold">
                 Go to sign in
               </Link>
             </div>
@@ -79,19 +79,19 @@ export default function Signup() {
       <div className="mx-auto max-w-md">
         <Reveal>
           <SectionLabel index={7}>Access</SectionLabel>
-          <h1 className="drawing-title mt-4 text-3xl sm:text-4xl">Request access</h1>
-          <p className="mt-2 text-sm text-ink-2">
+          <h1 className="drawing-title mt-2 sm:mt-4 text-2xl sm:text-4xl">Request access</h1>
+          <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2">
             Create an account to request an approved tester slot for MusicStream.
           </p>
         </Reveal>
 
         {!isConfigured && (
-          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-4 text-xs text-red-800 dark:text-red-300">
+          <div className="mt-5 sm:mt-6 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-3.5 sm:p-4 text-xs text-red-800 dark:text-red-300">
             <strong>Supabase not configured.</strong> Set environment variables to enable signups.
           </div>
         )}
 
-        <div className="mt-6 rounded-2xl border border-primary/20 bg-primary-pill p-4 text-xs text-primary-pill-text flex items-start gap-3">
+        <div className="mt-5 sm:mt-6 rounded-2xl border border-primary/20 bg-primary-pill p-3.5 sm:p-4 text-xs text-primary-pill-text flex items-start gap-2.5 sm:gap-3">
           <ShieldCheck className="h-4 w-4 shrink-0 mt-0.5" />
           <span>
             MusicStream is invite-only. After creating your account, the developer will
@@ -99,7 +99,7 @@ export default function Signup() {
           </span>
         </div>
 
-        <form onSubmit={onSubmit} className="mt-6 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8 shadow-xs">
+        <form onSubmit={onSubmit} className="mt-5 sm:mt-6 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-4 sm:p-8 shadow-xs">
           {error && (
             <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-3.5 text-xs text-red-800 dark:text-red-300">
               {error}

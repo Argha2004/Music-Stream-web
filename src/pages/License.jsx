@@ -38,11 +38,11 @@ const THIRD_PARTY = [
 /** A numbered clause heading that can be cited by its number. */
 function ClauseHead({ no, children }) {
   return (
-    <div className="mb-6 flex items-center gap-3 border-b border-rule pb-3">
-      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary">
+    <div className="mb-5 sm:mb-6 flex items-center gap-2.5 sm:gap-3 border-b border-rule pb-3">
+      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary shrink-0">
         § {no}
       </span>
-      <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
+      <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-ink min-w-0">
         {children}
       </h2>
     </div>
@@ -54,8 +54,8 @@ export default function License() {
     <Sheet label="License & Terms">
       <Reveal className="max-w-3xl">
         <SectionLabel index={4}>Legal</SectionLabel>
-        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">Terms of Use</h1>
-        <p className="mt-3 text-base text-ink-2">
+        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Terms of Use</h1>
+        <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-ink-2">
           Terms governing your private and educational use of MusicStream and this portal.
         </p>
       </Reveal>
@@ -81,10 +81,10 @@ export default function License() {
       </section>
 
       {/* --- Schedule of use --- */}
-      <section className="mt-12 max-w-3xl">
+      <section className="mt-10 sm:mt-12 max-w-3xl">
         <ClauseHead no="02">Schedule of use</ClauseHead>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
           <div className="plate">
             <div className="plate-hd">
               <span className="label text-checked">You may</span>
@@ -211,19 +211,19 @@ export default function License() {
         </p>
 
         <div className="reg mt-6">
-          <div className="reg-hd grid grid-cols-[1fr_auto] gap-4">
+          <div className="reg-hd hidden sm:grid sm:grid-cols-[1fr_auto] gap-4">
             <span>Component</span>
             <span>Licence</span>
           </div>
           {THIRD_PARTY.map((row) => (
             <div
               key={row.name}
-              className="reg-row grid grid-cols-1 gap-1 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-4"
+              className="reg-row flex flex-col sm:grid sm:grid-cols-[1fr_auto] sm:items-baseline gap-1 sm:gap-4"
             >
-              <span className="min-w-0 font-sans text-base normal-case text-ink">
+              <span className="min-w-0 font-sans text-sm sm:text-base normal-case text-ink font-medium sm:font-normal">
                 {row.name}
               </span>
-              <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-ink-3">
+              <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-primary sm:text-ink-3">
                 {row.licence}
               </span>
             </div>

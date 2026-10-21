@@ -22,12 +22,12 @@ function AwaitingIssue({ email, status, onRecheck }) {
     <Sheet label="Account status">
       <Reveal className="max-w-2xl">
         <SectionLabel index={5}>Controlled access</SectionLabel>
-        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">
+        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">
           {rejected ? 'Request declined' : 'Approval pending'}
         </h1>
 
-        <div className="mt-8 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8">
-          <div className="flex items-center justify-between pb-4 border-b border-rule">
+        <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-4 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-rule">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
               Request Record
             </span>
@@ -120,9 +120,9 @@ export default function Download() {
     <Sheet label="Download release" rev={release?.version_name}>
       <Reveal className="max-w-3xl">
         <SectionLabel index={5}>Downloads</SectionLabel>
-        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">Get MusicStream</h1>
-        <p className="mt-3 text-sm font-medium text-ink-3">
-          Issued to approved tester <span className="text-primary font-semibold">{user?.email}</span>
+        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Get MusicStream</h1>
+        <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-medium text-ink-3">
+          Issued to approved tester <span className="text-primary font-semibold break-all">{user?.email}</span>
         </p>
       </Reveal>
 
@@ -149,38 +149,38 @@ export default function Download() {
             </p>
           </div>
         ) : (
-          <div className="rounded-[32px] sm:rounded-[36px] bg-[#C1E5A5] dark:bg-[#1E3E24] text-[#1B3E21] dark:text-[#EEF5EE] p-8 sm:p-10 shadow-sm relative overflow-hidden">
+          <div className="rounded-[24px] sm:rounded-[36px] bg-[#C1E5A5] dark:bg-[#1E3E24] text-[#1B3E21] dark:text-[#EEF5EE] p-5 sm:p-8 lg:p-10 shadow-sm relative overflow-hidden">
             <div className="relative z-10">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#2A5C34] dark:text-[#78C587] bg-white/60 dark:bg-black/30 px-3 py-1 rounded-full">
+              <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
+                <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#2A5C34] dark:text-[#78C587] bg-white/60 dark:bg-black/30 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full">
                   Current build • v{release.version_name}
                 </span>
-                <span className="text-xs font-medium text-ink-2 dark:text-[#B2C9B5]">
+                <span className="text-[11px] sm:text-xs font-medium text-ink-2 dark:text-[#B2C9B5]">
                   Published {release.published_at}
                 </span>
               </div>
 
-              <h2 className="mt-5 font-display text-2xl sm:text-3xl font-extrabold tracking-tight">
+              <h2 className="mt-4 sm:mt-5 font-display text-xl sm:text-3xl font-extrabold tracking-tight">
                 {release.name}
               </h2>
 
               {/* Stats pills */}
-              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
-                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Version</div>
-                  <div className="mt-1 font-mono font-bold text-base text-ink">{release.version_name}</div>
+              <div className="mt-5 sm:mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                <div className="rounded-xl sm:rounded-2xl bg-white/70 dark:bg-black/20 p-2.5 sm:p-3.5 backdrop-blur-xs">
+                  <div className="text-[10px] sm:text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Version</div>
+                  <div className="mt-0.5 sm:mt-1 font-mono font-bold text-sm sm:text-base text-ink truncate">{release.version_name}</div>
                 </div>
-                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
-                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Build code</div>
-                  <div className="mt-1 font-mono font-bold text-base text-ink">{release.version_code}</div>
+                <div className="rounded-xl sm:rounded-2xl bg-white/70 dark:bg-black/20 p-2.5 sm:p-3.5 backdrop-blur-xs">
+                  <div className="text-[10px] sm:text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Build code</div>
+                  <div className="mt-0.5 sm:mt-1 font-mono font-bold text-sm sm:text-base text-ink truncate">{release.version_code}</div>
                 </div>
-                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
-                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">APK Size</div>
-                  <div className="mt-1 font-mono font-bold text-base text-ink">{formatBytes(release.apk_size) || '207 MB'}</div>
+                <div className="rounded-xl sm:rounded-2xl bg-white/70 dark:bg-black/20 p-2.5 sm:p-3.5 backdrop-blur-xs">
+                  <div className="text-[10px] sm:text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">APK Size</div>
+                  <div className="mt-0.5 sm:mt-1 font-mono font-bold text-sm sm:text-base text-ink truncate">{formatBytes(release.apk_size) || '207 MB'}</div>
                 </div>
-                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
-                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Android</div>
-                  <div className="mt-1 font-mono font-bold text-base text-ink">{release.min_sdk >= 24 ? '7.0+' : 'Supported'}</div>
+                <div className="rounded-xl sm:rounded-2xl bg-white/70 dark:bg-black/20 p-2.5 sm:p-3.5 backdrop-blur-xs">
+                  <div className="text-[10px] sm:text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Android</div>
+                  <div className="mt-0.5 sm:mt-1 font-mono font-bold text-sm sm:text-base text-ink truncate">{release.min_sdk >= 24 ? '7.0+' : 'Supported'}</div>
                 </div>
               </div>
 
@@ -206,14 +206,14 @@ export default function Download() {
               )}
 
               {/* Download Action */}
-              <div className="mt-8">
+              <div className="mt-6 sm:mt-8">
                 <a
                   href={release.apk_url}
-                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] w-full py-4 text-base font-bold shadow-lg flex items-center justify-center gap-3"
+                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] w-full py-3.5 sm:py-4 text-sm sm:text-base font-bold shadow-lg flex items-center justify-center gap-2.5 sm:gap-3"
                   download
                   rel="noopener"
                 >
-                  <DownloadIcon className="h-5 w-5" />
+                  <DownloadIcon className="h-4 sm:h-5 w-4 sm:w-5 shrink-0" />
                   <span>Download MusicStream APK</span>
                 </a>
               </div>
@@ -222,7 +222,7 @@ export default function Download() {
         )}
 
         {/* Installation instructions */}
-        <div className="mt-10 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8">
+        <div className="mt-8 sm:mt-10 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-4 sm:p-8">
           <h3 className="font-display text-lg font-bold text-ink">Installation steps</h3>
           <ol className="mt-4 space-y-4">
             <li className="flex gap-4">

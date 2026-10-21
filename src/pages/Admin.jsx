@@ -105,23 +105,23 @@ export default function Admin() {
   return (
     <Sheet label="Approvals register">
       <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-6">
           <div>
             <SectionLabel index={8}>Sheet</SectionLabel>
-            <h1 className="drawing-title mt-6">Approvals</h1>
+            <h1 className="drawing-title mt-2 sm:mt-4 text-2xl sm:text-4xl">Approvals</h1>
           </div>
-          <button type="button" className="btn btn-line btn-sm" onClick={load}>
+          <button type="button" className="btn btn-line btn-sm shrink-0" onClick={load}>
             Refresh
           </button>
         </div>
 
-        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-ink-2">
+        <p className="mt-4 sm:mt-6 max-w-2xl font-sans text-sm sm:text-base normal-case leading-[1.7] text-ink-2">
           Approve who can download MusicStream. Changes take effect immediately.
         </p>
       </Reveal>
 
       {/* Filters double as counters with pill styling */}
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="mt-6 sm:mt-8 flex flex-wrap gap-1.5 sm:gap-2">
         {FILTERS.map((f) => {
           const active = filter === f.id
           return (
@@ -130,14 +130,14 @@ export default function Admin() {
               type="button"
               aria-pressed={active}
               onClick={() => setFilter(f.id)}
-              className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 sm:gap-2 rounded-full px-2.5 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold transition-all ${
                 active
                   ? 'bg-primary text-white shadow-xs'
                   : 'bg-card-subtle text-ink-2 hover:bg-hover'
               }`}
             >
               <span>{f.label}</span>
-              <span className={`px-2 py-0.5 rounded-full text-[0.6875rem] font-mono ${active ? 'bg-white/20 text-white' : 'bg-card text-ink-3'}`}>
+              <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-[0.6875rem] font-mono ${active ? 'bg-white/20 text-white' : 'bg-card text-ink-3'}`}>
                 {counts[f.id]}
               </span>
             </button>
@@ -190,7 +190,7 @@ export default function Admin() {
             </p>
           </div>
         ) : (
-          <div className="rounded-3xl border border-rule bg-card overflow-hidden">
+          <div className="rounded-2xl sm:rounded-3xl border border-rule bg-card overflow-hidden">
             <div className="hidden grid-cols-[1fr_8rem_14rem] gap-4 px-6 py-3.5 bg-card-subtle font-mono text-xs font-bold uppercase tracking-wider text-ink-3 lg:grid">
               <span>Account</span>
               <span>Status</span>
@@ -199,13 +199,13 @@ export default function Admin() {
 
             <ul className="divide-y divide-rule">
               {visible.map((p) => (
-                <li key={p.id} className="p-5 sm:p-6 transition-colors hover:bg-card-subtle/40">
-                  <div className="grid gap-4 lg:grid-cols-[1fr_8rem_14rem] lg:items-center">
+                <li key={p.id} className="p-3.5 sm:p-6 transition-colors hover:bg-card-subtle/40">
+                  <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1fr_8rem_14rem] lg:items-center">
                     <div className="min-w-0">
-                      <p className="break-all font-mono text-sm font-semibold text-ink">
+                      <p className="break-all font-mono text-xs sm:text-sm font-semibold text-ink">
                         {p.email}
                       </p>
-                      <p className="mt-1 font-mono text-xs text-ink-3">
+                      <p className="mt-0.5 sm:mt-1 font-mono text-[11px] sm:text-xs text-ink-3">
                         Requested {new Date(p.requested_at).toLocaleDateString()}
                         {p.decided_at
                           ? ` · decided ${new Date(p.decided_at).toLocaleDateString()}`
@@ -215,7 +215,7 @@ export default function Admin() {
 
                     <div>
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider ${
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 sm:px-3 py-1 font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider ${
                           p.status === 'approved'
                             ? 'bg-primary-pill text-primary'
                             : p.status === 'rejected'
@@ -232,7 +232,7 @@ export default function Admin() {
                       {p.status !== 'approved' && (
                         <button
                           type="button"
-                          className="btn btn-sm btn-primary flex-1 lg:flex-none"
+                          className="btn btn-sm btn-primary flex-1 lg:flex-none text-xs py-2 px-3 sm:px-4"
                           disabled={busyId === p.id}
                           onClick={() => decide(p.id, p.email, 'approved')}
                         >
@@ -242,7 +242,7 @@ export default function Admin() {
                       {p.status !== 'rejected' && (
                         <button
                           type="button"
-                          className="btn btn-sm btn-void flex-1 lg:flex-none"
+                          className="btn btn-sm btn-void flex-1 lg:flex-none text-xs py-2 px-3 sm:px-4"
                           disabled={busyId === p.id}
                           onClick={() => decide(p.id, p.email, 'rejected')}
                         >
