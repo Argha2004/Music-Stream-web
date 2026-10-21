@@ -1,374 +1,414 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { animate, useInView, useReducedMotion } from 'framer-motion'
+import {
+  Download,
+  BookOpen,
+  Headphones,
+  Mic2,
+  Sliders,
+  Palette,
+  ShieldCheck,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  Layers,
+  Sparkles,
+} from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-import Sheet from '../components/Sheet'
-import Reveal, { Rule, RevealGroup, RevealItem } from '../components/Reveal'
-import SectionLabel from '../components/SectionLabel'
-import Waveform from '../components/Waveform'
-import Figure from '../components/Figure'
+import { fetchLatestRelease } from '../lib/supabase'
 
-/* ---------------------------------------------------------------------------
-   DIRECTION CONTRACT — "The Controlled Copy"
-
-   THESIS: This is the app's controlled specification document, not a landing
-   page about an app. It refuses the category arrangement it replaced: centred
-   hero, angled phone mockup, icon feature-card grid, gradient CTA.
-
-   OWN-WORLD: Warm vellum ground, blue-black drafting line work and lettering,
-   one survey vermilion meaning action or approval. Square corners, no shadows,
-   no glass. Depth from line weight, tonal recess and 45° hatching.
-
-   STORY: A visitor reads a spec'd, versioned, finished piece of software, sees
-   that access is issued rather than open, and requests issue.
-
-   FIRST VIEWPORT: Drawn sheet frame; the claim set as the drawing title at
-   display scale; three real screenshots pasted up as a ruled figure plate,
-   sized as specimens rather than as a hero image; the app's actual figures
-   pinned below as dimension callouts. Primary action sits under the title.
-
-   FORM: Technical standards document, candidate 5 of the grounded list, seed
-   key 9c0436ff, staged as a drawing sheet with title block.
-   --------------------------------------------------------------------------- */
-
-/* The app's real, measured specification. These are the figures that already
-   appeared on the site — presented here as what they are: measurements. */
-const SPEC = [
-  { value: '320', unit: 'kbps', label: 'Max bitrate' },
-  { value: '0', unit: '', label: 'Trackers' },
-  { value: '100', unit: '%', label: 'Ad-free' },
-  { value: '12.0', unit: '+', label: 'Android' },
-]
-
-/* Numbered clauses, not feature cards. Each is a capability the shipped APK
-   actually has. */
-const CLAUSES = [
+/* The 6 requested features with playful pastel geometric icon badges */
+const FEATURES = [
   {
-    title: 'Background playback',
-    body: 'Full lock-screen and notification controls, powered by Media3 and ExoPlayer. Music keeps going when you leave the app.',
+    title: 'Background Playback',
+    description:
+      'Full lock-screen and notification controls powered by Media3 and ExoPlayer. Music keeps playing smoothly when your screen is locked or you navigate away.',
+    icon: Headphones,
+    badgeBg: 'bg-[#D8F0D0] dark:bg-[#1E3D26]',
+    badgeText: 'text-[#2F6A3E] dark:text-[#A8F0BC]',
+    shape: 'rounded-full',
   },
   {
-    title: 'Synced lyrics',
-    body: 'Karaoke-style lyrics that scroll and highlight the current line. Tap any line to jump straight to it.',
+    title: 'Material Theme & Liquid Glass Effect',
+    description:
+      'Adaptive Material You wallpaper extraction combined with a sophisticated liquid glass blur effect and curated vibrant accent palettes.',
+    icon: Palette,
+    badgeBg: 'bg-[#D5F2EE] dark:bg-[#16364A]',
+    badgeText: 'text-[#1A6B63] dark:text-[#88E2D7]',
+    shape: 'rounded-2xl rotate-2',
   },
   {
-    title: 'Offline downloads',
-    body: 'Save tracks as original M4A, or convert to MP3 on-device with full metadata embedded.',
+    title: 'Synced Lyrics',
+    description:
+      'Karaoke-style synchronized lyrics that scroll and highlight in real time. Tap any lyric line to instantly seek playback to that verse.',
+    icon: Mic2,
+    badgeBg: 'bg-[#D2EBF7] dark:bg-[#183547]',
+    badgeText: 'text-[#1D6085] dark:text-[#88CDEF]',
+    shape: 'rounded-2xl -rotate-2',
   },
   {
-    title: 'Real equalizer',
-    body: 'Five-band EQ plus bass boost, wired straight into the Android audio pipeline.',
+    title: 'Ads & Trackers Free',
+    description:
+      '100% ad-free listening with zero telemetry or tracking SDKs. Your liked songs, playlists, and listening history stay strictly on your device.',
+    icon: ShieldCheck,
+    badgeBg: 'bg-[#FDE2E4] dark:bg-[#4D2025]',
+    badgeText: 'text-[#8C3A45] dark:text-[#FCA5A5]',
+    shape: 'rounded-full',
   },
   {
-    title: 'Make it yours',
-    body: 'Pick from seven accent colours, or let Material You match the app to your wallpaper.',
+    title: 'Real 10-band EQ',
+    description:
+      'Hardware-accelerated 10-band graphic equalizer with dedicated bass boost, virtualizer, and custom sound profile presets wired into Android audio.',
+    icon: Sliders,
+    badgeBg: 'bg-[#E2F0D8] dark:bg-[#203D26]',
+    badgeText: 'text-[#2A5C34] dark:text-[#96E4A8]',
+    shape: 'rounded-2xl',
   },
   {
-    title: 'Playlists & library',
-    body: 'Liked songs, listening history, and your own playlists — all stored locally on your device.',
-  },
-  {
-    title: 'Built for dark',
-    body: 'A true OLED-friendly dark theme, with an optional light mode that is just as considered.',
-  },
-  {
-    title: 'Updates in-app',
-    body: 'The app checks this site on launch and tells you the moment a new version ships.',
-  },
-  {
-    title: 'Genuinely fast',
-    body: 'Native Kotlin and Jetpack Compose throughout. No web views, no bridges, no lag.',
+    title: 'With In App Update Feature',
+    description:
+      'Automatic over-the-air update check on launch via lightweight API. Smooth one-tap update prompt installs new versions seamlessly over the existing build.',
+    icon: RefreshCw,
+    badgeBg: 'bg-[#F2F6CE] dark:bg-[#3C421B]',
+    badgeText: 'text-[#556925] dark:text-[#D9E67B]',
+    shape: 'rounded-2xl rotate-3',
   },
 ]
 
-/* The figure plate. FIG. 1 is the screenshot the site already shipped; the
-   other two prints are expected at these exact paths in `public/` and render as
-   NOT ISSUED cells until they are dropped in — nothing breaks in the meantime.
-   Case-sensitive, like the R2 object names. */
-const FIGURES = [
+/* 4 Screens — clean app captures without mobile mockups */
+const SCREENS = [
   {
-    no: '1',
+    id: 'now-playing',
+    title: 'Now Playing',
+    caption: 'Ambient album glow, synced lyrics, and playback controls',
+    src: '/Play1.png',
+  },
+  {
+    id: 'home',
+    title: 'Home & Quick Picks',
+    caption: 'Recent playback, trending selections, and recommendations',
     src: '/Home1.png',
-    caption: 'Home screen',
-    alt: "The MusicStream app's home screen, showing Quick Picks, Trending Now and Made For You sections.",
   },
   {
-    no: '2',
-    src: '/Now-Player.png',
-    caption: 'Now playing',
-    alt: "The MusicStream app's now-playing screen, showing the current track with playback controls.",
+    id: 'artist',
+    title: 'Artist & Discography',
+    caption: 'Full artist albums, singles, and top played tracks',
+    src: '/Artist1.png',
   },
   {
-    no: '3',
-    src: '/Artist.png',
-    caption: 'Artist',
-    alt: "The MusicStream app's artist screen, showing the artist's albums and related content.",
+    id: 'equalizer',
+    title: 'Equalizer & Audio FX',
+    caption: '10-band graphic EQ, bass booster, and sound presets',
+    src: '/EQ1.png',
   },
 ]
 
-const DATA_HANDLING = [
-  'No advertising or ad SDKs',
-  'No third-party analytics or tracking',
-  'No account required to use the app',
-  'Library data never leaves your device',
-  'Open about exactly what it downloads',
+/* FAQ Questions */
+const FAQS = [
+  {
+    q: 'How do I get approved to download the app?',
+    a: "MusicStream is currently distributed via private invite. Simply create an account on the sign-up page with your email. The developer reviews incoming requests in the admin console. Once approved, you can immediately sign in and download the latest verified APK.",
+  },
+  {
+    q: 'Why does Android say "Allow from this source" when installing?',
+    a: 'Because MusicStream is distributed directly as an APK outside Google Play, Android protects your security by asking you to permit installations from your web browser. In Android Settings, toggle "Allow from this source" for your browser, then tap Install. It is safe and 100% ad-free.',
+  },
+  {
+    q: 'Does MusicStream contain any ads, tracking, or telemetry?',
+    a: 'No. MusicStream has zero advertisement SDKs, zero third-party telemetry, and zero user analytics. The app only contacts servers for music playback streams, lyrics, album artwork, and version update checks.',
+  },
+  {
+    q: 'Can I download songs for offline listening?',
+    a: 'Yes! Any track or album can be downloaded with a single tap. MusicStream saves original M4A streams or can convert them to MP3 on-device with all metadata and high-resolution cover art embedded.',
+  },
+  {
+    q: 'How does the in-app automatic update check work?',
+    a: 'Every time the app launches, it queries the lightweight, unauthenticated endpoint on this website (/api/latest). If a newer version code is published, the app displays a smooth update banner allowing you to update in one tap.',
+  },
+  {
+    q: 'Is my listening data or library uploaded to any cloud?',
+    a: 'No. Your liked tracks, listening history, cache, and custom playlists are stored solely on your physical device using Android DataStore and local storage. No user accounts or personal profiles exist inside the app.',
+  },
+  {
+    q: 'Which Android versions and architectures are supported?',
+    a: 'MusicStream requires Android 7.0 (Nougat, API 24) or newer. It supports 64-bit ARM devices (arm64-v8a) as well as 32-bit devices (armeabi-v7a).',
+  },
 ]
-
-/**
- * Counts a figure up to its measured value when it first scrolls into view —
- * an instrument settling on a reading. Keeps any non-numeric suffix and
- * matches the source's decimals. Renders verbatim under reduced motion.
- */
-function Reading({ value }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-  const reduce = useReducedMotion()
-
-  const match = /^([\d.]+)(.*)$/.exec(value)
-  // Derive only primitives from the match — the array itself is a fresh object
-  // each render and must never land in the effect deps below.
-  const isNumeric = match != null
-  const target = match ? parseFloat(match[1]) : 0
-  const suffix = match ? match[2] : ''
-  const decimals = match && match[1].includes('.') ? match[1].split('.')[1].length : 0
-
-  /* Seeded with the TRUE value, never with zero. These are the product's real
-     measurements: if the observer never fires, the animation is skipped and
-     never started, or JS is slow, the sheet must still state 320 kbps rather
-     than 0 kbps. The count-up is an enhancement on top of a correct figure. */
-  const [text, setText] = useState(value)
-
-  useEffect(() => {
-    if (!isNumeric || reduce || !inView) return
-    const controls = animate(0, target, {
-      duration: 1,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => setText(`${v.toFixed(decimals)}${suffix}`),
-      // Land exactly on the source string, not on a re-formatted float.
-      onComplete: () => setText(value),
-    })
-    return () => controls.stop()
-  }, [inView, reduce, isNumeric, target, suffix, decimals, value])
-
-  return <span ref={ref}>{!isNumeric || reduce ? value : text}</span>
-}
-
-/** A measurement with a leader line running to the subject it measures. */
-function Callout({ value, unit, label }) {
-  return (
-    <div className="flex items-center gap-4 border-b border-rule-soft py-4 last:border-b-0">
-      <div className="flex w-24 shrink-0 items-baseline gap-1">
-        <span className="font-mono text-2xl font-bold tabular-nums text-ink">
-          <Reading value={value} />
-        </span>
-        {unit && <span className="font-mono text-[0.6875rem] text-ink-3">{unit}</span>}
-      </div>
-      <span className="callout-line" aria-hidden="true" />
-      <span className="label shrink-0">{label}</span>
-    </div>
-  )
-}
 
 export default function Home() {
-  const { user, isApproved } = useAuth()
+  const { user } = useAuth()
+  const [latestRelease, setLatestRelease] = useState(null)
+  const [openFaq, setOpenFaq] = useState(0)
+
+  useEffect(() => {
+    fetchLatestRelease()
+      .then((rel) => setLatestRelease(rel))
+      .catch(() => { })
+  }, [])
+
+  const currentVersion = latestRelease?.version_name || '3.0.2'
 
   return (
-    <Sheet label="Specification — MusicStream for Android">
-      {/* ---------------- Title field ---------------- */}
-      {/* The base column is minmax(0,1fr), not the implicit `auto`: the figure
-          plate below is `w-fit`, and an auto-sized column would let it size to
-          max-content and push the whole document wider than the phone instead
-          of letting the plate's own scroller take over. */}
-      <div data-impeccable-variants="a657c20f" data-impeccable-variant-count="2" style={{ display: "contents" }}>
-        {/* impeccable-variants-start a657c20f */}
-        {/* Original */}
-        <div data-impeccable-variant="original">
-          <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14">
-            {/* The title field runs on one spacing unit (u = 1rem), so the grouping
-                is a rule rather than a set of ad-hoc margins:
-                  eyebrow → title   0.5u  (one unit: the label names this title)
-                  title   → lead    2u
-                  lead    → actions 2u    (lead and its action are one group)
-                  actions → control 4u    (document control is a separate object)
-                Space above a heading always exceeds the space below it. */}
-            <div>
-              <SectionLabel index={1}>Subject</SectionLabel>
+    <div className="pb-16 pt-8 sm:pt-14 overflow-hidden">
+      {/* ---------------- 1. HERO SECTION ---------------- */}
+      <section className="container-x">
+        <div className="max-w-3xl">
+          {/* Main Title with crystal clear dark/light mode visibility */}
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-[4.5rem] font-extrabold tracking-tight text-ink leading-[1.08]">
+            Your music,
+            <br />
+            <span className="text-primary">No Ads, No Trackers.</span>
+          </h1>
 
-              <h1 className="drawing-title mt-2 stamp-title">
-                <span className="stamp-tick" aria-hidden="true" />
-                <span className="stamp-line" style={{ '--i': 0 }}>Your music.</span>
-                <span className="stamp-line" style={{ '--i': 1 }}>No ads.</span>
-                <span className="stamp-line" style={{ '--i': 2 }}>No noise.</span>
-              </h1>
+          {/* Subtitle */}
+          <p className="mt-6 text-base sm:text-lg leading-relaxed text-ink-2 max-w-2xl font-normal">
+            MusicStream is a fast, native Android music player with background playback,
+            liquid glass Material design, 10-band equalizer, and in-app updates.
+          </p>
 
-              {/* 52ch holds the lead inside a comfortable reading measure. */}
-              <p className="mt-8 max-w-[52ch] font-sans text-base leading-[1.7] normal-case text-ink-2">
-                A fast, native music player for Android — background playback, synced lyrics, a
-                real equalizer and offline downloads. Built in Kotlin, with nothing between you
-                and the music.
-              </p>
+          {/* CTA Buttons */}
+          <div className="mt-8 flex flex-wrap items-center gap-3.5">
+            <Link
+              to={user ? '/download' : '/signup'}
+              className="btn btn-primary px-7 py-3.5 text-sm font-semibold flex items-center gap-2.5 shadow-sm hover:shadow-md"
+            >
+              <Download className="h-4 w-4" />
+              <span>{user ? 'Download APK' : 'Request Access'}</span>
+            </Link>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
-                  {user ? 'Go to download' : 'Request issue'}
-                </Link>
-                <Link to="/docs" className="btn btn-line">
-                  Read the manual
-                </Link>
+            <Link
+              to="/docs"
+              className="btn btn-secondary px-7 py-3.5 text-sm font-semibold flex items-center gap-2.5"
+            >
+              <BookOpen className="h-4 w-4" />
+              <span>Read documentation</span>
+            </Link>
+          </div>
+
+          {/* Platform Pills row with all key features */}
+          <div className="mt-8 flex flex-wrap items-center gap-2 text-xs font-semibold">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              Android 7.0+
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              Real 10-Band EQ
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              Liquid Glass UI
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              100% Ad-Free
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-card px-3 py-1 text-ink-2 shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              In-App Updates
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 2. FEATURES SECTION ("What the app does") ---------------- */}
+      <section id="features" className="container-x mt-28 sm:mt-36 scroll-mt-24">
+        <div>
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#4A7854] dark:text-primary">
+            FEATURES
+          </span>
+          <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">
+            What the app does
+          </h2>
+          <p className="mt-3 text-base text-ink-2 max-w-2xl">
+            Built with native Kotlin and Jetpack Compose. Everything you expect, nothing you don't.
+          </p>
+        </div>
+
+        {/* 3x2 Grid with pastel geometric icon badges */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+          {FEATURES.map((item) => {
+            const Icon = item.icon
+            return (
+              <div key={item.title} className="flex flex-col items-start group">
+                {/* Playful pastel shaped badge */}
+                <div
+                  className={`flex h-12 w-12 items-center justify-center ${item.badgeBg} ${item.badgeText} ${item.shape} shadow-xs transition-transform group-hover:scale-110 duration-200`}
+                >
+                  <Icon className="h-6 w-6" />
+                </div>
+
+                <h3 className="mt-4 font-display text-lg font-bold text-ink">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-2">
+                  {item.description}
+                </p>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* ---------------- 3. SCREENS SHOWCASE (Screens from 3.0.2 - Fixed no cut off, clean screenshots) ---------------- */}
+      <section id="screens" className="container-x mt-28 sm:mt-36 scroll-mt-24">
+        <div>
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#4A7854] dark:text-primary">
+            INTERFACE TOUR
+          </span>
+          <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">
+            Screens from {currentVersion}
+          </h2>
+          <p className="mt-3 text-base text-ink-2 max-w-2xl">
+            Clean views from the current release, running in pure native high fidelity.
+          </p>
+        </div>
+
+        {/* Responsive 4-Column Grid: fits 100% inside container on desktop without cutting off */}
+        <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {SCREENS.map((screen) => (
+            <div key={screen.id} className="flex flex-col group">
+              {/* Clean app capture without mobile mockup frame */}
+              <div className="rounded-xl sm:rounded-2xl overflow-hidden border border-rule/80 dark:border-white/10 bg-card shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                <img
+                  src={screen.src}
+                  alt={screen.title}
+                  className="w-full aspect-[9/20] object-cover object-top transition-transform duration-500 group-hover:scale-[1.00]"
+                  loading="lazy"
+                />
               </div>
 
-              {/* Access stated as document control, not as fine print. */}
-              <div className="mt-16 max-w-md border border-rule bg-sheet-deep">
-                <div className="plate-hd">
-                  <span className="label">Document control</span>
-                </div>
-                <div className="px-4 py-3.5">
-                  <p className="font-mono text-[0.6875rem] leading-[1.8] tracking-[0.06em] text-ink-2">
-                    {isApproved
-                      ? 'This copy is controlled. The current build is issued to your account.'
-                      : 'Issue is controlled. Access is granted per account by the developer; this copy is uncontrolled until yours is approved.'}
-                  </p>
-                </div>
+              <div className="mt-4 px-1">
+                <h4 className="font-display text-sm sm:text-base font-bold text-ink">{screen.title}</h4>
+                <p className="mt-1 text-xs text-ink-3 leading-snug">{screen.caption}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------------- 4. DOWNLOAD BANNER CARD ---------------- */}
+      <section className="container-x mt-28 sm:mt-36">
+        <div className="relative rounded-[32px] sm:rounded-[40px] bg-[#C1E5A5] dark:bg-[#1A3821] text-[#1B3E21] dark:text-[#EEF5EE] p-8 sm:p-12 overflow-hidden shadow-sm">
+          {/* Subtle organic background wave contours */}
+          <div
+            className="pointer-events-none absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-[#AEDE8E] dark:bg-[#254C2D] opacity-50 blur-2xl"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute top-0 left-1/3 w-64 h-64 rounded-full bg-[#D4F0BE] dark:bg-[#1E4125] opacity-40 blur-xl"
+            aria-hidden="true"
+          />
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left side details */}
+            <div className="lg:col-span-7">
+              <h3 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight">
+                Get MusicStream {currentVersion}
+              </h3>
+              <p className="mt-2.5 text-xs sm:text-sm text-[#315738] dark:text-[#B2C9B5] font-medium">
+                Released {latestRelease?.published_at || 'July 2026'} • SHA-256 Checksum verified
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link
+                  to={user ? '/download' : '/signup'}
+                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] px-7 py-3.5 rounded-full text-sm font-semibold inline-flex items-center gap-2 shadow-md"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>{user ? 'Download latest APK' : 'Request access to download'}</span>
+                </Link>
+
+                <Link
+                  to="/changelog"
+                  className="btn bg-[#A8D588] text-[#1B3E21] dark:bg-[#2C5235] dark:text-white hover:bg-[#97C577] px-6 py-3.5 rounded-full text-sm font-semibold"
+                >
+                  All downloads & changelog
+                </Link>
               </div>
             </div>
 
-            {/* The figure plate: three specimens of the shipped app, pasted up as
-                one ruled object. Sized to its contents rather than stretched to the
-                column, so the drawing sits off-centre in its frame — and each print
-                is small enough to read as a specimen rather than as a hero image.
-                Scrolls inside itself on a narrow phone instead of shrinking the
-                prints to illegibility. */}
-            <div className="plate w-fit max-w-full self-start">
-              <div className="plate-hd justify-between gap-4">
-                <span className="label">Figure plate</span>
-                <span className="label">FIG. 1–3</span>
-              </div>
-              <div className="flex overflow-x-auto">
-                {FIGURES.map((f, i) => (
-                  <div
-                    key={f.no}
-                    className={`w-[152px] shrink-0 p-3 sm:w-[180px] sm:p-4 ${
-                      i > 0 ? 'border-l border-rule' : ''
-                    }`}
-                  >
-                    <Figure {...f} priority={i === 0} />
+            {/* Right side architecture download option - Universal APK */}
+            <div className="lg:col-span-5 flex flex-col justify-center">
+              <Link
+                to={user ? '/download' : '/signup'}
+                className="flex items-center justify-between rounded-2xl bg-[#E8F8DB] dark:bg-[#142919] p-5 sm:p-6 text-[#1B3E21] dark:text-[#EEF5EE] border border-[#B3DC94] dark:border-[#27462B] hover:bg-white dark:hover:bg-[#1E3B24] transition-all group shadow-sm hover:shadow-md"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#D4F0BE] dark:bg-[#1E4125] text-[#2A5C34] dark:text-[#78C587] group-hover:scale-105 transition-transform">
+                    <Layers className="h-6 w-6" />
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <h5 className="text-base font-bold">Universal APK</h5>
+                    <p className="text-xs text-[#415746] dark:text-[#A8C2AC] mt-0.5">
+                      Compatible with all devices (Android 7.0+)
+                    </p>
+                  </div>
+                </div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#C1E5A5] text-[#1B3E21] group-hover:scale-110 group-hover:bg-[#1B3E21] group-hover:text-white transition-all shadow-2xs">
+                  <Download className="h-4 w-4" />
+                </div>
+              </Link>
             </div>
           </div>
         </div>
-      </div>  
-      {/* ---------------- Capabilities ---------------- */}
-      <section className="mt-20">
-        <Reveal className="max-w-2xl">
-          <SectionLabel index={3}>Capabilities</SectionLabel>
-          <h2 className="sheet-heading mt-5">Everything you expect. Nothing you don't.</h2>
-          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-ink-2">
-            Built as a proper Android app, not a wrapped website — so it feels fast, behaves
-            correctly, and respects the platform.
-          </p>
-        </Reveal>
-
-        {/* Numbered clauses in a ruled register. Rows butt against shared rules;
-            no cards, no icons, no equal-height grid of tiles. */}
-        <RevealGroup className="reg mt-10">
-          <div className="reg-hd grid grid-cols-[3rem_1fr] gap-4 sm:grid-cols-[4rem_16rem_1fr]">
-            <span>No.</span>
-            <span>Capability</span>
-            <span className="hidden sm:block">Description</span>
-          </div>
-
-          {CLAUSES.map((c, i) => (
-            <RevealItem key={c.title}>
-              <div className="reg-row grid grid-cols-[3rem_1fr] items-baseline gap-x-4 gap-y-1 sm:grid-cols-[4rem_16rem_1fr]">
-                <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h3 className="min-w-0 font-sans text-base font-bold uppercase tracking-[0.04em] text-ink">
-                  {c.title}
-                </h3>
-                <p className="col-start-2 min-w-0 font-sans text-base normal-case leading-[1.7] text-ink-2 sm:col-start-3">
-                  {c.body}
-                </p>
-              </div>
-            </RevealItem>
-          ))}
-        </RevealGroup>
       </section>
 
-      {/* ---------------- Data handling ---------------- */}
-      <section className="mt-20 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
-        <Reveal>
-          <SectionLabel index={4}>Data handling</SectionLabel>
-          <h2 className="sheet-heading mt-5">Your library stays on your phone</h2>
-          <p className="mt-5 font-sans text-base normal-case leading-[1.7] text-ink-2">
-            Liked songs, playlists and listening history are stored locally on your device
-            using Android DataStore. There is no cloud sync, no account inside the app, and
-            no analytics SDK bundled in.
+      {/* ---------------- 5. FAQ / ACCORDION SECTION ---------------- */}
+      <section id="faq" className="container-x mt-28 sm:mt-36 scroll-mt-24">
+        <div>
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#4A7854] dark:text-primary">
+            FAQ
+          </span>
+          <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">
+            Common questions
+          </h2>
+          <p className="mt-3 text-base text-ink-2 max-w-2xl">
+            Frequently asked questions about access, installation, and privacy.
           </p>
-          <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-ink-2">
-            The only network calls the app makes are for music data, artwork, lyrics,
-            optional region detection, and checking this site for updates.
-          </p>
-        </Reveal>
+        </div>
 
-        <Reveal delay={0.1}>
-          <div className="plate">
-            <div className="plate-hd">
-              <span className="label">Verified conditions</span>
-            </div>
-            {DATA_HANDLING.map((item) => (
+        {/* Accordion List */}
+        <div className="mt-10 max-w-3xl space-y-3">
+          {FAQS.map((faq, index) => {
+            const isOpen = openFaq === index
+            return (
               <div
-                key={item}
-                className="flex items-center gap-3 border-b border-rule-soft px-4 py-3.5 last:border-b-0"
+                key={faq.q}
+                className="rounded-2xl border border-rule bg-card-subtle overflow-hidden transition-colors"
               >
-                <span
-                  aria-hidden="true"
-                  className="h-1.5 w-1.5 shrink-0 bg-checked"
-                />
-                <span className="font-sans text-base normal-case text-ink-2">
-                  {item}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </section>
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(isOpen ? null : index)}
+                  className="flex w-full items-center justify-between p-5 sm:p-6 text-left font-display text-base font-bold text-ink hover:text-primary transition-colors cursor-pointer"
+                  aria-expanded={isOpen}
+                >
+                  <span>{faq.q}</span>
+                  <div className="ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sheet text-ink-2">
+                    {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </div>
+                </button>
 
-      {/* ---------------- Issue ---------------- */}
-      <section className="mt-20">
-        <Reveal>
-          <div className="border border-rule bg-sheet-deep">
-            <div className="plate-hd justify-between">
-              <span className="label">Issue</span>
-              <Waveform
-                bars={16}
-                height={14}
-                barWidth={2}
-                gap={3}
-                barClassName="bg-rule"
-                className="hidden sm:flex"
-              />
-            </div>
-            <div className="p-6 sm:p-10">
-              <h2 className="sheet-heading max-w-xl">Sign in and start playing.</h2>
-              <p className="mt-5 max-w-xl font-sans text-base normal-case leading-[1.7] text-ink-2">
-                Sign in with an approved account to download the latest build. Access is
-                invite-only — ask the developer to add your email.
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link to={user ? '/download' : '/signup'} className="btn btn-issue">
-                  {user ? 'Go to download' : 'Request issue'}
-                </Link>
-                <Link to="/changelog" className="btn btn-line">
-                  Revision history
-                </Link>
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    >
+                      <div className="px-5 pb-6 sm:px-6 pt-1 text-sm leading-relaxed text-ink-2 border-t border-rule/50">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            </div>
-          </div>
-        </Reveal>
+            )
+          })}
+        </div>
       </section>
-    </Sheet>
+    </div>
   )
 }

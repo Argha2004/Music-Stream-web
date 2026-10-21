@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Download as DownloadIcon, Smartphone, CheckCircle, AlertTriangle, ArrowRight, RefreshCw, FileCode } from 'lucide-react'
 import { fetchLatestRelease, formatBytes } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import Sheet from '../components/Sheet'
@@ -7,20 +8,6 @@ import Stamp from '../components/Stamp'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 
-/**
- * Controlled issue of the build.
- *
- * The three access states are the sheet's whole subject, so each gets a real
- * document treatment rather than a badge:
- *   pending  → the issue area is hatched "not yet issued", and no stamp exists
- *   rejected → a VOID stamp in correction ink
- *   approved → the build is issued, with its figures recorded
- *
- * The download link is never rendered for an unapproved holder. That is a UI
- * courtesy on top of the real boundary, which is Postgres RLS.
- */
-
-/** Shown while an access request is still pending, or after a rejection. */
 function AwaitingIssue({ email, status, onRecheck }) {
   const [checking, setChecking] = useState(false)
   const rejected = status === 'rejected'
@@ -32,83 +19,76 @@ function AwaitingIssue({ email, status, onRecheck }) {
   }
 
   return (
-    <Sheet label="Controlled issue">
+    <Sheet label="Account status">
       <Reveal className="max-w-2xl">
-        <SectionLabel index={5}>Sheet</SectionLabel>
-        <h1 className="drawing-title mt-6">{rejected ? 'Not issued' : 'Pending'}</h1>
+        <SectionLabel index={5}>Controlled access</SectionLabel>
+        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">
+          {rejected ? 'Request declined' : 'Approval pending'}
+        </h1>
 
-        <div className="mt-10 border border-rule">
-          <div className="plate-hd justify-between">
-            <span className="label">Request record</span>
-            {/* Pending deliberately carries no stamp — the absence IS the state. */}
-            {rejected && <Stamp tone="void">Void</Stamp>}
+        <div className="mt-8 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8">
+          <div className="flex items-center justify-between pb-4 border-b border-rule">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
+              Request Record
+            </span>
+            <Stamp tone={rejected ? 'void' : 'approve'}>
+              {rejected ? 'Refused' : 'Awaiting developer'}
+            </Stamp>
           </div>
 
-          <div className="bg-sheet-deep">
-            <div className="flex flex-col gap-1.5 border-b border-rule-soft px-4 py-3.5 sm:flex-row sm:items-baseline sm:gap-4">
-              <span className="label w-32 shrink-0">Account</span>
-              <span className="min-w-0 break-all font-mono text-[0.875rem] text-ink">
-                {email}
-              </span>
+          <div className="mt-4 space-y-3 text-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <span className="text-ink-3">Account</span>
+              <span className="font-mono font-semibold text-ink break-all">{email}</span>
             </div>
-            <div className="flex flex-col gap-1.5 px-4 py-3.5 sm:flex-row sm:items-baseline sm:gap-4">
-              <span className="label w-32 shrink-0">Status</span>
-              <span
-                className={`font-mono text-[0.875rem] uppercase tracking-[0.12em] ${
-                  rejected ? 'text-void' : 'text-ink-2'
-                }`}
-              >
-                {rejected ? 'Not approved' : 'Awaiting decision'}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <span className="text-ink-3">Decision</span>
+              <span className="font-medium text-ink-2">
+                {rejected
+                  ? 'Access was not approved for this address'
+                  : 'Reviewing by developer (usually < 24h)'}
               </span>
             </div>
           </div>
         </div>
 
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
+        <p className="mt-6 text-base text-ink-2 leading-relaxed">
           {rejected ? (
             <>
-              Your request for <strong className="text-ink">{email}</strong> wasn't
-              approved. Contact the developer if you think this is a mistake.
+              Your request for <strong className="text-ink">{email}</strong> was not approved.
+              If you think this is a mistake, contact the developer.
             </>
           ) : (
             <>
-              Your account <strong className="text-ink">{email}</strong> has been created
-              and your request is waiting for the developer to review it. You'll be able to
-              download as soon as it's approved.
+              Your account has been created and is waiting for developer approval. As soon
+              as your email is approved, you will be able to download the app directly.
             </>
           )}
         </p>
 
-        {/* The issue area exists, but is drawn as a void: nothing to collect yet. */}
-        <div className="hatch mt-8 flex items-center justify-center border border-rule px-6 py-12">
-          <span className="label bg-sheet-deep px-3 py-1.5">No build issued to you</span>
-        </div>
-
         {!rejected && (
           <button
             type="button"
-            className="btn btn-line mt-8"
+            className="btn btn-secondary mt-6 flex items-center gap-2"
             disabled={checking}
             onClick={recheck}
           >
-            {checking ? 'Checking…' : 'Check again'}
+            <RefreshCw className={`h-4 w-4 ${checking ? 'animate-spin' : ''}`} />
+            <span>{checking ? 'Checking status…' : 'Check approval status'}</span>
           </button>
         )}
 
-        <p className="mt-10 font-sans text-base normal-case leading-[1.7] text-ink-2">
-          In the meantime, read the{' '}
-          <Link to="/docs" className="text-stamp underline decoration-stamp/40 underline-offset-4">
-            manual
+        <div className="mt-8 pt-6 border-t border-rule text-sm text-ink-2">
+          Want to know more? Check the{' '}
+          <Link to="/docs" className="text-primary font-semibold hover:underline">
+            operating manual
           </Link>{' '}
           or the{' '}
-          <Link
-            to="/changelog"
-            className="text-stamp underline decoration-stamp/40 underline-offset-4"
-          >
+          <Link to="/changelog" className="text-primary font-semibold hover:underline">
             revision history
           </Link>
           .
-        </p>
+        </div>
       </Reveal>
     </Sheet>
   )
@@ -132,180 +112,145 @@ export default function Download() {
     }
   }, [isApproved])
 
-  // Not approved yet — never render the download link.
   if (!isApproved) {
     return <AwaitingIssue email={user?.email} status={status} onRecheck={refreshProfile} />
   }
 
   return (
-    <Sheet label="Controlled issue" rev={release?.version_name}>
-      <Reveal className="max-w-2xl">
-        <SectionLabel index={5}>Sheet</SectionLabel>
-        <h1 className="drawing-title mt-6">Issue</h1>
-        <p className="mt-8 font-mono text-[0.875rem] tracking-[0.06em] text-ink-2">
-          Issued to <span className="text-stamp">{user?.email}</span>
+    <Sheet label="Download release" rev={release?.version_name}>
+      <Reveal className="max-w-3xl">
+        <SectionLabel index={5}>Downloads</SectionLabel>
+        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">Get MusicStream</h1>
+        <p className="mt-3 text-sm font-medium text-ink-3">
+          Issued to approved tester <span className="text-primary font-semibold">{user?.email}</span>
         </p>
       </Reveal>
 
-      {/* --- The build --- */}
-      <div className="mt-12 max-w-2xl">
+      <div className="mt-10 max-w-3xl">
         {loading ? (
-          <div className="hatch h-56 border border-rule" aria-hidden="true" />
+          <div className="h-64 rounded-3xl bg-card-subtle animate-pulse" />
         ) : error ? (
-          <div className="border border-void bg-sheet-deep" role="alert">
-            <div className="flex items-center gap-2.5 border-b border-void bg-void/10 px-4 py-2.5">
-              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-void">
-                Retrieval failed
-              </span>
-            </div>
-            <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-                Couldn't load the latest release. {error}
-              </p>
-              <button
-                type="button"
-                className="btn btn-line btn-sm mt-5"
-                onClick={() => window.location.reload()}
-              >
-                Try again
-              </button>
-            </div>
+          <div className="rounded-3xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-6 text-red-800 dark:text-red-300">
+            <h3 className="font-bold">Failed to load release</h3>
+            <p className="mt-2 text-sm">{error}</p>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm mt-4"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </button>
           </div>
         ) : !release ? (
-          <div className="hatch flex flex-col items-center justify-center border border-rule px-6 py-16 text-center">
-            <span className="bg-sheet-deep px-3 py-1.5 label">No release published yet</span>
-            <p className="mt-4 max-w-sm bg-sheet-deep px-3 font-sans text-base normal-case leading-[1.7] text-ink-2">
-              Once the first build is uploaded it will appear here automatically.
+          <div className="rounded-3xl border border-rule bg-card-subtle p-12 text-center">
+            <h3 className="font-bold text-lg text-ink">No release published yet</h3>
+            <p className="mt-2 text-sm text-ink-3">
+              Once the developer uploads a release, it will be available here.
             </p>
           </div>
         ) : (
-          <div className="border border-stamp">
-            <div className="plate-hd justify-between border-stamp bg-stamp/10">
-              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-stamp">
-                Current build
-              </span>
-              <Stamp className="!px-2 !py-1 !text-[0.6875rem]">Issued</Stamp>
-            </div>
-
-            <div className="bg-sheet-deep">
-              <div className="border-b border-rule-soft px-5 py-5">
-                <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.02em] text-ink">
-                  {release.name}
-                </h2>
+          <div className="rounded-[32px] sm:rounded-[36px] bg-[#C1E5A5] dark:bg-[#1E3E24] text-[#1B3E21] dark:text-[#EEF5EE] p-8 sm:p-10 shadow-sm relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#2A5C34] dark:text-[#78C587] bg-white/60 dark:bg-black/30 px-3 py-1 rounded-full">
+                  Current build • v{release.version_name}
+                </span>
+                <span className="text-xs font-medium text-ink-2 dark:text-[#B2C9B5]">
+                  Published {release.published_at}
+                </span>
               </div>
 
-              {/* Figures, recorded as measurements. */}
-              <dl className="grid grid-cols-2 border-b border-rule-soft sm:grid-cols-4">
-                {[
-                  { k: 'Version', v: release.version_name },
-                  { k: 'Build', v: release.version_code },
-                  { k: 'Size', v: formatBytes(release.apk_size) ?? '—' },
-                  { k: 'Android', v: release.min_sdk >= 24 ? '7.0+' : 'Supported' },
-                ].map((f) => (
-                  <div
-                    key={f.k}
-                    className="min-w-0 border-r border-rule-soft px-4 py-3.5 last:border-r-0"
-                  >
-                    <dt className="label">{f.k}</dt>
-                    <dd className="mt-1.5 font-mono text-[0.875rem] font-medium tabular-nums text-ink">
-                      {f.v}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
+              <h2 className="mt-5 font-display text-2xl sm:text-3xl font-extrabold tracking-tight">
+                {release.name}
+              </h2>
 
-              <div className="px-5 py-4">
-                <p className="label">Issued {release.published_at}</p>
+              {/* Stats pills */}
+              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
+                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Version</div>
+                  <div className="mt-1 font-mono font-bold text-base text-ink">{release.version_name}</div>
+                </div>
+                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
+                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Build code</div>
+                  <div className="mt-1 font-mono font-bold text-base text-ink">{release.version_code}</div>
+                </div>
+                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
+                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">APK Size</div>
+                  <div className="mt-1 font-mono font-bold text-base text-ink">{formatBytes(release.apk_size) || '207 MB'}</div>
+                </div>
+                <div className="rounded-2xl bg-white/70 dark:bg-black/20 p-3.5 backdrop-blur-xs">
+                  <div className="text-[0.6875rem] font-mono uppercase text-[#415746] dark:text-[#A8C2AC]">Android</div>
+                  <div className="mt-1 font-mono font-bold text-base text-ink">{release.min_sdk >= 24 ? '7.0+' : 'Supported'}</div>
+                </div>
               </div>
 
+              {/* Release notes */}
               {release.notes && (
-                <ul className="space-y-2 border-t border-rule-soft px-5 py-5">
-                  {release.notes
-                    .split('\n')
-                    .map((l) => l.replace(/^[-•]\s*/, '').trim())
-                    .filter(Boolean)
-                    .map((line, i) => (
-                      <li key={i} className="flex gap-3">
-                        <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 bg-stamp" />
-                        <span className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-                          {line}
-                        </span>
-                      </li>
-                    ))}
-                </ul>
+                <div className="mt-6 rounded-2xl bg-white/60 dark:bg-black/20 p-4 sm:p-5">
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#315738] dark:text-[#B2C9B5] mb-3">
+                    What's new in this build:
+                  </h4>
+                  <ul className="space-y-2 text-sm text-[#27462C] dark:text-[#D5E8D8]">
+                    {release.notes
+                      .split('\n')
+                      .map((l) => l.replace(/^[-•]\s*/, '').trim())
+                      .filter(Boolean)
+                      .map((line, i) => (
+                        <li key={i} className="flex items-start gap-2.5">
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#1B3E21] dark:bg-[#78C587] mt-2 shrink-0" />
+                          <span>{line}</span>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
               )}
 
-              {/* A real <a download> — not a button — so the browser handles the file. */}
-              <a
-                href={release.apk_url}
-                className="btn btn-issue w-full"
-                download
-                rel="noopener"
-              >
-                Download APK
-              </a>
+              {/* Download Action */}
+              <div className="mt-8">
+                <a
+                  href={release.apk_url}
+                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] w-full py-4 text-base font-bold shadow-lg flex items-center justify-center gap-3"
+                  download
+                  rel="noopener"
+                >
+                  <DownloadIcon className="h-5 w-5" />
+                  <span>Download MusicStream APK</span>
+                </a>
+              </div>
             </div>
           </div>
         )}
 
-        {/* --- Installation --- */}
-        <div className="plate mt-8">
-          <div className="plate-hd">
-            <span className="label">Installation procedure</span>
-          </div>
-          <ol className="bg-sheet-deep">
-            {[
-              <>
-                Open the downloaded <code className="font-mono text-ink">.apk</code> file.
-              </>,
-              <>
-                Android will ask to allow installing unknown apps — allow it for your
-                browser, and for MusicStream so in-app updates work later.
-              </>,
-              <>
-                Tap <strong className="text-ink">Install</strong>. Done.
-              </>,
-            ].map((step, i) => (
-              <li
-                key={i}
-                className="flex gap-4 border-b border-rule-soft px-4 py-4 last:border-b-0"
-              >
-                <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="min-w-0 font-sans text-base normal-case leading-[1.7] text-ink-2">
-                  {step}
-                </span>
-              </li>
-            ))}
+        {/* Installation instructions */}
+        <div className="mt-10 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8">
+          <h3 className="font-display text-lg font-bold text-ink">Installation steps</h3>
+          <ol className="mt-4 space-y-4">
+            <li className="flex gap-4">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-pill text-xs font-bold text-primary">
+                1
+              </span>
+              <p className="text-sm text-ink-2 leading-relaxed">
+                Open the downloaded <code className="font-mono bg-card px-1.5 py-0.5 rounded border border-rule">.apk</code> file from your browser downloads or Files app.
+              </p>
+            </li>
+            <li className="flex gap-4">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-pill text-xs font-bold text-primary">
+                2
+              </span>
+              <p className="text-sm text-ink-2 leading-relaxed">
+                When Android warns about installing unknown apps, tap <strong>Settings</strong> and switch on <strong>Allow from this source</strong> for your browser.
+              </p>
+            </li>
+            <li className="flex gap-4">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-pill text-xs font-bold text-primary">
+                3
+              </span>
+              <p className="text-sm text-ink-2 leading-relaxed">
+                Tap <strong>Install</strong>. Once installed, also grant MusicStream the permission to install unknown apps so in-app over-the-air updates work seamlessly.
+              </p>
+            </li>
           </ol>
         </div>
-
-        {/* --- Known condition --- */}
-        <div className="mt-8 border border-stamp bg-sheet-deep">
-          <div className="flex items-center gap-2.5 border-b border-stamp bg-stamp/10 px-4 py-2.5">
-            <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-stamp">
-              Upgrading from an older build?
-            </span>
-          </div>
-          <div className="p-5">
-            <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-              If the install fails with "App not installed", you have a version signed with
-              a different key. Uninstall the old MusicStream first — this is a one-time
-              step.
-            </p>
-          </div>
-        </div>
-
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
-          Looking for older versions?{' '}
-          <Link
-            to="/changelog"
-            className="text-stamp underline decoration-stamp/40 underline-offset-4"
-          >
-            See the revision history
-          </Link>
-        </p>
       </div>
     </Sheet>
   )

@@ -1,35 +1,22 @@
 import { motion, useReducedMotion } from 'framer-motion'
 
-/**
- * A rubber-stamp impression: the way this document records a decision.
- *
- * Orange is approval and issue; red is correction — rejected, void, withdrawn.
- * There is deliberately no "pending" stamp: an unstamped sheet IS the pending
- * state, which is more honest than a badge announcing that nothing has
- * happened yet.
- *
- * The impact motion is reserved for real decisions and is disabled under
- * reduced motion, where the stamp simply renders already landed.
- */
-/* Must track the `.stamp` rule in index.css — this animates to an inline style,
-   which wins over the class. On the paper ground a lighter impression drops the
-   mark under 4.5:1, so the two values are not free to drift apart. */
-const STAMP_OPACITY = 0.92
-
 export default function Stamp({ children, tone = 'approve', className = '' }) {
   const reduce = useReducedMotion()
   const void_ = tone === 'void'
-  const settled = void_ ? 3 : -3.5
 
   return (
     <motion.span
-      role="img"
-      aria-label={`Stamped ${String(children)}`}
-      className={`stamp ${void_ ? 'stamp-void' : ''} ${className}`}
-      initial={reduce ? false : { opacity: 0, scale: 1.5, rotate: void_ ? 9 : -9 }}
-      animate={reduce ? false : { opacity: STAMP_OPACITY, scale: 1, rotate: settled }}
-      transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
+      role="status"
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider ${
+        void_
+          ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-400 border border-red-200 dark:border-red-900/40'
+          : 'bg-primary-pill text-primary-pill-text border border-primary-pill/80'
+      } ${className}`}
+      initial={reduce ? false : { opacity: 0, scale: 0.9 }}
+      animate={reduce ? false : { opacity: 1, scale: 1 }}
+      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
     >
+      <span className={`h-1.5 w-1.5 rounded-full ${void_ ? 'bg-red-500' : 'bg-primary'}`} />
       {children}
     </motion.span>
   )

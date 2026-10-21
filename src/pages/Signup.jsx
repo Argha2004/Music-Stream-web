@@ -1,19 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, UserPlus, MailCheck, ShieldCheck } from 'lucide-react'
 import { humanizeAuthError, useAuth } from '../context/AuthContext'
 import { isConfigured } from '../lib/supabase'
 import Sheet from '../components/Sheet'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 
-/**
- * The access request form.
- *
- * Creating an account does not grant anything — it files a request. The sheet
- * says so before the form, not after it, because the whole distribution model
- * depends on that expectation being set correctly.
- */
 export default function Signup() {
   const { signUp } = useAuth()
   const navigate = useNavigate()
@@ -30,13 +23,12 @@ export default function Signup() {
     e.preventDefault()
     setError(null)
 
-    // Validate on submit, not on every keystroke.
     if (password.length < 6) {
       setError('Password must be at least 6 characters.')
       return
     }
     if (password !== confirm) {
-      setError('Both passwords must match.')
+      setError('Passwords must match.')
       return
     }
 
@@ -49,34 +41,30 @@ export default function Signup() {
       return
     }
 
-    // With email confirmation on, there's no session yet — tell them to check mail.
     if (data?.session) navigate('/download', { replace: true })
     else setDone(true)
   }
 
   if (done) {
     return (
-      <Sheet label="Access request">
-        <div className="mx-auto max-w-lg">
+      <Sheet label="Account Request">
+        <div className="mx-auto max-w-md">
           <Reveal>
-            <SectionLabel index={7}>Sheet</SectionLabel>
-            <h1 className="drawing-title mt-6">Filed</h1>
+            <SectionLabel index={7}>Submitted</SectionLabel>
+            <h1 className="drawing-title mt-4 text-3xl sm:text-4xl">Request filed</h1>
 
-            <div className="mt-10 border border-rule bg-sheet-deep">
-              <div className="plate-hd">
-                <span className="label">Next step</span>
+            <div className="mt-8 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8 text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-pill text-primary">
+                <MailCheck className="h-7 w-7" />
               </div>
-              <div className="p-5 sm:p-6">
-                <h2 className="font-sans text-lg font-bold uppercase tracking-[0.06em] text-ink">
-                  Check your email
-                </h2>
-                <p className="mt-4 font-sans text-base normal-case leading-[1.7] text-ink-2">
-                  We sent a confirmation link to{' '}
-                  <strong className="break-all text-ink">{email}</strong>. Click it to
-                  activate your account, then sign in.
-                </p>
-              </div>
-              <Link to="/login" className="btn btn-issue w-full">
+              <h2 className="mt-4 font-display text-xl font-bold text-ink">
+                Check your email
+              </h2>
+              <p className="mt-2 text-sm text-ink-2 leading-relaxed">
+                We sent a confirmation link to <strong className="text-ink break-all">{email}</strong>.
+                Click the link to verify your email, then wait for developer approval.
+              </p>
+              <Link to="/login" className="btn btn-primary w-full mt-6 py-3.5">
                 Go to sign in
               </Link>
             </div>
@@ -87,71 +75,41 @@ export default function Signup() {
   }
 
   return (
-    <Sheet label="Access request">
-      <div className="mx-auto max-w-lg">
+    <Sheet label="Account Request">
+      <div className="mx-auto max-w-md">
         <Reveal>
-          <SectionLabel index={7}>Sheet</SectionLabel>
-          <h1 className="drawing-title mt-6">Request</h1>
-          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
-            Create an account and the developer will review your request.
+          <SectionLabel index={7}>Access</SectionLabel>
+          <h1 className="drawing-title mt-4 text-3xl sm:text-4xl">Request access</h1>
+          <p className="mt-2 text-sm text-ink-2">
+            Create an account to request an approved tester slot for MusicStream.
           </p>
         </Reveal>
 
-        {/* Surfaced before the form is used, so a misconfigured deploy is
-            obvious rather than showing a cryptic error on submit. */}
         {!isConfigured && (
-          <div className="mt-8 border border-void bg-sheet-deep" role="alert">
-            <div className="flex items-center gap-2.5 border-b border-void bg-void/10 px-4 py-2.5">
-              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-void">
-                Site not connected to Supabase
-              </span>
-            </div>
-            <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-                Set{' '}
-                <code className="border border-rule-soft bg-sheet px-1.5 py-0.5 font-mono text-[0.875rem] text-ink">
-                  VITE_SUPABASE_URL
-                </code>{' '}
-                and{' '}
-                <code className="border border-rule-soft bg-sheet px-1.5 py-0.5 font-mono text-[0.875rem] text-ink">
-                  VITE_SUPABASE_ANON_KEY
-                </code>{' '}
-                in your environment variables, then redeploy. Sign-up cannot work until
-                then.
-              </p>
-            </div>
+          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-4 text-xs text-red-800 dark:text-red-300">
+            <strong>Supabase not configured.</strong> Set environment variables to enable signups.
           </div>
         )}
 
-        <div className="mt-8 border border-stamp bg-sheet-deep">
-          <div className="flex items-center gap-2.5 border-b border-stamp bg-stamp/10 px-4 py-2.5">
-            <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-stamp">
-              Issue is controlled
-            </span>
-          </div>
-          <div className="p-5">
-            <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-              Creating an account sends an access request to the developer. You'll be able
-              to download the app once it's approved.
-            </p>
-          </div>
+        <div className="mt-6 rounded-2xl border border-primary/20 bg-primary-pill p-4 text-xs text-primary-pill-text flex items-start gap-3">
+          <ShieldCheck className="h-4 w-4 shrink-0 mt-0.5" />
+          <span>
+            MusicStream is invite-only. After creating your account, the developer will
+            approve your email before you can download the APK.
+          </span>
         </div>
 
-        <form onSubmit={onSubmit} className="mt-8 border border-rule bg-sheet-deep">
-          <div className="plate-hd">
-            <span className="label">Requester details</span>
-          </div>
+        <form onSubmit={onSubmit} className="mt-6 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8 shadow-xs">
+          {error && (
+            <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-3.5 text-xs text-red-800 dark:text-red-300">
+              {error}
+            </div>
+          )}
 
-          <div className="space-y-5 p-5 sm:p-6">
-            {error && (
-              <div className="border border-void bg-void/10 px-4 py-3" role="alert">
-                <p className="font-mono text-[0.875rem] leading-relaxed text-void">{error}</p>
-              </div>
-            )}
-
+          <div className="space-y-4">
             <div>
               <label className="field-label" htmlFor="signup-email">
-                Email <span className="text-stamp">*</span>
+                Email address
               </label>
               <input
                 id="signup-email"
@@ -159,24 +117,20 @@ export default function Signup() {
                 type="email"
                 autoComplete="email"
                 required
-                placeholder="you@example.com"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                aria-describedby="signup-email-note"
               />
-              <p id="signup-email-note" className="mt-2 label normal-case tracking-[0.06em]">
-                The developer will see this address.
-              </p>
             </div>
 
             <div>
               <label className="field-label" htmlFor="signup-password">
-                Password <span className="text-stamp">*</span>
+                Password
               </label>
               <div className="relative">
                 <input
                   id="signup-password"
-                  className="field-input pr-14"
+                  className="field-input pr-12"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   required
@@ -187,7 +141,7 @@ export default function Signup() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-0 top-0 flex h-full w-12 items-center justify-center border-l border-rule text-ink-3 transition-colors hover:text-ink"
+                  className="absolute right-0 top-0 flex h-full w-12 items-center justify-center text-ink-3 hover:text-ink transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -197,7 +151,7 @@ export default function Signup() {
 
             <div>
               <label className="field-label" htmlFor="signup-confirm">
-                Confirm password <span className="text-stamp">*</span>
+                Confirm password
               </label>
               <input
                 id="signup-confirm"
@@ -205,24 +159,21 @@ export default function Signup() {
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="new-password"
                 required
-                placeholder="Re-enter your password"
+                placeholder="Re-enter password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
               />
             </div>
           </div>
 
-          <button type="submit" className="btn btn-issue w-full" disabled={busy}>
-            {busy ? 'Creating account…' : 'File request'}
+          <button type="submit" className="btn btn-primary w-full mt-6 py-3.5" disabled={busy}>
+            {busy ? 'Submitting…' : 'Submit request'}
           </button>
         </form>
 
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className="text-stamp underline decoration-stamp/40 underline-offset-4"
-          >
+        <p className="mt-6 text-center text-sm text-ink-2">
+          Already requested access?{' '}
+          <Link to="/login" className="text-primary font-semibold hover:underline">
             Sign in
           </Link>
         </p>

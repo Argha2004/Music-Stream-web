@@ -1,599 +1,396 @@
-/* ---------------------------------------------------------------------------
-   MusicStream — "The Controlled Copy" (whiteprint)
-
-   The site is the app's controlled specification document. The process is a
-   whiteprint — the diazo print that succeeded the cyanotype: dark blue-black
-   line work drawn on a warm vellum ground, corrected in red, stamped in survey
-   vermilion. Same document, reversed process. The ink is now the figure and the
-   paper is the field, which is how a working drawing is actually read.
-
-   Three hard rules, all load-bearing:
-     - Every corner is square. Radius is 0 site-wide.
-     - There are no shadows. A printed sheet does not cast one; depth comes
-       from line weight, tonal recess, and 45° hatching.
-     - One accent, survey vermilion, meaning the live action or an approval.
-       On paper it is a darker, absorbed ink than it was on blue — it has to
-       carry text contrast against vellum, and a hot screen-orange cannot.
-
-   HeroUI is deliberately NOT imported. Every control is rebuilt below in the
-   drafting vocabulary, so a stock component library would only add weight and
-   a cascade to fight. See DESIGN.md.
-   --------------------------------------------------------------------------- */
 @import 'tailwindcss';
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 @theme {
-  /* --- The sheet: warm drafting vellum ---------------------------------- */
-  /* Deep is the sheet pressed in (wells, plate interiors, code); raised is the
-     sheet lifted (plate headers, active rows). On paper that ordering inverts
-     from the blue system — recess is darker, relief is brighter — so the
-     semantic names still describe what the eye reads. */
-  --color-sheet: #f3f0e6;
-  --color-sheet-deep: #e7e2d4;
-  --color-sheet-raised: #fbf9f3;
+  --font-sans: 'Plus Jakarta Sans', Outfit, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Plus Jakarta Sans', Outfit, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Azeret Mono', ui-monospace, SFMono-Regular, monospace;
 
-  /* --- Line work: the drawn line --------------------------------------- */
-  /* Blue-black diazo ink. Measured 5.8:1 against the sheet, far clear of the
-     3:1 non-text floor — line work carries all the structure in this system,
-     and on paper a timid rule disappears in a way it never did on blue. */
-  --color-rule: #2f5980;
-  --color-rule-soft: #b9c6d4;
+  --color-sheet: #f7f8f2;
+  --color-sheet-deep: #ebf2e3;
+  --color-sheet-raised: #ffffff;
 
-  /* --- Lettering ------------------------------------------------------- */
-  /* 14.9:1 / 7.6:1 / 5.3:1 against the sheet. ink-3 also has to clear 4.5:1
-     against the pressed-in wells it labels, which is what sets its value. */
-  --color-ink: #101c28;
-  --color-ink-2: #3d4c5c;
-  --color-ink-3: #526475;
+  --color-card: #ffffff;
+  --color-card-subtle: #ebf2e3;
+  --color-card-hover: #e2ecd8;
 
-  /* --- The one accent: action + approval ------------------------------- */
-  /* Vermilion stamp ink, not screen orange. #ff5a1f measured 2.7:1 on vellum —
-     unusable for the clause numbers, links and stamps that carry it as text.
-     Set against the *pressed-in* well (#e7e2d4), not the paper, because the
-     clause numbers live in the register: 4.9:1 there, 5.5:1 on the sheet.
-     Reads hotter against cream than the bright value did against blue. Hover
-     goes deeper, the way pressure loads a stamp. */
-  --color-stamp: #b32e00;
-  --color-stamp-hi: #992700;
-  --color-on-stamp: #fdfaf2;
+  --color-rule: #dce7d5;
+  --color-rule-soft: #e8efe2;
 
-  /* --- Correction ink + verification ----------------------------------- */
-  --color-void: #c8102e;
-  --color-checked: #0f7a52;
+  --color-ink: #192e1e;
+  --color-ink-2: #415746;
+  --color-ink-3: #6c8271;
 
-  /* --- Interaction ground ---------------------------------------------- */
-  /* Where a surface goes when you hover or select it. This is a token rather
-     than a literal because the direction is not the same in both processes:
-     on paper the ink presses IN (darker), on the blueprint the sheet lifts
-     OUT (lighter). Both move away from the ground toward more contrast, which
-     is the rule; the sign is what changes. */
-  --color-hover: #e7e2d4;
+  --color-primary: #2a5c34;
+  --color-primary-hover: #1e4626;
+  --color-primary-pill: #dcefce;
+  --color-primary-pill-text: #1e3e24;
 
-  --font-sans: Archivo, ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'Azeret Mono', ui-monospace, SFMono-Regular, monospace;
+  --color-stamp: #2a5c34;
+  --color-stamp-hi: #1e4626;
+  --color-on-stamp: #ffffff;
 
-  --container-content: 1240px;
+  --color-void: #c82d43;
+  --color-checked: #257a44;
 
-  /* Rules draw themselves along their length rather than fading in. */
-  --animate-plot-x: plot-x 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-stamp-in: stamp-in 300ms cubic-bezier(0.2, 0, 0, 1) both;
-  /* The level plot's needle movement. scaleY only — no layout, no paint. */
-  --animate-bar: bar 1.1s ease-in-out infinite;
+  --color-hover: #e6eee0;
+
+  --color-accent-mint: #d5f2ce;
+  --color-accent-blue: #d4ebf8;
+  --color-accent-peach: #fde2e4;
+  --color-accent-yellow: #f2f6ce;
+  --color-accent-banner: #bfe59f;
+  --color-accent-banner-dark: #1b3e21;
+
+  --container-content: 1200px;
 }
 
-/* ---------------------------------------------------------------------------
-   THE SECOND PROCESS — cyanotype
-
-   The document is issued in two processes, not in a theme and its inversion.
-   Light is the whiteprint above: blue-black ink on warm vellum. Dark is the
-   cyanotype: the sheet exposed blue, the line work washed out white, the stamp
-   burning hot because it is sitting on blue rather than being absorbed by
-   paper. Both are real drafting outputs of the same drawing, which is why the
-   accent changes value between them instead of staying put — #b32e00 is ink
-   soaking into cream, #ff5a1f is light on a blue field.
-
-   Tailwind v4 compiles every colour utility to `var(--color-*)`, so redefining
-   those variables on the root element re-themes the entire site with no
-   `dark:` variants anywhere. Adding a colour to @theme above automatically
-   needs a value here too.
-
-   The site is a React SPA — it does not render at all without JS — so there is
-   deliberately no `prefers-color-scheme` fallback block. The boot script in
-   index.html resolves the system preference and stamps `data-theme` before
-   first paint, which is also what stops the wrong theme flashing.
-   --------------------------------------------------------------------------- */
 html[data-theme='dark'] {
   color-scheme: dark;
 
-  --color-sheet: #0a2440;
-  --color-sheet-deep: #06172a;
-  /* Darkened from the original #0e3055, which was set to look lifted against
-     the sheet without regard for what sits ON it: survey orange measured
-     4.28:1 there, and orange labels in plate headers are a pattern used across
-     the site. At this value orange clears 4.6:1 and ink-3 clears 5.0:1. The
-     lift is now 1.10 against the sheet — exactly the lift the whiteprint's own
-     raised strip has, and the 1px rule under a header does the rest. */
-  --color-sheet-raised: #0d2b4c;
+  --color-sheet: #0e1610;
+  --color-sheet-deep: #152018;
+  --color-sheet-raised: #1c2a1f;
 
-  /* 3.28:1 against the blue sheet — clears the 3:1 non-text floor. */
-  --color-rule: #3f76a6;
-  --color-rule-soft: #1e4770;
+  --color-card: #16241a;
+  --color-card-subtle: #1e3022;
+  --color-card-hover: #263c2c;
 
-  --color-ink: #eef6ff;
-  --color-ink-2: #a8c9e8;
-  /* Lifted from the original #7099c0, which measured 4.46:1 against the RAISED
-     header strip — every plate header, register header and title-block key on
-     the site sat just under the floor. Like its whiteprint counterpart, this
-     value is set by the surface it labels (4.68:1 on raised), not by the sheet
-     it sits nearest (5.5:1). */
-  --color-ink-3: #749dc4;
+  --color-rule: #2a4030;
+  --color-rule-soft: #203325;
 
-  /* Full survey orange. On blue it measures 5.6:1 and needs no darkening —
-     the constraint that forced vermilion on paper does not exist here. */
-  --color-stamp: #ff5a1f;
-  --color-stamp-hi: #ff7c47;
-  --color-on-stamp: #180701;
+  --color-ink: #f7fbf8;
+  --color-ink-2: #c6decb;
+  --color-ink-3: #92b097;
 
-  /* Lifted from the original #ff4d4d (4.38:1 on a raised header, where the
-     restrictions plate puts it). Same surface-not-sheet correction as ink-3. */
-  --color-void: #ff6b6b;
-  --color-checked: #35d39a;
+  --color-primary: #52c46f;
+  --color-primary-hover: #67d682;
+  --color-primary-pill: #1e3d26;
+  --color-primary-pill-text: #a8f0bc;
 
-  /* Lifts instead of pressing in — see the token's note above. */
-  --color-hover: #0d2b4c;
-}
+  --color-stamp: #52c46f;
+  --color-stamp-hi: #67d682;
+  --color-on-stamp: #0b150d;
 
-@keyframes bar {
-  0%,
-  100% {
-    transform: scaleY(0.35);
-  }
-  50% {
-    transform: scaleY(1);
-  }
-}
+  --color-void: #ff5c72;
+  --color-checked: #52c46f;
 
-@keyframes plot-x {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
+  --color-hover: #233829;
 
-/* A decision landing: arrives oversized and slightly turned, then settles. */
-@keyframes stamp-in {
-  from {
-    opacity: 0;
-    transform: scale(1.5) rotate(-9deg);
-  }
-  60% {
-    opacity: 0.92;
-  }
-  to {
-    opacity: 0.92;
-    transform: scale(1) rotate(-3.5deg);
-  }
-}
-
-/* The drawing title's lines landing as stamped impressions. The magnitudes are
-   the accepted tuning (impact 0.95) baked to literals: scale 1.399, rotate
-   -3.04deg. Paired with `.stamp-title` in the components layer. */
-@keyframes stamp-line {
-  from {
-    opacity: 0;
-    transform: scale(1.399) rotate(-3.04deg);
-  }
-  60% {
-    opacity: 1;
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-}
-
-@keyframes stamp-tick {
-  from {
-    opacity: 0;
-    transform: scale(1.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  --color-accent-mint: #1e3d26;
+  --color-accent-blue: #16364a;
+  --color-accent-peach: #4d2025;
+  --color-accent-yellow: #3c421b;
+  --color-accent-banner: #1f4225;
+  --color-accent-banner-dark: #a8f0bc;
 }
 
 @layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-rule);
+  }
+
   html {
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
-    /* Scrollbars, form controls and the overscroll gutter are painted by the
-       UA. The dark process overrides this to `dark` alongside its palette. */
-    color-scheme: light;
     background-color: var(--color-sheet);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
-  /* The ground is plain vellum. A tiled hairline grid used to sit here, and it
-     ran *under* every component rather than behind them — the drafting language
-     is already carried by the sheet frame, the ruled registers and the title
-     block, so the paper itself does not need to argue for it. */
   body {
-    @apply bg-sheet text-ink font-sans antialiased;
-  }
-
-  /* Structure is uppercase; content is sentence case. The case difference is
-     how you tell the frame from what it holds, so headings carry it here. */
-  h1,
-  h2,
-  h3 {
-    @apply font-sans uppercase;
-    letter-spacing: 0.01em;
-  }
-
-  /* Square, like everything else. */
-  :focus-visible {
-    outline: 2px solid var(--color-stamp);
-    outline-offset: 2px;
-    border-radius: 0;
+    min-height: 100vh;
+    background-color: var(--color-sheet);
+    color: var(--color-ink);
   }
 
   ::selection {
-    background: var(--color-stamp);
-    color: var(--color-on-stamp);
-  }
-
-  /* Figures are read from an instrument, not spoken. */
-  code,
-  kbd,
-  samp,
-  pre {
-    @apply font-mono;
-  }
-
-  /* 16px stops iOS zooming the viewport when a control takes focus. */
-  @media (max-width: 767px) {
-    input,
-    textarea,
-    select {
-      font-size: 16px;
-    }
+    background-color: var(--color-primary-pill);
+    color: var(--color-primary-pill-text);
   }
 }
 
 @layer components {
   .container-x {
-    @apply mx-auto w-[94%] max-w-content;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--container-content);
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
-  /* --- Type roles ------------------------------------------------------ */
-
-  /* Title-block field names, table headers, callout tags, button lettering. */
-  .label {
-    @apply font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-ink-3;
-  }
-
-  /* Every numeral on the site. */
-  .figure {
-    @apply font-mono tabular-nums text-ink;
-  }
-
-  /* The subject of a sheet. One per page. */
-  .drawing-title {
-    font-family: var(--font-sans);
-    font-size: clamp(2.75rem, 9vw, 6rem);
-    font-weight: 800;
-    font-stretch: 110%;
-    line-height: 0.9;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    color: var(--color-ink);
-  }
-
-  /* --- The stamped title ----------------------------------------------- */
-
-  /* The home sheet's one authored moment: the drawing title is not revealed,
-     it is STAMPED. Each line arrives oversized and turned, then settles flat
-     on a hard ease — the same impact the approval stamp makes, which is the
-     document's native motion. A registration mark snaps into the corner as
-     the last line sets, in the sheet's own crop-mark vocabulary.
-
-     Per DESIGN.md's one-authored-moment rule this belongs to the home sheet
-     alone; do not reuse it on another title. */
-  .stamp-title {
-    position: relative;
-  }
-
-  .stamp-title .stamp-line {
-    display: block;
-    /* Off-centre origin so the impression pivots from the left, the way a
-       hand-held stamp rocks onto paper rather than landing dead flat. */
-    transform-origin: 8% 60%;
-    animation: stamp-line 320ms cubic-bezier(0.2, 0, 0, 1) both;
-    animation-delay: calc(var(--i) * 115ms);
-  }
-
-  .stamp-title .stamp-tick {
-    position: absolute;
-    top: -0.12em;
-    left: -0.34em;
-    width: 11px;
-    height: 11px;
-    border-top: 2px solid var(--color-stamp);
-    border-left: 2px solid var(--color-stamp);
-    pointer-events: none;
-    animation: stamp-tick 240ms cubic-bezier(0.2, 0, 0, 1) both;
-    /* Lands just after the third line settles. */
-    animation-delay: 430ms;
-  }
-
-  /* The second reduced-motion layer. The global block below already freezes
-     durations, but these must also render in their FINAL state rather than
-     their `both`-filled starting frame. */
-  @media (prefers-reduced-motion: reduce) {
-    .stamp-title .stamp-line,
-    .stamp-title .stamp-tick {
-      animation: none;
-      opacity: 1;
-      transform: none;
+  @media (min-width: 640px) {
+    .container-x {
+      padding-left: 2rem;
+      padding-right: 2rem;
     }
   }
 
-  .sheet-heading {
-    @apply font-sans text-[1.75rem] font-bold uppercase;
-    line-height: 1.05;
-    letter-spacing: 0.01em;
+  /* --- Buttons --- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    cursor: pointer;
   }
 
-  .clause-heading {
-    @apply font-sans text-lg font-bold uppercase tracking-[0.06em];
+  .btn:active {
+    transform: scale(0.97);
   }
 
-  /* --- The sheet frame ------------------------------------------------- */
-
-  /* A drawn frame with an inset hairline. Corner registration ticks are
-     placed by .sheet-ticks below, the way a print carries crop marks. */
-  .sheet-frame {
-    position: relative;
-    border: 1px solid var(--color-rule);
-    box-shadow: inset 0 0 0 6px var(--color-sheet), inset 0 0 0 7px var(--color-rule-soft);
-    /* Opaque. This was 92% translucent only so the old body grid would read
-       through the sheet; with the grid gone, translucency just risks letting
-       anything behind it bleed into the content. */
-    background-color: var(--color-sheet);
+  .btn-issue,
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    padding: 0.75rem 1.625rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 
-  .sheet-ticks::before,
-  .sheet-ticks::after {
-    content: '';
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-color: var(--color-stamp);
-    pointer-events: none;
-  }
-  .sheet-ticks::before {
-    top: -1px;
-    left: -1px;
-    border-top: 2px solid;
-    border-left: 2px solid;
-  }
-  .sheet-ticks::after {
-    bottom: -1px;
-    right: -1px;
-    border-bottom: 2px solid;
-    border-right: 2px solid;
+  .btn-issue:hover,
+  .btn-primary:hover {
+    background-color: var(--color-primary-hover);
+    box-shadow: 0 4px 12px rgba(42, 92, 52, 0.22);
   }
 
-  /* --- Plates (the container primitive) -------------------------------- */
-
-  .plate {
-    @apply border border-rule bg-sheet-deep;
+  .btn-secondary,
+  .btn-pill {
+    background-color: var(--color-card-subtle);
+    color: var(--color-ink);
+    padding: 0.75rem 1.625rem;
   }
 
-  /* A plate announces what it is with a raised, ruled header strip. */
-  .plate-hd {
-    @apply flex items-center gap-2.5 border-b border-rule bg-sheet-raised px-4 py-2.5;
-  }
-
-  .plate-bd {
-    @apply p-5 sm:p-6;
-  }
-
-  /* Interactive plates take an orange edge — nothing lifts, nothing glows. */
-  .plate-link {
-    transition: border-color 160ms ease, background-color 160ms ease;
-  }
-  /* Deepens, never lifts. On paper a hover toward sheet-raised is a 1.09:1
-     non-event; the ink has to press in for the state to register at all. */
-  .plate-link:hover {
-    border-color: var(--color-stamp);
+  .btn-secondary:hover,
+  .btn-pill:hover {
     background-color: var(--color-hover);
   }
 
-  /* --- Controls -------------------------------------------------------- */
+  .btn-line {
+    border: 1px solid var(--color-rule);
+    background-color: transparent;
+    color: var(--color-ink);
+    padding: 0.625rem 1.375rem;
+  }
 
-  .btn {
-    @apply inline-flex h-12 items-center justify-center gap-2.5 px-6 text-center
-           font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em];
-    border-radius: 0;
-    cursor: pointer;
-    transition: background-color 160ms ease, border-color 160ms ease,
-      color 160ms ease, transform 120ms ease;
+  .btn-line:hover {
+    background-color: var(--color-hover);
+    border-color: var(--color-primary);
   }
 
   .btn-sm {
-    @apply h-10 gap-2 px-4 text-[0.6875rem];
-  }
-
-  /* The single live action on a sheet. */
-  .btn-issue {
-    @apply bg-stamp text-on-stamp;
-    font-weight: 700;
-    border: 1px solid var(--color-stamp);
-  }
-  .btn-issue:hover {
-    @apply bg-stamp-hi;
-    border-color: var(--color-stamp-hi);
-  }
-  .btn-issue:active {
-    transform: translateY(1px);
-  }
-
-  .btn-line {
-    @apply border border-rule bg-transparent text-ink;
-  }
-  .btn-line:hover {
-    @apply bg-hover;
-    border-color: var(--color-stamp);
-  }
-  .btn-line:active {
-    transform: translateY(1px);
-  }
-
-  .btn-void {
-    @apply border bg-transparent text-void;
-    border-color: color-mix(in oklab, var(--color-void) 55%, transparent);
-  }
-  .btn-void:hover {
-    background-color: color-mix(in oklab, var(--color-void) 12%, transparent);
-    border-color: var(--color-void);
+    padding: 0.45rem 1rem;
+    font-size: 0.8125rem;
   }
 
   .btn-quiet {
-    @apply border border-transparent bg-transparent text-ink-3;
+    background-color: transparent;
+    color: var(--color-ink-2);
+    padding: 0.5rem 1rem;
   }
+
   .btn-quiet:hover {
-    @apply text-ink;
-    border-color: var(--color-rule);
+    color: var(--color-ink);
+    background-color: var(--color-hover);
   }
 
-  /* Unavailable takes the hatch, the way a drawing marks a void area. */
-  .btn:disabled,
-  .btn[aria-disabled='true'] {
-    @apply cursor-not-allowed text-ink-3;
-    background-color: var(--color-sheet-deep);
-    background-image: repeating-linear-gradient(
-      45deg,
-      var(--color-rule-soft) 0,
-      var(--color-rule-soft) 1px,
-      transparent 1px,
-      transparent 6px
-    );
-    border-color: var(--color-rule-soft);
-    transform: none;
+  .btn-void {
+    background-color: var(--color-void);
+    color: #ffffff;
+    padding: 0.5rem 1rem;
   }
 
-  /* --- Fields ---------------------------------------------------------- */
+  .btn-void:hover {
+    opacity: 0.9;
+  }
 
+  /* --- Labels & Headings --- */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .drawing-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6.5vw, 4.25rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+  }
+
+  .sheet-heading {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+
+  /* --- Form Fields --- */
   .field-label {
-    @apply mb-2 block font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-ink-3;
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin-bottom: 0.5rem;
   }
 
   .field-input {
-    @apply block w-full border border-rule bg-sheet-deep px-3.5 py-3 font-mono text-base text-ink;
-    border-radius: 0;
-    transition: border-color 160ms ease;
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-sheet-raised);
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    transition: all 150ms ease;
   }
+
+  .field-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(42, 92, 52, 0.15);
+  }
+
   .field-input::placeholder {
     color: var(--color-ink-3);
   }
-  .field-input:hover {
-    border-color: var(--color-ink-3);
-  }
-  /* Keyed to :focus, not :focus-visible — for a text field a pointer user
-     wants the same confirmation a keyboard user gets. */
-  .field-input:focus {
-    outline: none;
-    border-color: var(--color-stamp);
-  }
-  .field-input[aria-invalid='true'] {
-    border-color: var(--color-void);
-  }
 
-  /* --- Stamps ---------------------------------------------------------- */
-
-  /* Drawn just under full so the sheet reads through the ink. 0.92, not the
-     0.85 the blue system used — on paper the ink lightens toward the ground
-     instead of darkening into it, and 0.85 dropped the mark below 4.5:1. */
+  /* --- Stamp Badge --- */
   .stamp {
-    @apply inline-block px-4 py-2 font-mono text-sm font-bold uppercase tracking-[0.2em];
-    border: 2px solid var(--color-stamp);
-    box-shadow: inset 0 0 0 1px var(--color-stamp);
-    color: var(--color-stamp);
-    opacity: 0.92;
-    transform: rotate(-3.5deg);
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background-color: var(--color-primary-pill);
+    color: var(--color-primary-pill-text);
+    border: 1px solid var(--color-primary-pill);
   }
 
   .stamp-void {
-    border-color: var(--color-void);
-    box-shadow: inset 0 0 0 1px var(--color-void);
+    background-color: rgba(200, 45, 67, 0.12);
     color: var(--color-void);
-    transform: rotate(3deg);
+    border-color: rgba(200, 45, 67, 0.25);
   }
 
-  /* --- Title block ------------------------------------------------------ */
-
-  .title-block {
-    @apply grid border-l border-t border-rule bg-sheet-deep;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  @media (min-width: 640px) {
-    .title-block {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+  /* --- Cards & Plates --- */
+  .plate {
+    border-radius: 1.5rem;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-card);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
   }
 
-  /* Cells butt against a shared rule — no gaps inside a ruled object. */
-  .tb-cell {
-    @apply flex min-w-0 flex-col gap-1.5 border-b border-r border-rule px-4 py-3;
+  .plate-hd {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1.25rem;
+    background-color: var(--color-card-subtle);
+    border-bottom: 1px solid var(--color-rule);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink-2);
   }
 
-  .tb-k {
-    @apply font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-ink-3;
+  .plate-bd {
+    padding: 1.5rem;
   }
 
-  .tb-v {
-    @apply font-mono text-[0.875rem] font-medium tabular-nums text-ink;
-    overflow-wrap: anywhere;
-  }
-
-  /* --- Register (admin rows, revision table) ---------------------------- */
-
+  /* --- Registers / Tables --- */
   .reg {
-    @apply border border-rule bg-sheet-deep;
+    border-radius: 1.5rem;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-card);
+    overflow: hidden;
   }
 
   .reg-hd {
-    @apply border-b border-rule bg-sheet-raised px-4 py-2.5
-           font-mono text-[0.6875rem] font-medium uppercase tracking-[0.18em] text-ink-3;
+    padding: 0.875rem 1.25rem;
+    background-color: var(--color-card-subtle);
+    border-bottom: 1px solid var(--color-rule);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-ink-3);
   }
 
   .reg-row {
-    @apply border-b border-rule-soft px-4 py-4;
+    padding: 1.125rem 1.25rem;
+    border-bottom: 1px solid var(--color-rule-soft);
+    transition: background-color 150ms ease;
   }
+
   .reg-row:last-child {
-    border-bottom: 0;
+    border-bottom: none;
   }
 
-  /* --- Dimension callout ------------------------------------------------ */
-
-  .callout-line {
-    @apply relative h-px min-w-6 flex-1 bg-rule;
+  .reg-row:hover {
+    background-color: rgba(235, 242, 227, 0.45);
   }
-  /* The terminator tick at the measured end. */
-  .callout-line::after {
-    content: '';
+
+  /* --- Phone Mockup Chassis --- */
+  .phone-chassis {
+    position: relative;
+    border-radius: 42px;
+    background-color: #1a221b;
+    padding: 9px;
+    box-shadow: 0 25px 60px -15px rgba(25, 45, 28, 0.22),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  }
+
+  .phone-screen-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 33px;
+    overflow: hidden;
+    background-color: #0b0f0c;
+  }
+
+  .phone-island {
     position: absolute;
-    right: 0;
-    top: -3px;
-    width: 1px;
-    height: 7px;
-    background: var(--color-rule);
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 68px;
+    height: 16px;
+    background-color: #1a221b;
+    border-radius: 9999px;
+    z-index: 20;
   }
 
-  /* --- Hatch (unavailable / not yet issued) ----------------------------- */
+  /* --- Sheet Frame --- */
+  .sheet-frame {
+    border-radius: 2rem;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-sheet-raised);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  }
 
+  /* --- Hatching Placeholder --- */
   .hatch {
     background-color: var(--color-sheet-deep);
     background-image: repeating-linear-gradient(
@@ -601,86 +398,134 @@ html[data-theme='dark'] {
       var(--color-rule-soft) 0,
       var(--color-rule-soft) 1px,
       transparent 1px,
-      transparent 6px
+      transparent 8px
     );
   }
 
-  /* --- Documentation prose ---------------------------------------------- */
+  /* --- Title Block --- */
+  .title-block {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-rule);
+    background-color: var(--color-card-subtle);
+    overflow: hidden;
+  }
 
+  @media (min-width: 640px) {
+    .title-block {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .tb-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--color-rule);
+    border-right: 1px solid var(--color-rule);
+  }
+
+  .tb-cell:last-child {
+    border-right: none;
+  }
+
+  .tb-k {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  .tb-v {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    word-break: break-all;
+  }
+
+  /* --- Prose / Docs Typography --- */
   .prose-doc h2 {
-    @apply mt-14 mb-5 font-sans text-2xl font-bold uppercase tracking-[0.02em] text-ink scroll-mt-28;
+    margin-top: 2.75rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-ink);
   }
+
   .prose-doc h3 {
-    @apply mt-9 mb-3 font-sans text-base font-bold uppercase tracking-[0.06em] text-ink scroll-mt-28;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-ink);
   }
-  /* Content is sentence case and set for reading, not for structure. */
+
   .prose-doc p,
   .prose-doc li {
-    @apply font-sans text-base leading-[1.7] text-ink-2 normal-case;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-ink-2);
   }
+
   .prose-doc p {
-    @apply mb-4;
+    margin-bottom: 1rem;
   }
-  .prose-doc ul {
-    @apply mb-4 space-y-2 pl-5;
-    list-style: none;
-  }
-  /* A square marker, not a disc — nothing in this system is round. */
-  .prose-doc ul > li {
-    position: relative;
-  }
-  .prose-doc ul > li::before {
-    content: '';
-    position: absolute;
-    left: -1.25rem;
-    top: 0.6875em;
-    width: 5px;
-    height: 5px;
-    background: var(--color-stamp);
-  }
+
   .prose-doc ol {
-    @apply mb-4 list-decimal space-y-2 pl-5;
+    margin-bottom: 1rem;
+    padding-left: 1.25rem;
+    list-style-type: decimal;
   }
-  .prose-doc ol::marker,
-  .prose-doc ol > li::marker {
-    @apply font-mono text-ink-3;
+
+  .prose-doc ul {
+    margin-bottom: 1rem;
+    padding-left: 1.25rem;
+    list-style-type: disc;
   }
+
   .prose-doc code {
-    @apply border border-rule-soft bg-sheet-deep px-1.5 py-0.5 font-mono text-[0.875rem] text-ink;
-    /* Paths and env names are one long token; let them break rather than
-       setting a min-content floor wider than a phone. */
-    overflow-wrap: anywhere;
+    border-radius: 0.375rem;
+    background-color: var(--color-sheet-deep);
+    padding: 0.2rem 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-primary);
   }
+
   .prose-doc pre {
-    @apply mb-4 overflow-x-auto border border-rule bg-sheet-deep p-4 text-[0.875rem];
+    border-radius: 1rem;
+    background-color: var(--color-sheet-deep);
+    border: 1px solid var(--color-rule);
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
   }
-  .prose-doc pre code {
-    @apply border-0 bg-transparent p-0 text-ink-2;
-    overflow-wrap: normal;
-  }
+
   .prose-doc a {
-    @apply text-stamp underline decoration-stamp/40 underline-offset-4;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-weight: 500;
   }
+
   .prose-doc a:hover {
-    @apply decoration-stamp;
-  }
-  .prose-doc strong {
-    @apply font-semibold text-ink;
+    color: var(--color-primary-hover);
   }
 }
 
-/* Honour the motion preference across every animation on the site. Rules
-   render fully drawn and stamps render already landed. */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+/* Animations */
+@keyframes bar {
+  0%, 100% {
+    transform: scaleY(0.35);
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  50% {
+    transform: scaleY(1);
   }
 }

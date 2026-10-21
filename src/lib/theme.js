@@ -19,7 +19,7 @@ import { useCallback, useEffect, useState } from 'react'
  */
 
 const STORAGE_KEY = 'ms-theme'
-const THEME_COLOR = { light: '#f3f0e6', dark: '#0a2440' }
+const THEME_COLOR = { light: '#f7f8f2', dark: '#141d16' }
 
 /** Mirrors the pre-paint boot script in index.html. Keep the two in step. */
 export function readStoredTheme() {

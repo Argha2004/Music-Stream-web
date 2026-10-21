@@ -4,12 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpeg" href="/Logo-final.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f3f0e6" />
-    <!-- Resolves the issued process before first paint. Without this the light
-         palette renders for a frame and then swaps, which on a full-bleed
-         ground is a whole-screen flash rather than a subtle one. Kept inline
-         and synchronous on purpose — a deferred module is already too late.
-         Mirrors readStoredTheme() in src/lib/theme.js. -->
+    <meta name="theme-color" content="#f7f8f2" />
     <script>
       (function () {
         try {
@@ -22,32 +17,28 @@
                 : 'light'
           document.documentElement.dataset.theme = t
           var m = document.querySelector('meta[name="theme-color"]')
-          if (m) m.content = t === 'dark' ? '#0a2440' : '#f3f0e6'
+          if (m) m.content = t === 'dark' ? '#141d16' : '#f7f8f2'
         } catch (e) {
           document.documentElement.dataset.theme = 'light'
         }
       })()
     </script>
-    <title>MusicStream</title>
+    <title>MusicStream — Your music library, clean & ad-free</title>
     <meta
       name="description"
-      content="MusicStream is a fast, ad-free native Android music player with background playback, synced lyrics, an equalizer and offline downloads."
+      content="MusicStream is a fast, native Android music player with background playback, synced lyrics, 5-band equalizer and offline downloads."
     />
-    <meta property="og:title" content="MusicStream — Your music, everywhere" />
+    <meta property="og:title" content="MusicStream — Your music library, clean & ad-free" />
     <meta
       property="og:description"
-      content="A fast, ad-free native Android music player. Background playback, synced lyrics, equalizer, offline downloads."
+      content="A fast, native Android music player. Background playback, synced lyrics, 5-band equalizer, offline downloads."
     />
     <meta property="og:type" content="website" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Archivo carries a real width axis, which technical lettering needs: the
-         same voice drawn wide for a drawing title and condensed for a
-         title-block field. Azeret Mono is the instrument readout and exists
-         only for figures. display=swap avoids invisible text while loading. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..112,400..800&family=Azeret+Mono:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
   </head>

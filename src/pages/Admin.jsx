@@ -120,9 +120,8 @@ export default function Admin() {
         </p>
       </Reveal>
 
-      {/* Filters double as counters. aria-pressed keeps toggle semantics that a
-          plain styled button would otherwise lose. */}
-      <div className="mt-10 flex flex-wrap">
+      {/* Filters double as counters with pill styling */}
+      <div className="mt-8 flex flex-wrap gap-2">
         {FILTERS.map((f) => {
           const active = filter === f.id
           return (
@@ -131,22 +130,24 @@ export default function Admin() {
               type="button"
               aria-pressed={active}
               onClick={() => setFilter(f.id)}
-              className={`btn btn-sm -ml-px flex-1 border sm:flex-none ${
+              className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all ${
                 active
-                  ? 'border-stamp bg-stamp/10 text-stamp'
-                  : 'border-rule text-ink-3 hover:text-ink'
+                  ? 'bg-primary text-white shadow-xs'
+                  : 'bg-card-subtle text-ink-2 hover:bg-hover'
               }`}
             >
-              {f.label}
-              <span className="tabular-nums">{counts[f.id]}</span>
+              <span>{f.label}</span>
+              <span className={`px-2 py-0.5 rounded-full text-[0.6875rem] font-mono ${active ? 'bg-white/20 text-white' : 'bg-card text-ink-3'}`}>
+                {counts[f.id]}
+              </span>
             </button>
           )
         })}
       </div>
 
       {error && (
-        <div className="mt-8 border border-void bg-void/10 px-4 py-3" role="alert">
-          <p className="font-mono text-[0.875rem] leading-relaxed text-void">{error}</p>
+        <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 px-4 py-3 text-xs text-red-800 dark:text-red-300" role="alert">
+          {error}
         </div>
       )}
 
@@ -189,28 +190,23 @@ export default function Admin() {
             </p>
           </div>
         ) : (
-          <div className="reg">
-            <div className="reg-hd hidden grid-cols-[1fr_8rem_14rem] gap-4 lg:grid">
+          <div className="rounded-3xl border border-rule bg-card overflow-hidden">
+            <div className="hidden grid-cols-[1fr_8rem_14rem] gap-4 px-6 py-3.5 bg-card-subtle font-mono text-xs font-bold uppercase tracking-wider text-ink-3 lg:grid">
               <span>Account</span>
               <span>Status</span>
-              <span className="text-right">Decision</span>
+              <span className="text-right">Action</span>
             </div>
 
-            <ul>
+            <ul className="divide-y divide-rule">
               {visible.map((p) => (
-                <li key={p.id} className="reg-row">
-                  {/* Stacked on phones: side-by-side crushed the email and
-                      truncated it, so you couldn't read who you were approving. */}
+                <li key={p.id} className="p-5 sm:p-6 transition-colors hover:bg-card-subtle/40">
                   <div className="grid gap-4 lg:grid-cols-[1fr_8rem_14rem] lg:items-center">
                     <div className="min-w-0">
-                      {/* break-all, not truncate: you're deciding access based on
-                          this address, so a hidden tail could mean approving the
-                          wrong account. */}
-                      <p className="break-all font-mono text-[0.875rem] text-ink">
+                      <p className="break-all font-mono text-sm font-semibold text-ink">
                         {p.email}
                       </p>
-                      <p className="mt-1.5 font-mono text-[0.6875rem] tabular-nums tracking-[0.08em] text-ink-3">
-                        Requested {new Date(p.requested_at).toLocaleString()}
+                      <p className="mt-1 font-mono text-xs text-ink-3">
+                        Requested {new Date(p.requested_at).toLocaleDateString()}
                         {p.decided_at
                           ? ` · decided ${new Date(p.decided_at).toLocaleDateString()}`
                           : ''}
@@ -219,19 +215,24 @@ export default function Admin() {
 
                     <div>
                       <span
-                        className={`font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] ${
-                          STATUS_TONE[p.status] || 'text-ink-3'
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider ${
+                          p.status === 'approved'
+                            ? 'bg-primary-pill text-primary'
+                            : p.status === 'rejected'
+                              ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                              : 'bg-card-subtle text-ink-3'
                         }`}
                       >
+                        <span className={`h-1.5 w-1.5 rounded-full ${p.status === 'approved' ? 'bg-primary' : p.status === 'rejected' ? 'bg-red-500' : 'bg-ink-3'}`} />
                         {STATUS_WORD[p.status] || p.status}
                       </span>
                     </div>
 
-                    <div className="flex gap-0 lg:justify-end">
+                    <div className="flex gap-2 lg:justify-end">
                       {p.status !== 'approved' && (
                         <button
                           type="button"
-                          className="btn btn-sm btn-line flex-1 lg:flex-none"
+                          className="btn btn-sm btn-primary flex-1 lg:flex-none"
                           disabled={busyId === p.id}
                           onClick={() => decide(p.id, p.email, 'approved')}
                         >
@@ -241,7 +242,7 @@ export default function Admin() {
                       {p.status !== 'rejected' && (
                         <button
                           type="button"
-                          className="btn btn-sm btn-void -ml-px flex-1 lg:flex-none"
+                          className="btn btn-sm btn-void flex-1 lg:flex-none"
                           disabled={busyId === p.id}
                           onClick={() => decide(p.id, p.email, 'rejected')}
                         >

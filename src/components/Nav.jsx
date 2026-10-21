@@ -1,35 +1,21 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Menu, X, Sparkles, Download, LogIn, LogOut, ShieldCheck } from 'lucide-react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-import Waveform from './Waveform'
 import ThemeToggle from './ThemeToggle'
-import { DOC_NO } from './Sheet'
 
-/**
- * The document header, not a marketing nav bar.
- *
- * It carries the document number on the left and sheet tabs on the right,
- * under a 2px rule. Deliberately not floating, not rounded, and not blurred —
- * it is the header of the sheet you are reading, so it behaves like one.
- */
-
-const LINKS = [
-  { to: '/docs', label: 'Specification' },
-  { to: '/changelog', label: 'Revisions' },
-  { to: '/license', label: 'Terms' },
-]
-
-/** Reading-progress rule pinned to the very top of the viewport. */
 function ScrollProgress() {
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 220, damping: 40, mass: 0.2 })
+  const { scrollYProgress } = useSpring(useScroll().scrollYProgress, {
+    stiffness: 240,
+    damping: 40,
+    mass: 0.2,
+  })
 
   return (
     <motion.div
-      style={{ scaleX }}
-      className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-stamp"
+      style={{ scaleX: scrollYProgress }}
+      className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-primary"
       aria-hidden="true"
     />
   )
@@ -39,8 +25,8 @@ export default function Nav() {
   const [open, setOpen] = useState(false)
   const { user, signOut, isAdmin } = useAuth()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
-  // Lock body scroll while the sheet menu is open.
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
     return () => {
@@ -48,7 +34,6 @@ export default function Nav() {
     }
   }, [open])
 
-  // Escape closes the menu (a11y: overlays must be dismissible).
   useEffect(() => {
     if (!open) return
     const onKey = (e) => e.key === 'Escape' && setOpen(false)
@@ -62,134 +47,212 @@ export default function Nav() {
     navigate('/')
   }
 
-  /* The active tab takes a survey-orange rule. Tabs are flush to the header's
-     bottom border, so the active rule reads as part of the frame. */
-  const tabClass = ({ isActive }) =>
-    `flex items-center border-b-2 px-3 font-mono text-[0.6875rem] font-medium uppercase
-     tracking-[0.18em] transition-colors duration-150 lg:px-4 ${
-       isActive
-         ? 'border-stamp text-ink'
-         : 'border-transparent text-ink-3 hover:text-ink'
-     }`
-
   return (
     <>
       <ScrollProgress />
 
-      <header className="sticky top-0 z-40 -mb-px border-b-2 border-rule bg-sheet">
+      <header className="sticky top-0 z-40 bg-sheet/90 backdrop-blur-md transition-colors border-b border-rule/60">
         <div className="container-x">
-          <nav aria-label="Main" className="flex h-14 items-stretch justify-between gap-6">
-            {/* Document identity: the mark is a level plot, the number is real. */}
-            <Link to="/" className="group flex items-center gap-3">
-              <Waveform bars={5} height={16} barWidth={2.5} gap={2} barClassName="bg-stamp" />
-              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-ink">
+          <nav aria-label="Main" className="flex h-16 items-center justify-between gap-4">
+            {/* Logo */}
+            <Link to="/" className="group flex items-center gap-2.5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-pill text-primary transition-transform group-hover:scale-105">
+                <img
+                  src="/Logo-dark.png"
+                  alt="MusicStream Logo"
+                  className="h-5 w-5 object-contain dark:hidden"
+                />
+                <img
+                  src="/Logo-final.png"
+                  alt="MusicStream Logo"
+                  className="h-5 w-5 object-contain hidden dark:block"
+                />
+              </div>
+              <span className="font-display text-lg font-extrabold tracking-tight text-ink">
                 MusicStream
-              </span>
-              <span className="hidden font-mono text-[0.6875rem] tracking-[0.18em] text-ink-3 sm:inline">
-                {DOC_NO}
               </span>
             </Link>
 
-            <div className="hidden items-stretch md:flex">
-              {LINKS.map((l) => (
-                <NavLink key={l.to} to={l.to} className={tabClass}>
-                  {l.label}
-                </NavLink>
-              ))}
+            {/* Navigation links matching reference pill style */}
+            <div className="hidden items-center gap-1.5 md:flex">
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                  `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-primary-pill text-primary-pill-text font-semibold shadow-xs'
+                      : 'text-ink-2 hover:text-ink hover:bg-hover'
+                  }`
+                }
+              >
+                Home
+              </NavLink>
+
+              <NavLink
+                to="/download"
+                className={({ isActive }) =>
+                  `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-primary-pill text-primary-pill-text font-semibold shadow-xs'
+                      : 'text-ink-2 hover:text-ink hover:bg-hover'
+                  }`
+                }
+              >
+                Downloads
+              </NavLink>
+
+              <NavLink
+                to="/changelog"
+                className={({ isActive }) =>
+                  `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-primary-pill text-primary-pill-text font-semibold shadow-xs'
+                      : 'text-ink-2 hover:text-ink hover:bg-hover'
+                  }`
+                }
+              >
+                Releases
+              </NavLink>
+
+              <NavLink
+                to="/docs"
+                className={({ isActive }) =>
+                  `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-primary-pill text-primary-pill-text font-semibold shadow-xs'
+                      : 'text-ink-2 hover:text-ink hover:bg-hover'
+                  }`
+                }
+              >
+                Docs
+              </NavLink>
             </div>
 
-            <div className="hidden items-center gap-2 md:flex">
-              <ThemeToggle className="my-1.5 h-11" />
+            {/* Right side actions */}
+            <div className="hidden items-center gap-2.5 md:flex">
+              <ThemeToggle />
+
               {user ? (
-                <>
+                <div className="flex items-center gap-2">
                   {isAdmin && (
-                    <NavLink to="/admin" className={tabClass}>
-                      Approvals
+                    <NavLink
+                      to="/admin"
+                      className="btn btn-sm btn-pill border border-rule hover:border-primary flex items-center gap-1.5"
+                    >
+                      <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                      <span>Approvals</span>
                     </NavLink>
                   )}
-                  <Link to="/download" className="btn btn-sm btn-issue">
-                    Download
+                  <Link to="/download" className="btn btn-sm btn-primary flex items-center gap-1.5 shadow-xs">
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Download</span>
                   </Link>
-                  <button type="button" className="btn btn-sm btn-quiet" onClick={handleSignOut}>
-                    Sign out
+                  <button
+                    type="button"
+                    className="btn btn-sm border border-rule bg-card hover:bg-red-50 hover:border-red-300 dark:hover:bg-red-950/30 dark:hover:border-red-800 text-ink-2 hover:text-red-600 dark:hover:text-red-400 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    onClick={handleSignOut}
+                    title="Sign out of your account"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                    <span>Sign out</span>
                   </button>
-                </>
+                </div>
               ) : (
                 <>
-                  <Link to="/login" className="btn btn-sm btn-quiet">
+                  <Link to="/login" className="btn btn-sm btn-quiet flex items-center gap-1.5">
+                    <LogIn className="h-3.5 w-3.5" />
                     Sign in
                   </Link>
-                  <Link to="/signup" className="btn btn-sm btn-issue">
+                  <Link to="/signup" className="btn btn-sm btn-primary">
                     Request access
                   </Link>
                 </>
               )}
             </div>
 
-            {/* Sits in the bar rather than inside the menu: the process is a
-                persistent preference, not a navigation destination. */}
+            {/* Mobile menu trigger */}
             <div className="flex items-center gap-2 md:hidden">
-              <ThemeToggle className="my-1.5 h-11" />
-
-              {/* 44px minimum touch target, square like everything else. */}
+              <ThemeToggle />
               <button
                 type="button"
-                className="my-2 flex h-11 w-11 items-center justify-center border border-rule text-ink transition-colors hover:border-stamp"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-rule bg-card-subtle text-ink transition-colors hover:border-primary"
                 onClick={() => setOpen((v) => !v)}
                 aria-label={open ? 'Close menu' : 'Open menu'}
                 aria-expanded={open}
               >
-                {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </button>
             </div>
           </nav>
         </div>
       </header>
 
-      {/* Sheet menu: ruled rows butting together, no gaps, no rounding. */}
+      {/* Mobile Drawer */}
       {open && (
-        <div className="sticky top-14 z-40 border-b border-rule bg-sheet md:hidden">
-          <div className="container-x">
-            <div className="border-x border-rule">
-              {LINKS.map((l) => (
-                <NavLink
-                  key={l.to}
-                  to={l.to}
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    `flex min-h-12 items-center border-b border-rule-soft px-4 font-mono
-                     text-[0.6875rem] uppercase tracking-[0.18em] ${
-                       isActive ? 'bg-hover text-stamp' : 'text-ink-2'
-                     }`
-                  }
-                >
-                  {l.label}
-                </NavLink>
-              ))}
+        <div className="fixed inset-x-0 top-16 z-40 border-b border-rule bg-sheet/95 backdrop-blur-xl p-5 shadow-xl md:hidden">
+          <div className="flex flex-col gap-2">
+            <NavLink
+              to="/"
+              end
+              onClick={() => setOpen(false)}
+              className={({ isActive }) =>
+                `px-4 py-2.5 rounded-2xl text-sm font-semibold transition-colors ${
+                  isActive ? 'bg-primary-pill text-primary-pill-text' : 'text-ink-2 hover:bg-hover'
+                }`
+              }
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/download"
+              onClick={() => setOpen(false)}
+              className="px-4 py-2.5 rounded-2xl text-sm font-medium text-ink-2 hover:bg-hover"
+            >
+              Downloads
+            </NavLink>
+            <NavLink
+              to="/changelog"
+              onClick={() => setOpen(false)}
+              className="px-4 py-2.5 rounded-2xl text-sm font-medium text-ink-2 hover:bg-hover"
+            >
+              Releases
+            </NavLink>
+            <NavLink
+              to="/docs"
+              onClick={() => setOpen(false)}
+              className="px-4 py-2.5 rounded-2xl text-sm font-medium text-ink-2 hover:bg-hover"
+            >
+              Docs
+            </NavLink>
 
+            <div className="mt-4 pt-4 border-t border-rule flex flex-col gap-2.5">
               {user ? (
                 <>
                   {isAdmin && (
                     <NavLink
                       to="/admin"
                       onClick={() => setOpen(false)}
-                      className="flex min-h-12 items-center border-b border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-ink-2"
+                      className="btn btn-pill w-full flex items-center justify-center gap-1.5"
                     >
+                      <ShieldCheck className="h-4 w-4 text-primary" />
                       Approvals
                     </NavLink>
                   )}
                   <Link
                     to="/download"
                     onClick={() => setOpen(false)}
-                    className="btn btn-issue w-full"
+                    className="btn btn-primary w-full py-3 flex items-center justify-center gap-2"
                   >
-                    Download
+                    <Download className="h-4 w-4" />
+                    Download APK
                   </Link>
                   <button
                     type="button"
-                    className="btn btn-line w-full border-x-0 border-b-0"
+                    className="btn w-full border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-950/20 py-2.5 flex items-center justify-center gap-2 font-medium text-xs rounded-full hover:bg-red-100"
                     onClick={handleSignOut}
                   >
+                    <LogOut className="h-4 w-4" />
                     Sign out
                   </button>
                 </>
@@ -198,14 +261,14 @@ export default function Nav() {
                   <Link
                     to="/signup"
                     onClick={() => setOpen(false)}
-                    className="btn btn-issue w-full"
+                    className="btn btn-primary w-full"
                   >
                     Request access
                   </Link>
                   <Link
                     to="/login"
                     onClick={() => setOpen(false)}
-                    className="btn btn-line w-full border-x-0 border-b-0"
+                    className="btn btn-line w-full"
                   >
                     Sign in
                   </Link>

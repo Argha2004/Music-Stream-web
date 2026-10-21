@@ -56,11 +56,11 @@ function useActiveSection() {
 /** A clause heading carrying its own number, so it can be cited. */
 function Clause({ id, children }) {
   return (
-    <div className="mb-5 mt-14 flex items-baseline gap-4 border-b border-rule pb-3 first:mt-0">
-      <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
+    <div className="mb-6 mt-14 flex items-center gap-3 border-b border-rule pb-3 first:mt-0">
+      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary">
         § {clauseNo(id)}
       </span>
-      <h2 className="m-0 border-0 p-0 font-sans text-2xl font-bold uppercase tracking-[0.02em] text-ink">
+      <h2 className="m-0 border-0 p-0 font-display text-2xl font-bold tracking-tight text-ink">
         {children}
       </h2>
     </div>
@@ -71,35 +71,35 @@ export default function Docs() {
   const active = useActiveSection()
 
   return (
-    <Sheet label="Operating manual">
+    <Sheet label="Documentation">
       <Reveal>
-        <SectionLabel index={2}>Sheet</SectionLabel>
-        <h1 className="drawing-title mt-6">Manual</h1>
-        <p className="mt-8 max-w-2xl font-sans text-base normal-case leading-[1.7] text-ink-2">
-          Everything you need to install, use and troubleshoot MusicStream on Android.
+        <SectionLabel index={2}>Operating manual</SectionLabel>
+        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">Manual & Guide</h1>
+        <p className="mt-3 max-w-2xl text-base text-ink-2">
+          Everything you need to install, use, and troubleshoot MusicStream on Android.
         </p>
       </Reveal>
 
-      <div className="mt-14 grid gap-12 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-16">
+      <div className="mt-12 grid gap-12 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-16">
         {/* Clause index — sticky on desktop, hidden on mobile so content leads. */}
         <aside className="hidden lg:block">
-          <nav className="sticky top-24" aria-label="Clause index">
-            <p className="label border-b border-rule pb-3">Contents</p>
-            <ul className="border-x border-b border-rule">
+          <nav className="sticky top-24 rounded-3xl border border-rule bg-card-subtle p-4" aria-label="Clause index">
+            <p className="font-mono text-xs font-bold uppercase tracking-wider text-ink-3 px-3 pb-3 border-b border-rule">
+              Contents
+            </p>
+            <ul className="mt-3 space-y-1">
               {SECTIONS.map((s, i) => (
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
-                    className={`flex items-baseline gap-3 border-b border-rule-soft px-3 py-2.5
-                                font-mono text-[0.6875rem] uppercase tracking-[0.12em]
-                                transition-colors last:border-b-0 ${
-                                  active === s.id
-                                    ? 'bg-hover text-stamp'
-                                    : 'text-ink-3 hover:text-ink'
-                                }`}
+                    className={`flex items-center gap-2.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                      active === s.id
+                        ? 'bg-primary-pill text-primary font-bold shadow-xs'
+                        : 'text-ink-3 hover:text-ink hover:bg-hover'
+                    }`}
                   >
-                    <span className="tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="normal-case tracking-normal">{s.label}</span>
+                    <span className="font-mono text-[0.6875rem] opacity-70">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="truncate">{s.label}</span>
                   </a>
                 </li>
               ))}

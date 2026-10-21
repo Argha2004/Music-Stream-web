@@ -1,19 +1,12 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, LogIn, AlertCircle, Clock } from 'lucide-react'
 import { humanizeAuthError, useAuth } from '../context/AuthContext'
 import { isConfigured } from '../lib/supabase'
 import Sheet from '../components/Sheet'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
 
-/**
- * Holder sign-in, set as a document request form.
- *
- * The access-decision states are surfaced distinctly from a credential error:
- * a correct password with an undecided or refused request is a document-control
- * outcome, not a login failure, and saying so plainly is the whole point.
- */
 export default function Login() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
@@ -39,7 +32,6 @@ export default function Login() {
       setError(humanizeAuthError(err))
       return
     }
-    // Credentials were right, but access hasn't been granted.
     if (status) {
       setBlocked(status)
       return
@@ -48,83 +40,51 @@ export default function Login() {
   }
 
   return (
-    <Sheet label="Holder sign-in">
-      <div className="mx-auto max-w-lg">
+    <Sheet label="Account">
+      <div className="mx-auto max-w-md">
         <Reveal>
-          <SectionLabel index={6}>Sheet</SectionLabel>
-          <h1 className="drawing-title mt-6">Sign in</h1>
-          <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
-            Sign in to collect your issued build.
+          <SectionLabel index={6}>Authentication</SectionLabel>
+          <h1 className="drawing-title mt-4 text-3xl sm:text-4xl">Sign in</h1>
+          <p className="mt-2 text-sm text-ink-2">
+            Sign in with your approved account to download MusicStream.
           </p>
         </Reveal>
 
         {!isConfigured && (
-          <div className="mt-8 border border-void bg-sheet-deep" role="alert">
-            <div className="flex items-center gap-2.5 border-b border-void bg-void/10 px-4 py-2.5">
-              <span className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] text-void">
-                Site not connected to Supabase
-              </span>
-            </div>
-            <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-                The{' '}
-                <code className="border border-rule-soft bg-sheet px-1.5 py-0.5 font-mono text-[0.875rem] text-ink">
-                  VITE_SUPABASE_*
-                </code>{' '}
-                environment variables are missing, so sign-in cannot work.
-              </p>
-            </div>
+          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-4 text-xs text-red-800 dark:text-red-300">
+            <strong>Supabase not connected.</strong> Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.
           </div>
         )}
 
-        {/* An access decision, shown instead of a generic error so the holder
-            knows their password was fine and it's approval that's outstanding. */}
         {blocked && (
-          <div
-            className={`mt-8 border bg-sheet-deep ${
-              blocked === 'rejected' ? 'border-void' : 'border-rule'
-            }`}
-            role="alert"
-          >
-            <div
-              className={`flex items-center gap-2.5 border-b px-4 py-2.5 ${
-                blocked === 'rejected' ? 'border-void bg-void/10' : 'border-rule bg-sheet-raised'
-              }`}
-            >
-              <span
-                className={`font-mono text-[0.6875rem] font-bold uppercase tracking-[0.18em] ${
-                  blocked === 'rejected' ? 'text-void' : 'text-ink-2'
-                }`}
-              >
-                {blocked === 'rejected' ? 'Request not approved' : 'Request pending'}
-              </span>
+          <div className={`mt-6 rounded-2xl p-5 border text-sm ${
+            blocked === 'rejected'
+              ? 'border-red-200 bg-red-50 text-red-900 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300'
+              : 'border-primary/30 bg-primary-pill text-primary-pill-text'
+          }`}>
+            <div className="flex items-center gap-2 font-bold mb-1">
+              {blocked === 'rejected' ? <AlertCircle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+              <span>{blocked === 'rejected' ? 'Access Not Approved' : 'Approval Pending'}</span>
             </div>
-            <div className="p-5">
-              <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-                {blocked === 'rejected'
-                  ? "Your account exists but the developer hasn't granted access. Contact them if you think this is a mistake."
-                  : "Your account is waiting for the developer to approve it. You'll get an email once a decision is made — try signing in again then."}
-              </p>
-            </div>
+            <p className="text-xs leading-relaxed opacity-90">
+              {blocked === 'rejected'
+                ? "Your account exists, but access was not approved by the developer. Contact them if this is unexpected."
+                : "Your account is awaiting developer review. Once approved, you can sign in directly to download the APK."}
+            </p>
           </div>
         )}
 
-        <form onSubmit={onSubmit} className="mt-8 border border-rule bg-sheet-deep">
-          <div className="plate-hd">
-            <span className="label">Credentials</span>
-          </div>
+        <form onSubmit={onSubmit} className="mt-8 rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8 shadow-xs">
+          {error && (
+            <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 dark:bg-red-950/20 p-3.5 text-xs text-red-800 dark:text-red-300">
+              {error}
+            </div>
+          )}
 
-          <div className="space-y-5 p-5 sm:p-6">
-            {error && (
-              // role="alert" so screen readers announce it immediately.
-              <div className="border border-void bg-void/10 px-4 py-3" role="alert">
-                <p className="font-mono text-[0.875rem] leading-relaxed text-void">{error}</p>
-              </div>
-            )}
-
+          <div className="space-y-4">
             <div>
               <label className="field-label" htmlFor="login-email">
-                Email
+                Email address
               </label>
               <input
                 id="login-email"
@@ -132,7 +92,7 @@ export default function Login() {
                 type="email"
                 autoComplete="email"
                 required
-                placeholder="you@example.com"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -145,7 +105,7 @@ export default function Login() {
               <div className="relative">
                 <input
                   id="login-password"
-                  className="field-input pr-14"
+                  className="field-input pr-12"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   required
@@ -156,7 +116,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-0 top-0 flex h-full w-12 items-center justify-center border-l border-rule text-ink-3 transition-colors hover:text-ink"
+                  className="absolute right-0 top-0 flex h-full w-12 items-center justify-center text-ink-3 hover:text-ink transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -165,17 +125,14 @@ export default function Login() {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-issue w-full" disabled={busy}>
+          <button type="submit" className="btn btn-primary w-full mt-6 py-3.5" disabled={busy}>
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
 
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
-          Don't have an account?{' '}
-          <Link
-            to="/signup"
-            className="text-stamp underline decoration-stamp/40 underline-offset-4"
-          >
+        <p className="mt-6 text-center text-sm text-ink-2">
+          Don't have an approved account?{' '}
+          <Link to="/signup" className="text-primary font-semibold hover:underline">
             Request access
           </Link>
         </p>

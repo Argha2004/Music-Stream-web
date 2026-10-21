@@ -31,11 +31,11 @@ export default function NotFound() {
             <span className="label bg-sheet-deep px-3 py-1.5">No such sheet in this document</span>
           </div>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Link to="/" className="btn btn-issue">
-              Back to sheet 01
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link to="/" className="btn btn-primary">
+              Back to Home
             </Link>
-            <Link to="/docs" className="btn btn-line">
+            <Link to="/docs" className="btn btn-secondary">
               Open the manual
             </Link>
           </div>

@@ -38,11 +38,11 @@ const THIRD_PARTY = [
 /** A numbered clause heading that can be cited by its number. */
 function ClauseHead({ no, children }) {
   return (
-    <div className="mb-6 flex items-baseline gap-4 border-b border-rule pb-3">
-      <span className="font-mono text-[0.875rem] font-bold tabular-nums text-stamp">
+    <div className="mb-6 flex items-center gap-3 border-b border-rule pb-3">
+      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-full bg-primary-pill text-primary">
         § {no}
       </span>
-      <h2 className="font-sans text-2xl font-bold uppercase tracking-[0.02em] text-ink">
+      <h2 className="font-display text-2xl font-bold tracking-tight text-ink">
         {children}
       </h2>
     </div>
@@ -51,12 +51,12 @@ function ClauseHead({ no, children }) {
 
 export default function License() {
   return (
-    <Sheet label="Terms of use">
+    <Sheet label="License & Terms">
       <Reveal className="max-w-3xl">
-        <SectionLabel index={4}>Sheet</SectionLabel>
-        <h1 className="drawing-title mt-6">Terms</h1>
-        <p className="mt-8 font-sans text-base normal-case leading-[1.7] text-ink-2">
-          Terms covering your use of the MusicStream application and this website.
+        <SectionLabel index={4}>Legal</SectionLabel>
+        <h1 className="drawing-title mt-4 text-3xl sm:text-5xl">Terms of Use</h1>
+        <p className="mt-3 text-base text-ink-2">
+          Terms governing your private and educational use of MusicStream and this portal.
         </p>
       </Reveal>
 

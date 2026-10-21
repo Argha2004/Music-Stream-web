@@ -1,23 +1,14 @@
-/**
- * A clause marker — how a numbered standards document introduces a section.
- *
- *   § 01 ──── FEATURES
- *
- * The section number is real wayfinding here rather than decoration: clauses
- * are referred to by number in the documentation and on the license sheet.
- */
 export default function SectionLabel({ index, children, className = '' }) {
   return (
-    <p className={`flex items-center gap-3 ${className}`}>
+    <div className={`inline-flex items-center gap-2 rounded-full bg-primary-pill px-3.5 py-1 text-xs font-semibold text-primary-pill-text ${className}`}>
       {index != null && (
-        <>
-          <span className="font-mono text-[0.6875rem] font-bold tabular-nums tracking-[0.18em] text-stamp">
-            § {String(index).padStart(2, '0')}
-          </span>
-          <span aria-hidden="true" className="h-px w-8 bg-rule" />
-        </>
+        <span className="font-mono text-[0.6875rem] font-bold opacity-80">
+          0{index}
+        </span>
       )}
-      <span className="label">{children}</span>
-    </p>
+      <span className="uppercase tracking-wider font-mono text-[0.6875rem]">
+        {children}
+      </span>
+    </div>
   )
 }

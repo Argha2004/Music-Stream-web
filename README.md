@@ -73,11 +73,7 @@ APKs are hosted on R2 rather than Supabase Storage or Vercel, because R2 charges
 5 TiB. (Cloudflare **Pages** caps assets at 25 MiB, so it cannot host an APK.)
 
 **Current setup:** bucket `musicstream` (Asia-Pacific), served over R2's free
-**Public Development URL**:
 
-```
-https://pub-cec11addff5f4d68a3cc6df91976c697.r2.dev
-```
 
 ### Publishing an APK
 
