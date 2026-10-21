@@ -15,6 +15,8 @@ const Login = lazy(() => import('./pages/Login'))
 const Signup = lazy(() => import('./pages/Signup'))
 const Download = lazy(() => import('./pages/Download'))
 const Admin = lazy(() => import('./pages/Admin'))
+const Privacy = lazy(() => import('./pages/Privacy'))
+const Support = lazy(() => import('./pages/Support'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 /** Reset scroll and move focus to main on navigation (a11y: focus-on-route-change). */
@@ -59,6 +61,10 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/docs" element={<Docs />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/privacy-policy" element={<Privacy />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/donate" element={<Support />} />
               <Route path="/license" element={<License />} />
               <Route path="/changelog" element={<Changelog />} />
               <Route path="/login" element={<Login />} />

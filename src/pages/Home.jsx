@@ -13,6 +13,8 @@ import {
   ChevronUp,
   Layers,
   Sparkles,
+  Heart,
+  ArrowRight,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
@@ -178,6 +180,14 @@ export default function Home() {
             </Link>
 
             <Link
+              to="/support"
+              className="btn px-6 py-3.5 text-sm font-semibold flex items-center gap-2.5 rounded-full border border-rose-200/90 dark:border-rose-900/50 bg-rose-50/70 hover:bg-rose-100/90 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-rose-800 dark:text-rose-200 transition-all shadow-2xs group"
+            >
+              <Heart className="h-4 w-4 text-rose-500 fill-rose-500/30 group-hover:fill-rose-500 group-hover:scale-110 transition-transform" />
+              <span>Support</span>
+            </Link>
+
+            <Link
               to="/docs"
               className="btn btn-secondary px-7 py-3.5 text-sm font-semibold flex items-center gap-2.5"
             >
@@ -289,8 +299,8 @@ export default function Home() {
       </section>
 
       {/* ---------------- 4. DOWNLOAD BANNER CARD ---------------- */}
-      <section className="container-x mt-28 sm:mt-36">
-        <div className="relative rounded-[32px] sm:rounded-[40px] bg-[#C1E5A5] dark:bg-[#1A3821] text-[#1B3E21] dark:text-[#EEF5EE] p-8 sm:p-12 overflow-hidden shadow-sm">
+      <section className="container-x mt-20 sm:mt-32">
+        <div className="relative rounded-[28px] sm:rounded-[36px] bg-[#C1E5A5] dark:bg-[#1A3821] text-[#1B3E21] dark:text-[#EEF5EE] p-6 sm:p-10 lg:p-12 overflow-hidden shadow-sm">
           {/* Subtle organic background wave contours */}
           <div
             className="pointer-events-none absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-[#AEDE8E] dark:bg-[#254C2D] opacity-50 blur-2xl"
@@ -301,54 +311,97 @@ export default function Home() {
             aria-hidden="true"
           />
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             {/* Left side details */}
             <div className="lg:col-span-7">
-              <h3 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1B3E21]/10 dark:bg-white/10 px-3 py-1 text-xs font-semibold text-[#1B3E21] dark:text-[#A8F0BC] mb-3">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#1B3E21] dark:bg-[#52c46f]" />
+                Latest Release
+              </span>
+              <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1B3E21] dark:text-white">
                 Get MusicStream {currentVersion}
               </h3>
-              <p className="mt-2.5 text-xs sm:text-sm text-[#315738] dark:text-[#B2C9B5] font-medium">
+              <p className="mt-2 text-xs sm:text-sm text-[#315738] dark:text-[#B2C9B5] font-medium">
                 Released {latestRelease?.published_at || 'July 2026'} • SHA-256 Checksum verified
               </p>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link
-                  to={user ? '/download' : '/signup'}
-                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] px-7 py-3.5 rounded-full text-sm font-semibold inline-flex items-center gap-2 shadow-md"
-                >
-                  <Download className="h-4 w-4" />
-                  <span>{user ? 'Download latest APK' : 'Request access to download'}</span>
-                </Link>
-
+              <div className="mt-6 hidden lg:block">
                 <Link
                   to="/changelog"
-                  className="btn bg-[#A8D588] text-[#1B3E21] dark:bg-[#2C5235] dark:text-white hover:bg-[#97C577] px-6 py-3.5 rounded-full text-sm font-semibold"
+                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] dark:bg-[#2C5235] dark:hover:bg-[#386643] px-6 py-3 rounded-full text-sm font-semibold inline-flex items-center gap-2 shadow-xs transition-all"
                 >
                   All downloads & changelog
                 </Link>
               </div>
             </div>
 
-            {/* Right side architecture download option - Universal APK */}
-            <div className="lg:col-span-5 flex flex-col justify-center">
+            {/* Right side download card - Universal APK */}
+            <div className="lg:col-span-5 flex flex-col gap-3">
               <Link
                 to={user ? '/download' : '/signup'}
-                className="flex items-center justify-between rounded-2xl bg-[#E8F8DB] dark:bg-[#142919] p-5 sm:p-6 text-[#1B3E21] dark:text-[#EEF5EE] border border-[#B3DC94] dark:border-[#27462B] hover:bg-white dark:hover:bg-[#1E3B24] transition-all group shadow-sm hover:shadow-md"
+                className="flex items-center justify-between rounded-2xl bg-white/90 dark:bg-[#122216]/90 backdrop-blur-sm p-4 sm:p-5 text-[#1B3E21] dark:text-[#EEF5EE] border border-white/70 dark:border-white/10 hover:bg-white dark:hover:bg-[#162A1B] transition-all group shadow-sm hover:shadow-md"
               >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#D4F0BE] dark:bg-[#1E4125] text-[#2A5C34] dark:text-[#78C587] group-hover:scale-105 transition-transform">
-                    <Layers className="h-6 w-6" />
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#D8F0D0] dark:bg-[#1E3D26] text-[#1B3E21] dark:text-[#A8F0BC] group-hover:scale-105 transition-transform">
+                    <Layers className="h-5 w-5" />
                   </div>
-                  <div>
-                    <h5 className="text-base font-bold">Universal APK</h5>
-                    <p className="text-xs text-[#415746] dark:text-[#A8C2AC] mt-0.5">
-                      Compatible with all devices (Android 7.0+)
+                  <div className="min-w-0">
+                    <h5 className="text-sm sm:text-base font-bold truncate">Universal APK</h5>
+                    <p className="text-xs text-[#415746] dark:text-[#A8C2AC] truncate">
+                      Compatible with all Android 7.0+
                     </p>
                   </div>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#C1E5A5] text-[#1B3E21] group-hover:scale-110 group-hover:bg-[#1B3E21] group-hover:text-white transition-all shadow-2xs">
-                  <Download className="h-4 w-4" />
+                <div className="ml-3 flex h-9 sm:h-10 px-3.5 sm:px-4 shrink-0 items-center justify-center gap-1.5 rounded-full bg-[#1B3E21] dark:bg-[#52c46f] text-white dark:text-[#0b150d] text-xs font-bold group-hover:scale-105 transition-all shadow-xs">
+                  <Download className="h-3.5 w-3.5" />
+                  <span>{user ? 'Download' : 'Get APK'}</span>
                 </div>
+              </Link>
+
+              {/* Mobile-only Changelog button */}
+              <div className="lg:hidden mt-1">
+                <Link
+                  to="/changelog"
+                  className="btn w-full bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/15 text-[#1B3E21] dark:text-white py-2.5 rounded-full text-xs font-semibold flex items-center justify-center gap-2 border border-black/5 dark:border-white/10 transition-colors"
+                >
+                  All downloads & changelog
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------- 4.5 SUPPORT & DONATE CALLOUT SECTION ---------------- */}
+      <section className="container-x mt-20 sm:mt-28">
+        <div className="rounded-[28px] sm:rounded-[36px] border border-rose-200/80 dark:border-rose-900/40 bg-gradient-to-br from-rose-50/50 via-card to-card dark:from-rose-950/20 dark:via-card dark:to-card p-6 sm:p-10 lg:p-12 relative overflow-hidden shadow-2xs">
+          <div
+            className="pointer-events-none absolute -right-16 -top-16 w-64 h-64 rounded-full bg-rose-200/30 dark:bg-rose-900/10 blur-3xl"
+            aria-hidden="true"
+          />
+
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-100/80 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900/50 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300">
+                <Heart className="h-3.5 w-3.5 fill-rose-500 text-rose-500" />
+                Support Development
+              </span>
+              <h3 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+                Help keep MusicStream free & open-source
+              </h3>
+              <p className="mt-2 text-sm sm:text-base text-ink-2 leading-relaxed">
+                MusicStream is 100% ad-free with zero trackers or subscriptions. If you enjoy using the player, support continued development with a quick UPI contribution.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0">
+              <Link
+                to="/support"
+                className="btn px-6 py-3.5 rounded-full text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-2 shadow-sm hover:shadow-md transition-all group"
+              >
+                <Heart className="h-4 w-4 fill-white/30 group-hover:fill-white group-hover:scale-110 transition-transform" />
+                <span>Support via UPI</span>
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
               </Link>
             </div>
           </div>

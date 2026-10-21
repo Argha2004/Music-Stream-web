@@ -1,52 +1,50 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpeg" href="/Logo-final.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f7f8f2" />
-    <script>
-      (function () {
-        try {
-          var s = localStorage.getItem('ms-theme')
-          var t =
-            s === 'light' || s === 'dark'
-              ? s
-              : window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light'
-          document.documentElement.dataset.theme = t
-          var m = document.querySelector('meta[name="theme-color"]')
-          if (m) m.content = t === 'dark' ? '#141d16' : '#f7f8f2'
-        } catch (e) {
-          document.documentElement.dataset.theme = 'light'
-        }
-      })()
-    </script>
-    <title>MusicStream — Your music library, clean & ad-free</title>
-    <meta
-      name="description"
-      content="MusicStream is a fast, native Android music player with background playback, synced lyrics, 5-band equalizer and offline downloads."
-    />
-    <meta property="og:title" content="MusicStream — Your music library, clean & ad-free" />
-    <meta
-      property="og:description"
-      content="A fast, native Android music player. Background playback, synced lyrics, 5-band equalizer, offline downloads."
-    />
-    <meta property="og:type" content="website" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/jpeg" href="/Logo-final.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f8f2" />
+  <script>
+    (function () {
+      try {
+        var s = localStorage.getItem('ms-theme')
+        var t =
+          s === 'light' || s === 'dark'
+            ? s
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+        document.documentElement.dataset.theme = t
+        var m = document.querySelector('meta[name="theme-color"]')
+        if (m) m.content = t === 'dark' ? '#141d16' : '#f7f8f2'
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light'
+      }
+    })()
+  </script>
+  <title>MusicStream — Your music library, clean & ad-free</title>
+  <meta name="description"
+    content="MusicStream is a fast, native Android music player with background playback, synced lyrics, 10-band equalizer and Liquid Glass Effect Like IOS." />
+  <meta property="og:title" content="MusicStream — Your music library, clean & ad-free" />
+  <meta property="og:description"
+    content="A fast, native Android music player. Background playback, synced lyrics, 10-band equalizer." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
   <!-- impeccable-live-start -->
-<script src="http://localhost:8400/live.js?token=1d42384a-5698-4ce3-a09c-8fe2048a5841"></script>
-<!-- impeccable-live-end -->
+  <script src="http://localhost:8400/live.js?token=1d42384a-5698-4ce3-a09c-8fe2048a5841"></script>
+  <!-- impeccable-live-end -->
 </body>
+
 </html>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Sparkles, Heart } from 'lucide-react'
+import { Sparkles, Heart, ExternalLink } from 'lucide-react'
 
 const GROUPS = [
   {
@@ -14,17 +14,18 @@ const GROUPS = [
   {
     heading: 'Community',
     links: [
-      { to: '/signup', label: 'Request access' },
-      { to: '/login', label: 'Sign in' },
-      { to: '/docs#troubleshooting', label: 'Help & feedback' },
-      { to: '/docs#getting-started', label: 'Installation guide' },
+      { to: 'https://github.com/Argha2004/Music-Stream-web', label: 'GitHub', external: true },
+      { to: 'https://t.me/+i3CypCJYJa82NDBl', label: 'Telegram', external: true },
+      { to: 'https://github.com/MusicStream-Native', label: 'Organization', external: true },
+      { to: '/support', label: 'Support & Donate' },
     ],
   },
   {
     heading: 'Project',
     links: [
+      { to: '/support', label: 'Support project' },
       { to: '/license', label: 'Terms of use' },
-      { to: '/docs#privacy', label: 'Data & privacy' },
+      { to: '/privacy', label: 'Data & privacy' },
       { to: '/changelog', label: 'All releases' },
       { to: '/license#third-party', label: 'Third-party licenses' },
     ],
@@ -58,7 +59,7 @@ export default function Footer() {
 
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-2">
               A fast, ad-free native Android music player with background playback,
-              synced lyrics, 5-band equalizer, and on-device offline downloads.
+              synced lyrics, 10-band equalizer, and on-device offline downloads.
             </p>
 
             <div className="mt-6 flex items-center gap-2 text-xs text-ink-3">
@@ -77,7 +78,17 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 {group.links.map((link) => (
                   <li key={link.label}>
-                    {link.to.startsWith('/#') ? (
+                    {link.to.startsWith('http') ? (
+                      <a
+                        href={link.to}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="text-sm text-ink-2 hover:text-primary transition-colors inline-flex items-center gap-1 group/ext"
+                      >
+                        <span>{link.label}</span>
+                        <ExternalLink className="h-3 w-3 opacity-50 group-hover/ext:opacity-100 transition-opacity" />
+                      </a>
+                    ) : link.to.startsWith('/#') ? (
                       <a
                         href={link.to}
                         className="text-sm text-ink-2 hover:text-primary transition-colors"
@@ -102,7 +113,7 @@ export default function Footer() {
         {/* Bottom copyright bar */}
         <div className="mt-14 pt-8 border-t border-rule flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-3">
           <p>© {new Date().getFullYear()} Arghadeep Pakhira. All rights reserved.</p>
-          <p className="font-medium text-ink-2">Personal and educational use only.</p>
+          <p className="font-medium text-ink-2">Built with Java and Kotlin.</p>
         </div>
       </div>
     </footer>
