@@ -190,7 +190,7 @@ npm run dev
    Never overwrite an already-published object — always use a new filename.
    Confirm it's live and get the exact byte size:
    ```bash
-   curl -sI https://pub-cec11addff5f4d68a3cc6df91976c697.r2.dev/MusicStream-v2.1.4-20104.apk
+   curl -sI https://pub-cec11ad.r2.dev/MusicStream-v2.1.4-20104.apk
    ```
    Use the `Content-Length` value for `apk_size` — a mismatch makes every
    update fail with "Size mismatch".
