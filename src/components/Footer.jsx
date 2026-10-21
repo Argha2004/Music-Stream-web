@@ -15,7 +15,7 @@ const GROUPS = [
     heading: 'Community',
     links: [
       { to: 'https://github.com/Argha2004/Music-Stream-web', label: 'GitHub', external: true },
-      { to: 'https://t.me/+i3CypCJYJa82NDBl', label: 'Telegram', external: true },
+      { to: 'https://t.me/musicstream07', label: 'Telegram', external: true },
       { to: 'https://github.com/MusicStream-Native', label: 'Organization', external: true },
       { to: '/support', label: 'Support & Donate' },
     ],

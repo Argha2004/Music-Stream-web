@@ -165,7 +165,7 @@ export default function Home() {
 
           {/* Subtitle */}
           <p className="mt-4 sm:mt-6 text-sm sm:text-lg leading-relaxed text-ink-2 max-w-2xl font-normal">
-            MusicStream is a fast, native Android music player with background playback,
+            MusicStream is a fast, native Android music Streaming player with background playback,
             liquid glass Material design, 10-band equalizer, and in-app updates.
           </p>
 

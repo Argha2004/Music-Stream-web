@@ -112,7 +112,7 @@ export default function Docs() {
           <section id="getting-started">
             <Clause id="getting-started">Getting started</Clause>
             <p>
-              MusicStream is a native Android music player. It is not distributed through
+              MusicStream is a native Android music Streaming player. It is not distributed through
               the Play Store — you install it directly from this site as an APK.
             </p>
             <p>Access is invite-only. To get in:</p>
