@@ -62,6 +62,39 @@ create policy "admin updates profiles"
   using (public.is_admin())
   with check (public.is_admin());
 
+-- Only the admin may delete profiles.
+drop policy if exists "admin deletes profiles" on public.profiles;
+create policy "admin deletes profiles"
+  on public.profiles for delete to authenticated
+  using (public.is_admin());
+
+-- Allow admin to delete user from both profiles and auth.users so they can re-apply cleanly.
+create or replace function public.delete_user_account(target_user_id uuid)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+declare
+  target_email text;
+begin
+  if not public.is_admin() then
+    raise exception 'Unauthorized: Only administrator can delete accounts';
+  end if;
+
+  select email into target_email from auth.users where id = target_user_id;
+  if lower(coalesce(target_email, '')) = 'arghadeeppakhira@gmail.com' then
+    raise exception 'Cannot delete developer account';
+  end if;
+
+  delete from public.profiles where id = target_user_id;
+  delete from auth.users where id = target_user_id;
+  return true;
+end;
+$$;
+
+grant execute on function public.delete_user_account(uuid) to authenticated;
+
 -- No insert policy: rows are created by the trigger below (security definer).
 
 -- ---------------------------------------------------------------------------

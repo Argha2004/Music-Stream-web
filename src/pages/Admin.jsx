@@ -13,11 +13,14 @@ import {
   HelpCircle,
   Clock,
   Sparkles,
+  UserX,
+  Trash2,
 } from 'lucide-react'
 import {
   fetchProfiles,
   notifyDecision,
   setProfileStatus,
+  deleteUserAccount,
   fetchBugReports,
   deleteBugReport,
   notifyReportResolved,
@@ -74,6 +77,10 @@ export default function Admin() {
   const [resolutionNote, setResolutionNote] = useState('')
   const [isResolving, setIsResolving] = useState(false)
 
+  // Refuse User State
+  const [refusingUser, setRefusingUser] = useState(null)
+  const [isRefusing, setIsRefusing] = useState(false)
+
   // Shared Notifications
   const [error, setError] = useState(null)
   const [notice, setNotice] = useState(null)
@@ -119,8 +126,14 @@ export default function Admin() {
     }
   }, [activeTab, loadReports])
 
-  // Approve / Reject User
+  // Approve User
   async function decide(id, email, status) {
+    if (status === 'rejected') {
+      const target = profiles.find((p) => p.id === id)
+      setRefusingUser(target || { id, email, status: 'rejected' })
+      return
+    }
+
     setBusyId(id)
     setNotice(null)
     const previous = profiles
@@ -129,24 +142,67 @@ export default function Admin() {
     )
     try {
       await setProfileStatus(id, status)
-      const mail = await notifyDecision(email, status)
+      const mail = await notifyDecision(email, status, id)
       if (mail === 'sent') {
-        setNotice({ tone: 'ok', text: `${email} ${status} — notification email sent.` })
+        setNotice({ tone: 'ok', text: `${email} approved — notification email sent.` })
       } else if (mail === 'skipped') {
         setNotice({
           tone: 'warn',
-          text: `${email} ${status}. No email provider configured, so no notification was sent.`,
+          text: `${email} approved. No email provider configured, so no notification was sent.`,
         })
       } else {
         setNotice({
           tone: 'warn',
-          text: `${email} ${status}, but the notification email failed to send.`,
+          text: `${email} approved, but the notification email failed to send.`,
         })
       }
     } catch (e) {
       setProfiles(previous)
       setError(`Couldn't update: ${e.message}`)
     } finally {
+      setBusyId(null)
+    }
+  }
+
+  // Handle Refusing and Deleting a User Account
+  async function handleRefuseConfirm() {
+    if (!refusingUser) return
+    const target = refusingUser
+    setIsRefusing(true)
+    setBusyId(target.id)
+    setError(null)
+    setNotice(null)
+
+    try {
+      // 1. Send rejection email with re-signup instructions
+      const mail = await notifyDecision(target.email, 'rejected', target.id)
+
+      // 2. Permanently delete user account from DB (auth.users + profiles)
+      await deleteUserAccount(target.id)
+
+      // 3. Remove user row from UI state
+      setProfiles((rows) => rows.filter((r) => r.id !== target.id))
+
+      // 4. Set feedback notice
+      const mailNotice =
+        mail === 'sent'
+          ? 'Rejection notification email sent.'
+          : mail === 'skipped'
+            ? 'No email provider configured (skipping mail).'
+            : 'Email failed to send, but account was deleted.'
+
+      setNotice({
+        tone: 'ok',
+        text: `Account ${target.email} refused and deleted from database. ${mailNotice} The user can sign up again.`,
+      })
+
+      // Close modal
+      setRefusingUser(null)
+    } catch (e) {
+      console.error('Failed to refuse user:', e)
+      setError(`Failed to refuse user: ${e.message}`)
+    } finally {
+      setIsRefusing(false)
       setBusyId(null)
     }
   }
@@ -416,16 +472,14 @@ export default function Admin() {
                               Approve
                             </button>
                           )}
-                          {p.status !== 'rejected' && (
-                            <button
-                              type="button"
-                              className="btn btn-sm btn-void flex-1 lg:flex-none text-xs py-2 px-3 sm:px-4 cursor-pointer"
-                              disabled={busyId === p.id}
-                              onClick={() => decide(p.id, p.email, 'rejected')}
-                            >
-                              Refuse
-                            </button>
-                          )}
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-void flex-1 lg:flex-none text-xs py-2 px-3 sm:px-4 cursor-pointer hover:border-red-400 hover:text-red-600 dark:hover:text-red-400"
+                            disabled={busyId === p.id}
+                            onClick={() => setRefusingUser(p)}
+                          >
+                            {p.status === 'rejected' ? 'Delete from DB' : 'Refuse'}
+                          </button>
                         </div>
                       </div>
                     </li>
@@ -681,6 +735,93 @@ export default function Admin() {
                   <>
                     <Send className="h-3.5 w-3.5 shrink-0" />
                     <span className="whitespace-nowrap">Resolve &amp; Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          REFUSE USER & DELETE ACCOUNT MODAL
+      ========================================================================= */}
+      {refusingUser && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div className="relative w-full max-w-lg rounded-2xl sm:rounded-3xl border border-red-500/30 bg-sheet p-5 sm:p-7 shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setRefusingUser(null)}
+              disabled={isRefusing}
+              className="absolute right-4 top-4 text-ink-3 hover:text-ink transition-colors cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex items-center gap-2.5 text-red-600 dark:text-red-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/15 border border-red-500/20">
+                <UserX className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg font-bold text-ink">Refuse &amp; Delete Account</h3>
+                <p className="text-xs text-ink-3">Permanent rejection and account removal</p>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3.5">
+              <div className="p-3.5 rounded-xl bg-card-subtle border border-rule text-xs space-y-1.5">
+                <div>
+                  <span className="text-ink-3">Target Account:</span>{' '}
+                  <strong className="text-ink font-mono break-all">{refusingUser.email}</strong>
+                </div>
+                <div>
+                  <span className="text-ink-3">Current Status:</span>{' '}
+                  <span className="font-semibold text-primary capitalize">{refusingUser.status}</span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-red-500/5 border border-red-500/20 text-xs text-ink-2 space-y-2">
+                <div className="font-bold text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>Action details:</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-ink-2">
+                  <li>Sends a rejection email to <strong>{refusingUser.email}</strong> informing them that their approval status was rejected and instructing them to sign up again to re-apply.</li>
+                  <li>Permanently deletes the account from the database so the user can re-register cleanly.</li>
+                  <li>Immediately revokes any active website session and blocks APK downloading if the user is currently online.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col-reverse sm:flex-row items-stretch sm:items-center sm:justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={() => setRefusingUser(null)}
+                disabled={isRefusing}
+                className="btn btn-secondary w-full sm:w-auto px-4 py-2.5 sm:py-2 text-xs font-semibold justify-center text-center cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleRefuseConfirm}
+                disabled={isRefusing}
+                className="btn bg-red-600 text-white hover:bg-red-700 w-full sm:w-auto px-5 py-2.5 sm:py-2 text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 cursor-pointer transition-all"
+              >
+                {isRefusing ? (
+                  <>
+                    <div className="h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0" />
+                    <span className="whitespace-nowrap">Refusing &amp; Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-3.5 w-3.5 shrink-0" />
+                    <span className="whitespace-nowrap">Refuse &amp; Delete Account</span>
                   </>
                 )}
               </button>

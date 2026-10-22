@@ -50,5 +50,5 @@ Thumbs.db
 desktop.ini
 
 #Folders
-supabase/
+supabase/*
 !supabase/*.sql

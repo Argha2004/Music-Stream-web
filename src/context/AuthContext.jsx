@@ -10,6 +10,23 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [refusedWarning, setRefusedWarning] = useState(null)
+
+  const triggerRefusal = async (emailOverride) => {
+    const targetEmail = emailOverride || session?.user?.email || profile?.email || ''
+    setProfile(null)
+    setSession(null)
+    setRefusedWarning({ show: true, email: targetEmail })
+    try {
+      await supabase.auth.signOut()
+    } catch (e) {
+      // Ignore signOut errors during lockout
+    }
+  }
+
+  const dismissRefusedWarning = () => {
+    setRefusedWarning(null)
+  }
 
   useEffect(() => {
     let active = true
@@ -30,26 +47,93 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
-  // Load the approval status whenever the signed-in user changes.
+  // Load the approval status & establish real-time watcher whenever the signed-in user changes.
   const userId = session?.user?.id ?? null
+  const userEmail = session?.user?.email ?? ''
+
   useEffect(() => {
     let active = true
     if (!userId) {
       setProfile(null)
       return
     }
-    supabase
-      .from('profiles')
-      .select('id, email, status, requested_at, decided_at')
-      .eq('id', userId)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (active) setProfile(data ?? null)
-      })
+
+    const isDeveloper = userEmail.toLowerCase() === DEVELOPER_EMAIL.toLowerCase()
+
+    const verifyStatus = async () => {
+      if (!active) return
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, email, status, requested_at, decided_at')
+          .eq('id', userId)
+          .maybeSingle()
+
+        if (!active) return
+
+        // Developer is never locked out
+        if (isDeveloper) {
+          if (data) setProfile(data)
+          return
+        }
+
+        // If profile was deleted from DB or status changed to rejected:
+        if (!data || data.status === 'rejected') {
+          triggerRefusal(userEmail)
+          return
+        }
+
+        setProfile(data)
+      } catch (err) {
+        console.warn('[MusicStream] Profile verification check error:', err)
+      }
+    }
+
+    // 1. Initial check
+    verifyStatus()
+
+    // 2. Real-time PostgreSQL changes subscription on this user's profile
+    const channel = supabase
+      .channel(`profile-watch-${userId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${userId}`,
+        },
+        (payload) => {
+          if (!active || isDeveloper) return
+          if (payload.eventType === 'DELETE' || payload.new?.status === 'rejected') {
+            triggerRefusal(userEmail)
+          } else if (payload.eventType === 'UPDATE' && payload.new) {
+            setProfile(payload.new)
+          }
+        },
+      )
+      .subscribe()
+
+    // 3. Heartbeat polling (every 3.5s) to guarantee immediate lockout even without WebSocket
+    const pollInterval = setInterval(() => {
+      if (!document.hidden) {
+        verifyStatus()
+      }
+    }, 3500)
+
+    // 4. Tab visibility / focus recheck
+    const onFocus = () => verifyStatus()
+    window.addEventListener('focus', onFocus)
+    document.addEventListener('visibilitychange', onFocus)
+
     return () => {
       active = false
+      clearInterval(pollInterval)
+      window.removeEventListener('focus', onFocus)
+      document.removeEventListener('visibilitychange', onFocus)
+      supabase.removeChannel(channel)
     }
-  }, [userId])
+  }, [userId, userEmail])
 
   const value = useMemo(() => {
     const email = session?.user?.email ?? ''
@@ -58,6 +142,9 @@ export function AuthProvider({ children }) {
       user: session?.user ?? null,
       profile,
       loading,
+      refusedWarning,
+      dismissRefusedWarning,
+      triggerRefusal,
 
       // The DB is the real gate (RLS + is_admin()); these only drive the UI.
       isAdmin: email.toLowerCase() === DEVELOPER_EMAIL.toLowerCase(),
@@ -82,10 +169,14 @@ export function AuthProvider({ children }) {
           .eq('id', data.user.id)
           .maybeSingle()
 
-        if (prof?.status !== 'approved') {
+        if (!prof || prof?.status !== 'approved') {
+          // If rejected or deleted from database, show warning immediately
+          if (prof?.status === 'rejected' || !prof) {
+            setRefusedWarning({ show: true, email: email.trim() })
+          }
           // Drop the session immediately — unapproved users stay signed out.
           await supabase.auth.signOut()
-          return { error: null, blocked: prof?.status ?? 'pending' }
+          return { error: null, blocked: prof?.status ?? 'rejected' }
         }
         return { error: null, blocked: null }
       },
@@ -111,11 +202,15 @@ export function AuthProvider({ children }) {
           .select('id, email, status, requested_at, decided_at')
           .eq('id', userId)
           .maybeSingle()
-        setProfile(data ?? null)
-        return data ?? null
+        if (!data || data.status === 'rejected') {
+          triggerRefusal(userEmail)
+          return null
+        }
+        setProfile(data)
+        return data
       },
     }
-  }, [session, profile, loading, userId])
+  }, [session, profile, loading, userId, userEmail, refusedWarning])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

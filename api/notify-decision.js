@@ -27,22 +27,22 @@ function buildEmail({ status, siteUrl }) {
   const approved = status === 'approved'
   const subject = approved
     ? `Your ${SITE_NAME} access has been approved`
-    : `Your ${SITE_NAME} access request`
+    : `Your ${SITE_NAME} account approval status was rejected`
 
-  const heading = approved ? 'Access approved' : 'Access not approved'
+  const heading = approved ? 'Access approved' : 'Account approval rejected'
   const body = approved
     ? `Your request to access ${SITE_NAME} has been approved. You can now sign in and download the app.`
-    : `Your request to access ${SITE_NAME} was not approved. If you think this is a mistake, reply to this email.`
+    : `Your account approval status for ${SITE_NAME} was rejected by the administrator. Your account has been removed. You can sign up again and submit a new approval request to the admin.`
 
   const button = approved
-    ? `<a href="${siteUrl}/login" style="display:inline-block;background:#FF6B5B;color:#241717;font-weight:700;text-decoration:none;padding:13px 28px;border-radius:999px;margin-top:24px">Sign in to ${SITE_NAME}</a>`
-    : ''
+    ? `<a href="${siteUrl}/login" style="display:inline-block;background:#386A20;color:#FFFFFF;font-weight:700;text-decoration:none;padding:13px 28px;border-radius:999px;margin-top:24px">Sign in to ${SITE_NAME}</a>`
+    : `<a href="${siteUrl}/signup" style="display:inline-block;background:#BA1A1A;color:#FFFFFF;font-weight:700;text-decoration:none;padding:13px 28px;border-radius:999px;margin-top:24px">Sign up again on ${SITE_NAME}</a>`
 
   const html = `<!doctype html>
 <html><body style="margin:0;padding:32px 16px;background:#0B0B10;font-family:Inter,Segoe UI,system-ui,sans-serif">
   <table role="presentation" style="max-width:520px;margin:0 auto;background:#121218;border:1px solid #26262F;border-radius:16px">
     <tr><td style="padding:36px">
-      <p style="margin:0;color:#FF6B5B;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase">${SITE_NAME}</p>
+      <p style="margin:0;color:${approved ? '#78C587' : '#FFB4AB'};font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase">${SITE_NAME}</p>
       <h1 style="margin:14px 0 0;color:#F8FAFC;font-size:24px;font-weight:800">${heading}</h1>
       <p style="margin:16px 0 0;color:#9CA3AF;font-size:15px;line-height:1.6">${body}</p>
       ${button}
@@ -53,7 +53,7 @@ function buildEmail({ status, siteUrl }) {
   </p>
 </body></html>`
 
-  const text = `${heading}\n\n${body}\n\n${approved ? `${siteUrl}/login` : ''}`
+  const text = `${heading}\n\n${body}\n\n${approved ? `${siteUrl}/login` : `${siteUrl}/signup`}`
   return { subject, html, text }
 }
 
@@ -115,9 +115,29 @@ export default async function handler(req, res) {
   }
 
   // ---- validate ----
-  const { email, status } = req.body || {}
+  const { email, status, userId } = req.body || {}
   if (!email || !['approved', 'rejected'].includes(status)) {
     return res.status(400).json({ error: 'bad_request' })
+  }
+
+  // If rejected, attempt to delete user from database as well
+  if (status === 'rejected' && userId) {
+    try {
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+      if (serviceKey) {
+        const adminClient = createClient(SUPABASE_URL, serviceKey, {
+          auth: { autoRefreshToken: false, persistSession: false },
+        })
+        await adminClient.auth.admin.deleteUser(userId)
+      } else {
+        const authedClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+          global: { headers: { Authorization: `Bearer ${token}` } },
+        })
+        await authedClient.rpc('delete_user_account', { target_user_id: userId })
+      }
+    } catch (delErr) {
+      console.warn('Backend account deletion attempt:', delErr?.message)
+    }
   }
 
   const siteUrl = `https://${req.headers.host}`

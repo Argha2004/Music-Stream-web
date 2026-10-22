@@ -67,13 +67,35 @@ export async function setProfileStatus(id, status) {
 }
 
 /**
+ * Delete a user account (used when refusing/rejecting an account).
+ * Tries the secure database RPC first, and falls back to deleting the profile row.
+ */
+export async function deleteUserAccount(id) {
+  try {
+    const { data, error } = await supabase.rpc('delete_user_account', { target_user_id: id })
+    if (!error) return true
+    console.warn('RPC delete_user_account error, attempting direct profile delete:', error)
+  } catch (err) {
+    console.warn('RPC delete_user_account failed:', err)
+  }
+
+  // Fallback: delete profile row directly
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .delete()
+    .eq('id', id)
+  if (profileError) throw profileError
+  return true
+}
+
+/**
  * Emails the user about an approve/reject decision.
  *
  * Best-effort: the decision is already committed to the database, so a mail
  * failure is reported but never rolls anything back. Returns a short status
  * string for the admin UI.
  */
-export async function notifyDecision(email, status) {
+export async function notifyDecision(email, status, userId) {
   const { data } = await supabase.auth.getSession()
   const token = data?.session?.access_token
   if (!token) return 'no-session'
@@ -82,7 +104,7 @@ export async function notifyDecision(email, status) {
     const res = await fetch('/api/notify-decision', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ email, status }),
+      body: JSON.stringify({ email, status, userId }),
     })
     const body = await res.json().catch(() => ({}))
     if (!res.ok) return 'failed'

@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import PageTransition from './components/PageTransition'
 import Waveform from './components/Waveform'
 import PixelBackground from './components/PixelBackground'
+import RefusedWarningModal from './components/RefusedWarningModal'
 import Home from './pages/Home'
 
 // Route-level code splitting keeps the first sheet's bundle small.
@@ -46,6 +47,7 @@ export default function App() {
   return (
     <div className="flex min-h-dvh flex-col relative">
       <PixelBackground />
+      <RefusedWarningModal />
 
       <a
         href="#main"

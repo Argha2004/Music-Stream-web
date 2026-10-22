@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Download as DownloadIcon, Smartphone, CheckCircle, AlertTriangle, ArrowRight, RefreshCw, FileCode } from 'lucide-react'
-import { fetchLatestRelease, formatBytes } from '../lib/supabase'
+import { fetchLatestRelease, formatBytes, supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import Sheet from '../components/Sheet'
 import Stamp from '../components/Stamp'
@@ -95,10 +95,51 @@ function AwaitingIssue({ email, status, onRecheck }) {
 }
 
 export default function Download() {
-  const { user, status, isApproved, refreshProfile } = useAuth()
+  const { user, status, isApproved, refreshProfile, triggerRefusal } = useAuth()
   const [release, setRelease] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [verifyingDownload, setVerifyingDownload] = useState(false)
+
+  async function handleDownload(e) {
+    e.preventDefault()
+    if (verifyingDownload) return
+    setVerifyingDownload(true)
+
+    try {
+      if (!user?.id) {
+        triggerRefusal(user?.email)
+        return
+      }
+
+      // Pre-download database verification: Ensure account is not refused or deleted
+      const { data: prof, error: profError } = await supabase
+        .from('profiles')
+        .select('status')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (profError || !prof || prof.status !== 'approved') {
+        // Refused or deleted from database! Trigger refusal lockout and show warning
+        triggerRefusal(user.email)
+        return
+      }
+
+      // Authorized: trigger download safely
+      const link = document.createElement('a')
+      link.href = release.apk_url
+      link.setAttribute('download', '')
+      link.setAttribute('target', '_blank')
+      link.setAttribute('rel', 'noopener noreferrer')
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch {
+      triggerRefusal(user?.email)
+    } finally {
+      setVerifyingDownload(false)
+    }
+  }
 
   useEffect(() => {
     if (!isApproved) return
@@ -207,15 +248,24 @@ export default function Download() {
 
               {/* Download Action */}
               <div className="mt-6 sm:mt-8">
-                <a
-                  href={release.apk_url}
-                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] w-full py-3.5 sm:py-4 text-sm sm:text-base font-bold shadow-lg flex items-center justify-center gap-2.5 sm:gap-3"
-                  download
-                  rel="noopener"
+                <button
+                  type="button"
+                  onClick={handleDownload}
+                  disabled={verifyingDownload}
+                  className="btn bg-[#1B3E21] text-white hover:bg-[#122B17] w-full py-3.5 sm:py-4 text-sm sm:text-base font-bold shadow-lg flex items-center justify-center gap-2.5 sm:gap-3 cursor-pointer disabled:opacity-75 transition-all"
                 >
-                  <DownloadIcon className="h-4 sm:h-5 w-4 sm:w-5 shrink-0" />
-                  <span>Download MusicStream APK</span>
-                </a>
+                  {verifyingDownload ? (
+                    <>
+                      <div className="h-4 sm:h-5 w-4 sm:w-5 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0" />
+                      <span>Verifying download access...</span>
+                    </>
+                  ) : (
+                    <>
+                      <DownloadIcon className="h-4 sm:h-5 w-4 sm:w-5 shrink-0" />
+                      <span>Download MusicStream APK</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
