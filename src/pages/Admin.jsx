@@ -657,12 +657,12 @@ export default function Admin() {
               </p>
             </div>
 
-            <div className="mt-6 flex items-center justify-end gap-2.5">
+            <div className="mt-6 flex flex-col-reverse sm:flex-row items-stretch sm:items-center sm:justify-end gap-2.5">
               <button
                 type="button"
                 onClick={() => setResolvingReport(null)}
                 disabled={isResolving}
-                className="btn btn-secondary px-4 py-2 text-xs font-semibold"
+                className="btn btn-secondary w-full sm:w-auto px-4 py-2.5 sm:py-2 text-xs font-semibold justify-center text-center"
               >
                 Cancel
               </button>
@@ -670,17 +670,17 @@ export default function Admin() {
                 type="button"
                 onClick={handleResolveSubmit}
                 disabled={isResolving}
-                className="btn btn-primary px-5 py-2 text-xs font-bold flex items-center gap-1.5 shadow-sm disabled:opacity-50 cursor-pointer"
+                className="btn btn-primary w-full sm:w-auto px-5 py-2.5 sm:py-2 text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50 cursor-pointer"
               >
                 {isResolving ? (
                   <>
-                    <div className="h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                    <span>Resolving &amp; Sending...</span>
+                    <div className="h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0" />
+                    <span className="whitespace-nowrap">Resolving &amp; Sending...</span>
                   </>
                 ) : (
                   <>
-                    <Send className="h-3.5 w-3.5" />
-                    <span>Resolve &amp; Delete</span>
+                    <Send className="h-3.5 w-3.5 shrink-0" />
+                    <span className="whitespace-nowrap">Resolve &amp; Delete</span>
                   </>
                 )}
               </button>

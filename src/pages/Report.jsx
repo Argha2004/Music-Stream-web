@@ -348,26 +348,29 @@ export default function Report() {
             />
           </div>
 
-          {/* Submit Button */}
-          <div className="flex items-center gap-3">
+          {/* Submit & Cancel Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
             <button
               type="submit"
               disabled={submitting}
-              className="btn btn-primary px-7 py-3 text-sm font-semibold flex items-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+              className="btn btn-primary w-full sm:w-auto px-7 py-3.5 sm:py-3 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer transition-all active:scale-[0.99]"
             >
               {submitting ? (
                 <>
-                  <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                  <span>Submitting report...</span>
+                  <div className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin shrink-0" />
+                  <span className="whitespace-nowrap">Submitting report...</span>
                 </>
               ) : (
                 <>
-                  <Send className="h-4 w-4" />
-                  <span>Submit Bug Report</span>
+                  <Send className="h-4 w-4 shrink-0" />
+                  <span className="whitespace-nowrap">Submit Bug Report</span>
                 </>
               )}
             </button>
-            <Link to="/" className="btn btn-secondary px-5 py-3 text-sm font-semibold">
+            <Link
+              to="/"
+              className="btn btn-secondary w-full sm:w-auto px-6 py-3 text-sm font-semibold flex items-center justify-center text-center transition-all"
+            >
               Cancel
             </Link>
           </div>
