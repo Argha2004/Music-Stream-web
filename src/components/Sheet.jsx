@@ -15,8 +15,10 @@ const SHEET_INDEX = {
   '/login': '08',
   '/signup': '09',
   '/admin': '10',
+  '/report': '11',
+  '/report-bug': '11',
 }
-const SHEET_TOTAL = '10'
+const SHEET_TOTAL = '11'
 
 function sheetNumberFor(pathname) {
   return SHEET_INDEX[pathname] ?? SHEET_TOTAL

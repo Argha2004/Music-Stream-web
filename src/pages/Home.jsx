@@ -156,6 +156,12 @@ export default function Home() {
       {/* ---------------- 1. HERO SECTION ---------------- */}
       <section className="container-x">
         <div className="max-w-3xl">
+          {/* Pixel Material You Eyebrow Chip */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary-pill text-primary text-xs font-semibold mb-4 sm:mb-5 shadow-2xs">
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
+            <span>Material You &amp; Liquid Glass Experience</span>
+          </div>
+
           {/* Main Title with crystal clear dark/light mode visibility */}
           <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold tracking-tight text-ink leading-[1.1] sm:leading-[1.08]">
             Your music,

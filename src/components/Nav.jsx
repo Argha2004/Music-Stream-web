@@ -127,6 +127,19 @@ export default function Nav() {
               >
                 Docs
               </NavLink>
+
+              <NavLink
+                to="/report"
+                className={({ isActive }) =>
+                  `px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-primary-pill text-primary-pill-text font-semibold shadow-xs'
+                      : 'text-ink-2 hover:text-ink hover:bg-hover'
+                  }`
+                }
+              >
+                Report Bug
+              </NavLink>
             </div>
 
             {/* Right side actions */}
@@ -141,7 +154,7 @@ export default function Nav() {
                       className="btn btn-sm btn-pill border border-rule hover:border-primary flex items-center gap-1.5"
                     >
                       <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-                      <span>Approvals</span>
+                      <span>Dashboard</span>
                     </NavLink>
                   )}
                   <Link to="/download" className="btn btn-sm btn-primary flex items-center gap-1.5 shadow-xs">
@@ -225,6 +238,13 @@ export default function Nav() {
             >
               Docs
             </NavLink>
+            <NavLink
+              to="/report"
+              onClick={() => setOpen(false)}
+              className="px-4 py-2.5 rounded-2xl text-sm font-medium text-ink-2 hover:bg-hover"
+            >
+              Report Bug
+            </NavLink>
 
             <div className="mt-4 pt-4 border-t border-rule flex flex-col gap-2.5">
               {user ? (
@@ -236,7 +256,7 @@ export default function Nav() {
                       className="btn btn-pill w-full flex items-center justify-center gap-1.5"
                     >
                       <ShieldCheck className="h-4 w-4 text-primary" />
-                      Approvals
+                      Dashboard
                     </NavLink>
                   )}
                   <Link

@@ -436,17 +436,14 @@ Adele - Easy On Me`}</code>
               Where timed lyrics are missing, plain lyrics are shown if they exist.
             </p>
 
-            <h3>Downloads fail or don't appear</h3>
-            <p>
-              Check free storage, then confirm the download folder in Settings is still
-              accessible. If you picked a custom folder on an SD card that's been removed,
-              reset it to the default.
-            </p>
-
             <h3>Still stuck?</h3>
             <p>
               Note your app version from <code>Settings → Updates</code> and your Android
-              version, then report the issue to the developer.
+              version, then{' '}
+              <Link to="/report" className="font-semibold underline text-primary hover:text-primary-hover">
+                report the issue directly here
+              </Link>{' '}
+              so the developer can review and resolve it.
             </p>
           </section>
         </article>

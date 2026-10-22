@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 import PageTransition from './components/PageTransition'
 import Waveform from './components/Waveform'
+import PixelBackground from './components/PixelBackground'
 import Home from './pages/Home'
 
 // Route-level code splitting keeps the first sheet's bundle small.
@@ -17,6 +18,7 @@ const Download = lazy(() => import('./pages/Download'))
 const Admin = lazy(() => import('./pages/Admin'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Support = lazy(() => import('./pages/Support'))
+const Report = lazy(() => import('./pages/Report'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 /** Reset scroll and move focus to main on navigation (a11y: focus-on-route-change). */
@@ -42,7 +44,9 @@ function PageFallback() {
 
 export default function App() {
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col relative">
+      <PixelBackground />
+
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50
@@ -55,7 +59,7 @@ export default function App() {
       <RouteChangeEffects />
       <Nav />
 
-      <main id="main" tabIndex={-1} className="flex-1 outline-none">
+      <main id="main" tabIndex={-1} className="flex-1 outline-none relative z-10">
         <Suspense fallback={<PageFallback />}>
           <PageTransition>
             <Routes>
@@ -85,6 +89,8 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/report" element={<Report />} />
+              <Route path="/report-bug" element={<Report />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </PageTransition>

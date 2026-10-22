@@ -96,3 +96,59 @@ export function formatBytes(bytes) {
   if (!bytes) return null
   return `${(bytes / 1048576).toFixed(1)} MB`
 }
+
+// ---- Bug Reports -------------------------------------------------------------
+
+/** Submit a new bug report. */
+export async function submitBugReport(report) {
+  const { data, error } = await supabase
+    .from('bug_reports')
+    .insert([report])
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+/** Fetch all bug reports for the admin panel, newest first. */
+export async function fetchBugReports() {
+  const { data, error } = await supabase
+    .from('bug_reports')
+    .select('*')
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data ?? []
+}
+
+/** Delete a bug report (when resolved). */
+export async function deleteBugReport(id) {
+  const { error } = await supabase
+    .from('bug_reports')
+    .delete()
+    .eq('id', id)
+  if (error) throw error
+  return true
+}
+
+/**
+ * Emails the user that their bug report has been resolved.
+ */
+export async function notifyReportResolved({ email, reportTitle, category, resolutionNote }) {
+  const { data } = await supabase.auth.getSession()
+  const token = data?.session?.access_token
+  if (!token) return 'no-session'
+
+  try {
+    const res = await fetch('/api/notify-report-resolved', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ email, reportTitle, category, resolutionNote }),
+    })
+    const body = await res.json().catch(() => ({}))
+    if (!res.ok) return 'failed'
+    return body.sent ? 'sent' : 'skipped'
+  } catch {
+    return 'failed'
+  }
+}
+

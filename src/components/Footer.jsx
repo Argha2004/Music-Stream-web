@@ -18,6 +18,7 @@ const GROUPS = [
       { to: 'https://t.me/musicstream07', label: 'Telegram', external: true },
       { to: 'https://github.com/MusicStream-Native', label: 'Organization', external: true },
       { to: '/support', label: 'Support & Donate' },
+      { to: '/report', label: 'Report a Bug' },
     ],
   },
   {
