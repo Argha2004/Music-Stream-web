@@ -184,13 +184,13 @@ export default function NotFound() {
               rotateY: mousePos.x,
             }}
             transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-            className="rounded-[28px] sm:rounded-[38px] border border-rule/90 bg-card/90 dark:bg-card/40 backdrop-blur-xl p-5 sm:p-9 shadow-xl relative overflow-hidden"
+            className="rounded-[24px] sm:rounded-[38px] border border-rule/90 bg-card/90 dark:bg-card/40 backdrop-blur-xl p-3.5 sm:p-9 shadow-xl relative overflow-hidden"
           >
             {/* Subtle deck metallic accent dots in 4 corners */}
-            <span className="absolute top-4 left-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
-            <span className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
-            <span className="absolute bottom-4 left-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
-            <span className="absolute bottom-4 right-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
+            <span className="absolute top-3 left-3 sm:top-4 sm:left-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
+            <span className="absolute top-3 right-3 sm:top-4 sm:right-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
+            <span className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
+            <span className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-1.5 h-1.5 rounded-full bg-rule border border-ink/10" />
 
             {/* Glowing ambient turntable light */}
             <div
@@ -199,10 +199,10 @@ export default function NotFound() {
               }`}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center relative z-10">
               {/* LEFT: THE VINYL RECORD & TONEARM */}
               <div className="lg:col-span-6 flex flex-col items-center justify-center">
-                <div className="relative w-64 h-64 sm:w-76 sm:h-76 flex items-center justify-center select-none">
+                <div className="relative w-56 h-56 sm:w-76 sm:h-76 flex items-center justify-center select-none">
                   {/* Floating Musical Particles */}
                   <AnimatePresence>
                     {isPlaying &&
@@ -227,10 +227,10 @@ export default function NotFound() {
                   </AnimatePresence>
 
                   {/* Tonearm (Turntable Needle) */}
-                  <div className="absolute -top-3 -right-2 sm:-right-3 w-28 h-40 pointer-events-none z-20 origin-top-right">
+                  <div className="absolute -top-2 -right-1 sm:-right-3 w-22 sm:w-28 h-34 sm:h-40 pointer-events-none z-20 origin-top-right">
                     {/* Tonearm pivot base */}
-                    <div className="absolute top-0 right-0 w-9 h-9 rounded-full bg-gradient-to-br from-stone-200 to-stone-400 dark:from-stone-600 dark:to-stone-800 border-2 border-stone-400 dark:border-stone-500 shadow-md flex items-center justify-center">
-                      <div className="w-3.5 h-3.5 rounded-full bg-stone-500 dark:bg-stone-400 border border-stone-600" />
+                    <div className="absolute top-0 right-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-stone-200 to-stone-400 dark:from-stone-600 dark:to-stone-800 border-2 border-stone-400 dark:border-stone-500 shadow-md flex items-center justify-center">
+                      <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-stone-500 dark:bg-stone-400 border border-stone-600" />
                     </div>
 
                     {/* Tonearm armrod with rotation */}
@@ -239,10 +239,10 @@ export default function NotFound() {
                         rotate: isPlaying ? 28 : 6,
                       }}
                       transition={{ type: 'spring', stiffness: 75, damping: 14 }}
-                      className="absolute top-4.5 right-4 origin-top-right w-1.5 h-32 sm:h-36 bg-gradient-to-b from-stone-400 via-stone-200 to-stone-500 dark:from-stone-500 dark:via-stone-300 dark:to-stone-600 rounded-full shadow-md"
+                      className="absolute top-4 right-3 sm:top-4.5 sm:right-4 origin-top-right w-1.5 h-28 sm:h-36 bg-gradient-to-b from-stone-400 via-stone-200 to-stone-500 dark:from-stone-500 dark:via-stone-300 dark:to-stone-600 rounded-full shadow-md"
                     >
                       {/* Stylus head & green indicator cartridge */}
-                      <div className="absolute bottom-0 -left-2 w-5 h-7 bg-stone-900 dark:bg-stone-950 rounded-sm border border-stone-600 dark:border-stone-500 flex flex-col items-center justify-end pb-1 shadow-xs">
+                      <div className="absolute bottom-0 -left-1.5 sm:-left-2 w-4 sm:w-5 h-6 sm:h-7 bg-stone-900 dark:bg-stone-950 rounded-sm border border-stone-600 dark:border-stone-500 flex flex-col items-center justify-end pb-1 shadow-xs">
                         <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-primary shadow-[0_0_8px_#52c46f]' : 'bg-red-400'}`} />
                       </div>
                     </motion.div>
@@ -261,7 +261,7 @@ export default function NotFound() {
                       },
                     }}
                     onClick={togglePlay}
-                    className="w-56 h-56 sm:w-68 sm:h-68 rounded-full bg-[#121613] dark:bg-[#0c100d] shadow-2xl border border-white/10 relative flex items-center justify-center cursor-pointer group active:scale-98 transition-transform"
+                    className="w-48 h-48 sm:w-68 sm:h-68 rounded-full bg-[#121613] dark:bg-[#0c100d] shadow-2xl border border-white/10 relative flex items-center justify-center cursor-pointer group active:scale-98 transition-transform"
                     style={{
                       backgroundImage: `
                         radial-gradient(circle at 50% 50%, #171d18 0%, #0d120e 100%),
@@ -279,27 +279,27 @@ export default function NotFound() {
                     />
 
                     {/* Vinyl Grooves Accent Ring */}
-                    <div className="absolute inset-4 rounded-full border border-white/5 pointer-events-none" />
-                    <div className="absolute inset-8 rounded-full border border-white/5 pointer-events-none" />
-                    <div className="absolute inset-12 rounded-full border border-white/5 pointer-events-none" />
+                    <div className="absolute inset-3 sm:inset-4 rounded-full border border-white/5 pointer-events-none" />
+                    <div className="absolute inset-6 sm:inset-8 rounded-full border border-white/5 pointer-events-none" />
+                    <div className="absolute inset-9 sm:inset-12 rounded-full border border-white/5 pointer-events-none" />
 
                     {/* Center Vinyl Center Label */}
-                    <div className="w-22 h-22 sm:w-26 sm:h-26 rounded-full bg-gradient-to-tr from-[#2a5c34] to-[#78c587] text-[#0e1b11] p-1 shadow-inner relative flex flex-col items-center justify-center border-2 border-[#121613]">
-                      <span className="font-mono text-[8px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#0f2413]/80">
+                    <div className="w-20 h-20 sm:w-26 sm:h-26 rounded-full bg-gradient-to-tr from-[#2a5c34] to-[#78c587] text-[#0e1b11] p-1 shadow-inner relative flex flex-col items-center justify-center border-2 border-[#121613]">
+                      <span className="font-mono text-[7px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#0f2413]/80">
                         MusicStream
                       </span>
 
                       {/* Center 404 Stamp */}
-                      <span className="font-display text-xl sm:text-2xl font-black tracking-tight leading-none text-[#09150b]">
+                      <span className="font-display text-lg sm:text-2xl font-black tracking-tight leading-none text-[#09150b]">
                         404
                       </span>
 
-                      <span className="font-mono text-[7px] sm:text-[8px] font-bold uppercase tracking-wider text-[#0f2413]/70 mt-0.5">
+                      <span className="font-mono text-[6.5px] sm:text-[8px] font-bold uppercase tracking-wider text-[#0f2413]/70 mt-0.5">
                         SIDE 404 • NO TRACK
                       </span>
 
                       {/* Center Spindle Hole */}
-                      <div className="absolute w-4 h-4 rounded-full bg-[#121613] border-2 border-stone-400/80 shadow-inner flex items-center justify-center">
+                      <div className="absolute w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#121613] border-2 border-stone-400/80 shadow-inner flex items-center justify-center">
                         <div className="w-1.5 h-1.5 rounded-full bg-stone-500" />
                       </div>
                     </div>
@@ -310,7 +310,7 @@ export default function NotFound() {
                 <button
                   type="button"
                   onClick={togglePlay}
-                  className="mt-3 text-xs font-mono font-medium text-ink-3 hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="mt-2.5 sm:mt-3 text-[11px] sm:text-xs font-mono font-medium text-ink-3 hover:text-primary transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <Disc3 className={`h-3.5 w-3.5 ${isPlaying ? 'animate-spin text-primary' : ''}`} />
                   <span>{isPlaying ? 'Click vinyl to pause' : 'Click vinyl to spin'}</span>
@@ -320,49 +320,51 @@ export default function NotFound() {
               {/* RIGHT: TRACK DIAGNOSTIC CONSOLE & CONTROLS */}
               <div className="lg:col-span-6 flex flex-col justify-center">
                 {/* Now Playing Widget Card */}
-                <div className="rounded-2xl sm:rounded-3xl bg-card-subtle/80 dark:bg-card-subtle/40 border border-rule/80 p-4 sm:p-6 shadow-sm">
-                  <div className="flex items-center justify-between gap-2 border-b border-rule/60 pb-3">
-                    <div className="flex items-center gap-2">
+                <div className="rounded-2xl sm:rounded-3xl bg-card-subtle/80 dark:bg-card-subtle/40 border border-rule/80 p-3.5 sm:p-6 shadow-sm">
+                  {/* Header info */}
+                  <div className="flex items-center justify-between gap-2 border-b border-rule/60 pb-2.5 sm:pb-3">
+                    <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                       <span
-                        className={`h-2 w-2 rounded-full ${
+                        className={`h-2 w-2 rounded-full shrink-0 ${
                           isPlaying ? 'bg-primary animate-pulse' : 'bg-red-500'
                         }`}
                       />
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-ink-2">
-                        {isPlaying ? 'Tuning: Lost Broadcast' : 'Turntable: Idle'}
+                      <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-ink-2 truncate">
+                        {isPlaying ? 'Lost Broadcast' : 'Turntable Idle'}
                       </span>
                     </div>
 
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-card border border-rule text-primary">
+                    <span className="text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-card border border-rule text-primary whitespace-nowrap shrink-0">
                       FLAC • 0 kbps
                     </span>
                   </div>
 
-                  <div className="mt-3.5">
-                    <h3 className="font-display text-base sm:text-lg font-bold text-ink truncate">
+                  {/* Track Title & Album without awkward truncation */}
+                  <div className="mt-3 sm:mt-3.5">
+                    <h3 className="font-display text-sm sm:text-base md:text-lg font-bold text-ink leading-snug">
                       The Missing Master (Track 404)
                     </h3>
-                    <p className="text-xs sm:text-sm text-ink-3 font-medium truncate">
-                      Album: Unknown Catalog • MusicStream System
+                    <p className="text-[11px] sm:text-xs md:text-sm text-ink-3 font-medium mt-0.5 leading-snug">
+                      Unknown Catalog • MusicStream System
                     </p>
                   </div>
 
                   {/* Equalizer Visualizer */}
-                  <div className="mt-4 pt-3 border-t border-rule/40">
-                    <div className="flex items-center justify-between text-[11px] font-mono text-ink-3 mb-2">
+                  <div className="mt-3.5 sm:mt-4 pt-2.5 sm:pt-3 border-t border-rule/40">
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-ink-3 mb-1.5 sm:mb-2">
                       <span>Signal Analysis</span>
-                      <span>{isPlaying ? `${formatTime(trackSeconds)} / 4:04` : 'Paused'}</span>
+                      <span className="font-semibold text-ink-2">{isPlaying ? `${formatTime(trackSeconds)} / 4:04` : 'Paused'}</span>
                     </div>
 
-                    <div className="h-10 flex items-end gap-1 sm:gap-1.5 bg-sheet/60 dark:bg-sheet/20 rounded-xl p-2 border border-rule/50 overflow-hidden">
-                      {Array.from({ length: 22 }).map((_, i) => {
-                        const heights = [35, 75, 45, 95, 60, 30, 85, 50, 100, 70, 40, 80, 55, 90, 65, 35, 95, 50, 80, 45, 65, 40]
+                    <div className="h-8 sm:h-10 flex items-end gap-1 sm:gap-1.5 bg-sheet/60 dark:bg-sheet/20 rounded-xl p-1.5 sm:p-2 border border-rule/50 overflow-hidden">
+                      {Array.from({ length: 18 }).map((_, i) => {
+                        const heights = [35, 75, 45, 95, 60, 30, 85, 50, 100, 70, 40, 80, 55, 90, 65, 35, 95, 50]
                         const baseHeight = heights[i % heights.length]
                         return (
                           <motion.span
                             key={i}
                             animate={{
-                              height: isPlaying ? [`${baseHeight}%`, `${Math.max(15, (baseHeight * 0.4))}%`, `${baseHeight}%`] : '15%',
+                              height: isPlaying ? [`${baseHeight}%`, `${Math.max(15, baseHeight * 0.4)}%`, `${baseHeight}%`] : '15%',
                             }}
                             transition={{
                               duration: 0.6 + (i % 5) * 0.15,
@@ -381,31 +383,31 @@ export default function NotFound() {
                     </div>
                   </div>
 
-                  {/* Player Controls Bar */}
-                  <div className="mt-4 flex items-center justify-between gap-3">
+                  {/* Player Controls Bar with robust non-wrapping layout */}
+                  <div className="mt-3.5 sm:mt-4 flex items-center gap-2 sm:gap-3">
                     <button
                       type="button"
                       onClick={() => setTrackSeconds(0)}
-                      className="btn btn-secondary btn-sm flex items-center gap-1.5 text-xs font-semibold cursor-pointer"
-                      title="Restart timer"
+                      className="btn btn-secondary px-3 sm:px-3.5 py-2.5 sm:py-2 text-xs font-semibold flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap cursor-pointer transition-all active:scale-95"
+                      title="Restart track timer"
                     >
-                      <RotateCcw className="h-3 w-3" />
+                      <RotateCcw className="h-3.5 w-3.5 shrink-0" />
                       <span>Re-tune</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={togglePlay}
-                      className="btn btn-primary px-5 py-2 text-xs font-bold flex items-center gap-2 shadow-xs cursor-pointer"
+                      className="btn btn-primary flex-1 py-2.5 sm:py-2 px-3 sm:px-5 text-xs font-bold flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs cursor-pointer whitespace-nowrap transition-all active:scale-98"
                     >
                       {isPlaying ? (
                         <>
-                          <Pause className="h-3.5 w-3.5 fill-current" />
+                          <Pause className="h-3.5 w-3.5 fill-current shrink-0" />
                           <span>Pause Platter</span>
                         </>
                       ) : (
                         <>
-                          <Play className="h-3.5 w-3.5 fill-current" />
+                          <Play className="h-3.5 w-3.5 fill-current shrink-0" />
                           <span>Spin &amp; Play</span>
                         </>
                       )}
