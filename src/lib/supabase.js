@@ -114,6 +114,26 @@ export async function notifyDecision(email, status, userId) {
   }
 }
 
+/**
+ * Notifies the admin via email that a new user signed up and requested access.
+ * Non-blocking: failures won't disrupt the user signup experience.
+ */
+export async function notifyAdminSignup(email) {
+  if (!email) return 'skipped'
+  try {
+    const res = await fetch('/api/notify-signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, requested_at: new Date().toISOString() }),
+    })
+    const body = await res.json().catch(() => ({}))
+    if (!res.ok) return 'failed'
+    return body.sent ? 'sent' : 'skipped'
+  } catch {
+    return 'failed'
+  }
+}
+
 export function formatBytes(bytes) {
   if (!bytes) return null
   return `${(bytes / 1048576).toFixed(1)} MB`

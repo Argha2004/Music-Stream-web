@@ -1,0 +1,28 @@
+-- ============================================================================
+-- MusicStream — Database Webhook for New User Signup Alert (Optional)
+--
+-- Whenever a new user signs up, MusicStream frontend calls `/api/notify-signup`
+-- automatically.
+--
+-- However, if you also want database-level guarantees (e.g. if users sign up
+-- directly via Supabase Auth or mobile apps), you can configure a Supabase
+-- Database Webhook in the Supabase Dashboard:
+--
+-- METHOD 1 (Recommended): Via Supabase Dashboard UI
+-- ----------------------------------------------------------------------------
+-- 1. Go to your Supabase Dashboard: https://supabase.com/dashboard/project/_/database/hooks
+-- 2. Click "Create Webhook".
+-- 3. Name: "notify_admin_signup"
+-- 4. Table: "profiles" (Schema: public)
+-- 5. Events: Check "Insert"
+-- 6. Type: HTTP Request
+-- 7. Method: POST
+-- 8. URL: https://<YOUR_DEPLOYED_DOMAIN>/api/notify-signup
+-- 9. HTTP Headers:
+--      Content-Type: application/json
+-- 10. Click "Save webhook".
+--
+-- The endpoint `/api/notify-signup` automatically recognizes Supabase webhook
+-- payloads (`payload.record.email`) and dispatches the alert email to your
+-- administrator email (arghadeeppakhira@gmail.com).
+-- ============================================================================

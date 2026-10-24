@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, UserPlus, MailCheck, ShieldCheck } from 'lucide-react'
 import { humanizeAuthError, useAuth } from '../context/AuthContext'
-import { isConfigured } from '../lib/supabase'
+import { isConfigured, notifyAdminSignup } from '../lib/supabase'
 import Sheet from '../components/Sheet'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
@@ -40,6 +40,9 @@ export default function Signup() {
       setError(humanizeAuthError(err))
       return
     }
+
+    // Fire-and-forget email alert to admin: new signup & access request pending
+    notifyAdminSignup(email).catch((e) => console.warn('Failed to notify admin of signup:', e))
 
     if (data?.session) navigate('/download', { replace: true })
     else setDone(true)
