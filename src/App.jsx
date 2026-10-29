@@ -20,6 +20,7 @@ const Admin = lazy(() => import('./pages/Admin'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Support = lazy(() => import('./pages/Support'))
 const Report = lazy(() => import('./pages/Report'))
+const AppVerify = lazy(() => import('./pages/AppVerify'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 /** Reset scroll and move focus to main on navigation (a11y: focus-on-route-change). */
@@ -93,6 +94,8 @@ export default function App() {
               />
               <Route path="/report" element={<Report />} />
               <Route path="/report-bug" element={<Report />} />
+              <Route path="/verify" element={<AppVerify />} />
+              <Route path="/app-verify" element={<AppVerify />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </PageTransition>
