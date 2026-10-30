@@ -21,7 +21,7 @@ import { createClient } from '@supabase/supabase-js'
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
 const DEVELOPER_EMAIL = (process.env.DEVELOPER_EMAIL || 'arghadeeppakhira@gmail.com').toLowerCase()
-const SITE_NAME = 'MusicStream'
+const SITE_NAME = 'Zuno'
 
 function buildEmail({ status, siteUrl }) {
   const approved = status === 'approved'

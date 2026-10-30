@@ -286,7 +286,7 @@ export default function NotFound() {
                     {/* Center Vinyl Center Label */}
                     <div className="w-20 h-20 sm:w-26 sm:h-26 rounded-full bg-gradient-to-tr from-[#2a5c34] to-[#78c587] text-[#0e1b11] p-1 shadow-inner relative flex flex-col items-center justify-center border-2 border-[#121613]">
                       <span className="font-mono text-[7px] sm:text-[9px] font-extrabold uppercase tracking-widest text-[#0f2413]/80">
-                        MusicStream
+                        Zuno
                       </span>
 
                       {/* Center 404 Stamp */}
@@ -345,7 +345,7 @@ export default function NotFound() {
                       The Missing Master (Track 404)
                     </h3>
                     <p className="text-[11px] sm:text-xs md:text-sm text-ink-3 font-medium mt-0.5 leading-snug">
-                      Unknown Catalog • MusicStream System
+                      Unknown Catalog • Zuno System
                     </p>
                   </div>
 

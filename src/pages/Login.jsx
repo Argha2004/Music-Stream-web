@@ -46,7 +46,7 @@ export default function Login() {
           <SectionLabel index={6}>Authentication</SectionLabel>
           <h1 className="drawing-title mt-2 sm:mt-4 text-2xl sm:text-4xl">Sign in</h1>
           <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2">
-            Sign in with your approved account to download MusicStream.
+            Sign in with your approved account to download Zuno.
           </p>
         </Reveal>
 

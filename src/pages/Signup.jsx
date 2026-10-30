@@ -84,7 +84,7 @@ export default function Signup() {
           <SectionLabel index={7}>Access</SectionLabel>
           <h1 className="drawing-title mt-2 sm:mt-4 text-2xl sm:text-4xl">Request access</h1>
           <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2">
-            Create an account to request an approved tester slot for MusicStream.
+            Create an account to request an approved tester slot for Zuno.
           </p>
         </Reveal>
 
@@ -97,7 +97,7 @@ export default function Signup() {
         <div className="mt-5 sm:mt-6 rounded-2xl border border-primary/20 bg-primary-pill p-3.5 sm:p-4 text-xs text-primary-pill-text flex items-start gap-2.5 sm:gap-3">
           <ShieldCheck className="h-4 w-4 shrink-0 mt-0.5" />
           <span>
-            MusicStream is invite-only. After creating your account, the developer will
+            Zuno is invite-only. After creating your account, the developer will
             approve your email before you can download the APK.
           </span>
         </div>

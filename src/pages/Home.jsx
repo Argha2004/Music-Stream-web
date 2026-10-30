@@ -110,19 +110,19 @@ const SCREENS = [
 const FAQS = [
   {
     q: 'How do I get approved to download the app?',
-    a: "MusicStream is currently distributed via private invite. Simply create an account on the sign-up page with your email. The developer reviews incoming requests in the admin console. Once approved, you can immediately sign in and download the latest verified APK.",
+    a: "Zuno is currently distributed via private invite. Simply create an account on the sign-up page with your email. The developer reviews incoming requests in the admin console. Once approved, you can immediately sign in and download the latest verified APK.",
   },
   {
     q: 'Why does Android say "Allow from this source" when installing?',
-    a: 'Because MusicStream is distributed directly as an APK outside Google Play, Android protects your security by asking you to permit installations from your web browser. In Android Settings, toggle "Allow from this source" for your browser, then tap Install. It is safe and 100% ad-free.',
+    a: 'Because Zuno is distributed directly as an APK outside Google Play, Android protects your security by asking you to permit installations from your web browser. In Android Settings, toggle "Allow from this source" for your browser, then tap Install. It is safe and 100% ad-free.',
   },
   {
-    q: 'Does MusicStream contain any ads, tracking, or telemetry?',
-    a: 'No. MusicStream has zero advertisement SDKs, zero third-party telemetry, and zero user analytics. The app only contacts servers for music playback streams, lyrics, album artwork, and version update checks.',
+    q: 'Does Zuno contain any ads, tracking, or telemetry?',
+    a: 'No. Zuno has zero advertisement SDKs, zero third-party telemetry, and zero user analytics. The app only contacts servers for music playback streams, lyrics, album artwork, and version update checks.',
   },
   {
     q: 'Can I download songs for offline listening?',
-    a: 'Yes! Any track or album can be downloaded with a single tap. MusicStream saves original M4A streams or can convert them to MP3 on-device with all metadata and high-resolution cover art embedded.',
+    a: 'Yes! Any track or album can be downloaded with a single tap. Zuno saves original M4A streams or can convert them to MP3 on-device with all metadata and high-resolution cover art embedded.',
   },
   {
     q: 'How does the in-app automatic update check work?',
@@ -134,7 +134,7 @@ const FAQS = [
   },
   {
     q: 'Which Android versions and architectures are supported?',
-    a: 'MusicStream requires Android 7.0 (Nougat, API 24) or newer. It supports 64-bit ARM devices (arm64-v8a) as well as 32-bit devices (armeabi-v7a).',
+    a: 'Zuno requires Android 7.0 (Nougat, API 24) or newer. It supports 64-bit ARM devices (arm64-v8a) as well as 32-bit devices (armeabi-v7a).',
   },
 ]
 
@@ -171,7 +171,7 @@ export default function Home() {
 
           {/* Subtitle */}
           <p className="mt-4 sm:mt-6 text-sm sm:text-lg leading-relaxed text-ink-2 max-w-2xl font-normal">
-            MusicStream is a fast, native Android music Streaming player with background playback,
+            Zuno is a fast, native Android music streaming player with background playback,
             liquid glass Material design, 10-band equalizer, and in-app updates.
           </p>
 
@@ -325,7 +325,7 @@ export default function Home() {
                 Latest Release
               </span>
               <h3 className="font-display text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1B3E21] dark:text-white">
-                Get MusicStream {currentVersion}
+                Get Zuno {currentVersion}
               </h3>
               <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-[#315738] dark:text-[#B2C9B5] font-medium">
                 Released {latestRelease?.published_at || 'July 2026'} • SHA-256 Checksum verified
@@ -393,10 +393,10 @@ export default function Home() {
                 Support Development
               </span>
               <h3 className="mt-2.5 sm:mt-3 font-display text-xl sm:text-3xl font-extrabold tracking-tight text-ink">
-                Help keep MusicStream free & open-source
+                Help keep Zuno free & open-source
               </h3>
               <p className="mt-2 text-xs sm:text-base text-ink-2 leading-relaxed">
-                MusicStream is 100% ad-free with zero trackers or subscriptions. If you enjoy using the player, support continued development with a quick UPI contribution.
+                Zuno is 100% ad-free with zero trackers or subscriptions. If you enjoy using the player, support continued development with a quick UPI contribution.
               </p>
             </div>
 

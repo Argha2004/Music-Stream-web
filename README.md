@@ -1,7 +1,7 @@
-# MusicStream — website
+# Zuno — website
 
 Marketing site, documentation, gated downloads, and the update endpoint for the
-MusicStream Android app.
+Zuno Android app.
 
 <p align="center">
   <img src="public/web.png" alt="Home View of the Portfolio" width="900">

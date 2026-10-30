@@ -14,7 +14,7 @@ import { createClient } from '@supabase/supabase-js'
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
 const DEVELOPER_EMAIL = (process.env.DEVELOPER_EMAIL || 'arghadeeppakhira@gmail.com').toLowerCase()
-const SITE_NAME = 'MusicStream'
+const SITE_NAME = 'Zuno'
 
 function buildAdminSignupEmail({ userEmail, requestedAt, siteUrl }) {
   const subject = `[${SITE_NAME}] New Access Request: ${userEmail}`
@@ -66,7 +66,7 @@ function buildAdminSignupEmail({ userEmail, requestedAt, siteUrl }) {
         </div>
 
         <p style="margin:24px 0 0;color:#607765;font-size:12px;line-height:1.5">
-          Tip: Once approved, the user will be able to sign in and download the latest MusicStream APK.
+          Tip: Once approved, the user will be able to sign in and download the latest Zuno APK.
         </p>
       </td>
     </tr>

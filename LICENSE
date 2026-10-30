@@ -1,23 +1,23 @@
-MusicStream — Personal & Educational Use License
+Zuno — Personal & Educational Use License
 
 Copyright (c) 2026 Arghadeep Pakhira. All rights reserved.
 
-MusicStream is proprietary software. It is NOT open source. It is provided free
+Zuno is proprietary software. It is NOT open source. It is provided free
 of charge to approved individuals for personal, non-commercial use only, and is
 not licensed for redistribution.
 
-These terms cover the MusicStream Android application, this website, and their
+These terms cover the Zuno Android application, this website, and their
 source code.
 
 
 1. GRANT OF LICENCE
 
 Subject to these terms, you are granted a personal, non-exclusive,
-non-transferable, revocable licence to install and use MusicStream on devices
+non-transferable, revocable licence to install and use Zuno on devices
 you own, for private and non-commercial purposes only.
 
 You may:
-  - Install and use MusicStream on devices you personally own
+  - Install and use Zuno on devices you personally own
   - Use the app for private, non-commercial listening
   - Study the app for personal educational purposes
   - Report bugs and suggest improvements
@@ -32,7 +32,7 @@ are personal and must not be shared.
 
 Specifically, you may not:
   - Redistribute, resell, or republish the APK anywhere
-  - Use MusicStream for any commercial purpose
+  - Use Zuno for any commercial purpose
   - Remove or alter attribution, branding, or this licence
   - Share your account credentials or download links publicly
   - Represent the app or its content as your own work
@@ -73,7 +73,7 @@ changes are published constitutes acceptance of the revised terms.
 
 CONTENT DISCLAIMER
 
-MusicStream does not host, own, or distribute any music. It is a client that
+Zuno does not host, own, or distribute any music. It is a client that
 retrieves publicly accessible data from an unofficial, self-made API. All music,
 artwork, and metadata remain the property of their respective owners and rights
 holders.
@@ -86,7 +86,7 @@ apply where you live.
 
 THIRD-PARTY COMPONENTS
 
-MusicStream is built with the following components, used under their respective
+Zuno is built with the following components, used under their respective
 licences. Those licences govern those components, not this one:
 
   AndroidX / Jetpack Compose / Media3    Apache License 2.0

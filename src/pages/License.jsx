@@ -11,7 +11,7 @@ import SectionLabel from '../components/SectionLabel'
  */
 
 const PERMITTED = [
-  'Install and use MusicStream on devices you personally own',
+  'Install and use Zuno on devices you personally own',
   'Use the app for private, non-commercial listening',
   'Study the app for personal educational purposes',
   'Report bugs and suggest improvements',
@@ -19,7 +19,7 @@ const PERMITTED = [
 
 const NOT_PERMITTED = [
   'Redistribute, resell, or republish the APK anywhere',
-  'Use MusicStream for any commercial purpose',
+  'Use Zuno for any commercial purpose',
   'Remove or alter attribution, branding, or this licence',
   'Share your account credentials or download links publicly',
   'Represent the app or its content as your own work',
@@ -56,7 +56,7 @@ export default function License() {
         <SectionLabel index={4}>Legal</SectionLabel>
         <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Terms of Use</h1>
         <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-ink-2">
-          Terms governing your private and educational use of MusicStream and this portal.
+          Terms governing your private and educational use of Zuno and this portal.
         </p>
       </Reveal>
 
@@ -72,7 +72,7 @@ export default function License() {
           <div className="plate-bd">
             <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
               Copyright © {new Date().getFullYear()} Arghadeep Pakhira. All rights
-              reserved. MusicStream is proprietary software provided free of charge to
+              reserved. Zuno is proprietary software provided free of charge to
               approved individuals for personal, non-commercial use. It is not open source
               and is not licensed for redistribution.
             </p>
@@ -131,7 +131,7 @@ export default function License() {
           </div>
           <div className="p-5 sm:p-6">
             <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-              MusicStream does not host, own, or distribute any music. It is a client that
+              Zuno does not host, own, or distribute any music. It is a client that
               retrieves publicly accessible data from an unofficial selfmade API. All
               music, artwork, and metadata remain the property of their respective owners
               and rights holders.
@@ -154,7 +154,7 @@ export default function License() {
           <h3>3.1 Grant of licence</h3>
           <p>
             Subject to these terms, you are granted a personal, non-exclusive,
-            non-transferable, revocable licence to install and use MusicStream on devices
+            non-transferable, revocable licence to install and use Zuno on devices
             you own, for private and non-commercial purposes only.
           </p>
 
@@ -206,7 +206,7 @@ export default function License() {
         <ClauseHead no="04">Third-party licences</ClauseHead>
 
         <p className="font-sans text-base normal-case leading-[1.7] text-ink-2">
-          MusicStream is built with the following open-source components, used under
+          Zuno is built with the following open-source components, used under
           their respective licences:
         </p>
 

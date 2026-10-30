@@ -145,7 +145,7 @@ export default function Report() {
         </div>
 
         <p className="mt-3 sm:mt-4 max-w-2xl font-sans text-sm sm:text-base leading-[1.7] text-ink-2">
-          Help us refine MusicStream. When you submit a bug report, it is sent directly to the developer&apos;s admin dashboard. Once resolved, you will receive an email update.
+          Help us refine Zuno. When you submit a bug report, it is sent directly to the developer&apos;s admin dashboard. Once resolved, you will receive an email update.
         </p>
       </Reveal>
 
@@ -159,7 +159,7 @@ export default function Report() {
             Report Received!
           </h2>
           <p className="mt-2 text-sm text-ink-2 leading-relaxed">
-            Thank you for helping us polish MusicStream. Your bug report has been forwarded to the developer. An email will be sent to <strong className="text-ink font-semibold">{user?.email || email}</strong> as soon as the issue is resolved.
+            Thank you for helping us polish Zuno. Your bug report has been forwarded to the developer. An email will be sent to <strong className="text-ink font-semibold">{user?.email || email}</strong> as soon as the issue is resolved.
           </p>
 
           <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">

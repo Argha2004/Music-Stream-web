@@ -21,7 +21,7 @@ const HIGHLIGHTS = [
   {
     icon: Lock,
     title: 'No In-App Account Required',
-    desc: 'MusicStream does not require an account to use the Android app. Launch the player and enjoy listening with complete anonymity.',
+    desc: 'Zuno does not require an account to use the Android app. Launch the player and enjoy listening with complete anonymity.',
     badgeBg: 'bg-[#D5F2EE] dark:bg-[#16364A]',
     badgeText: 'text-[#1A6B63] dark:text-[#88E2D7]',
   },
@@ -93,7 +93,7 @@ export default function Privacy() {
           Data &amp; Privacy Policy
         </h1>
         <p className="mt-2.5 sm:mt-3 text-sm sm:text-base text-ink-2 leading-relaxed">
-          MusicStream is built on the principle of minimal data footprint. We believe your music
+          Zuno is built on the principle of minimal data footprint. We believe your music
           habits, playlists, and listening history belong exclusively to you.
         </p>
         <p className="mt-1 font-mono text-[11px] sm:text-xs text-ink-3">
@@ -129,8 +129,8 @@ export default function Privacy() {
         <ClauseHead no="01">Architecture &amp; On-Device Storage</ClauseHead>
         <div className="space-y-4 text-sm sm:text-base leading-relaxed text-ink-2">
           <p>
-            MusicStream is a native Android music client designed from scratch with a local-first
-            architecture. Unlike commercial streaming platforms, MusicStream does not maintain a
+            Zuno is a native Android music client designed from scratch with a local-first
+            architecture. Unlike commercial streaming platforms, Zuno does not maintain a
             remote profile of your tastes.
           </p>
           <p>
@@ -158,7 +158,7 @@ export default function Privacy() {
       <section className="mt-12 max-w-3xl">
         <ClauseHead no="02">What We Do NOT Collect</ClauseHead>
         <p className="text-sm sm:text-base leading-relaxed text-ink-2 mb-4">
-          To maintain zero data liability, MusicStream contains no third-party tracking libraries,
+          To maintain zero data liability, Zuno contains no third-party tracking libraries,
           advertising networks, or analytics SDKs. We do not gather or sell:
         </p>
 
@@ -224,7 +224,7 @@ export default function Privacy() {
       <section className="mt-12 max-w-3xl">
         <ClauseHead no="04">Android Device Permissions</ClauseHead>
         <p className="text-sm sm:text-base leading-relaxed text-ink-2 mb-4">
-          MusicStream requests only the minimal Android permissions necessary for standard media
+          Zuno requests only the minimal Android permissions necessary for standard media
           player operations:
         </p>
 
@@ -282,7 +282,7 @@ export default function Privacy() {
           <div className="rounded-2xl bg-card-subtle border border-rule p-4 sm:p-5 text-sm space-y-2">
             <p>
               • <strong>To delete in-app data:</strong> Open Android{' '}
-              <code>Settings → Apps → MusicStream → Storage → Clear Data</code>. This permanently removes all
+              <code>Settings → Apps → Zuno → Storage → Clear Data</code>. This permanently removes all
               cached tracks, preferences, and local playlists.
             </p>
             <p>
@@ -304,7 +304,7 @@ export default function Privacy() {
           <p className="mt-3 font-mono text-sm font-bold text-ink">
             Developer: Arghadeep Pakhira
             <br />
-            Project: MusicStream
+            Project: Zuno
           </p>
         </div>
       </section>

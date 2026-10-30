@@ -6,7 +6,7 @@ const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const isConfigured = Boolean(url && anonKey)
 
 if (!isConfigured && import.meta.env.DEV) {
-  console.warn('[MusicStream] Supabase env vars missing — copy .env.example to .env.local')
+  console.warn('[Zuno] Supabase env vars missing — copy .env.example to .env.local')
 }
 
 // Safe placeholder values keep the app rendering (with a clear banner) instead

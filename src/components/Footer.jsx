@@ -40,20 +40,15 @@ export default function Footer() {
           {/* Brand blurb */}
           <div className="lg:col-span-2">
             <Link to="/" className="group inline-flex items-center gap-2">
-              <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-primary-pill text-primary transition-transform group-hover:scale-105">
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl overflow-hidden transition-transform group-hover:scale-105">
                 <img
-                  src="/Logo-dark.png"
-                  alt="MusicStream Logo"
-                  className="h-4.5 w-4.5 sm:h-5 sm:w-5 object-contain dark:hidden"
-                />
-                <img
-                  src="/Logo-final.png"
-                  alt="MusicStream Logo"
-                  className="h-4.5 w-4.5 sm:h-5 sm:w-5 object-contain hidden dark:block"
+                  src="/zuno.png"
+                  alt="Zuno Logo"
+                  className="h-7 w-7 sm:h-8 sm:w-8 object-contain rounded-lg"
                 />
               </div>
               <span className="font-display text-base sm:text-lg font-extrabold tracking-tight text-ink">
-                MusicStream
+                Zuno
               </span>
             </Link>
 

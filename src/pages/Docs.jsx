@@ -76,7 +76,7 @@ export default function Docs() {
         <SectionLabel index={2}>Operating manual</SectionLabel>
         <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Manual & Guide</h1>
         <p className="mt-2.5 sm:mt-3 max-w-2xl text-sm sm:text-base text-ink-2">
-          Everything you need to install, use, and troubleshoot MusicStream on Android.
+          Everything you need to install, use, and troubleshoot Zuno on Android.
         </p>
       </Reveal>
 
@@ -112,7 +112,7 @@ export default function Docs() {
           <section id="getting-started">
             <Clause id="getting-started">Getting started</Clause>
             <p>
-              MusicStream is a native Android music Streaming player. It is not distributed through
+              Zuno is a native Android music streaming player. It is not distributed through
               the Play Store — you install it directly from this site as an APK.
             </p>
             <p>Access is invite-only. To get in:</p>
@@ -146,15 +146,15 @@ export default function Docs() {
                 Go back and tap <strong>Install</strong>.
               </li>
             </ol>
-            <h3>Also allow MusicStream to install apps</h3>
+            <h3>Also allow Zuno to install apps</h3>
             <p>
-              So that in-app updates work later, grant the same permission to MusicStream
-              itself: <code>Settings → Apps → MusicStream → Install unknown apps → Allow</code>.
+              So that in-app updates work later, grant the same permission to Zuno
+              itself: <code>Settings → Apps → Zuno → Install unknown apps → Allow</code>.
               Without this, tapping "Update" inside the app appears to do nothing.
             </p>
             <h3>"App not installed" error</h3>
             <p>
-              This means an existing MusicStream build was signed with a different key.
+              This means an existing Zuno build was signed with a different key.
               Uninstall the old version first, then install again. It's a one-time step —
               future updates install straight over the top.
             </p>
@@ -184,11 +184,11 @@ export default function Docs() {
             <pre className="max-w-full overflow-x-auto text-xs sm:text-sm">
               <code>{`{
   "schema": 1,
-  "versionCode": 20103,
-  "versionName": "2.1.3",
-  "name": "MusicStream 2.1.3",
-  "notes": "- Swipeable Now Playing\\n- Waveform progress bar",
-  "apkUrl": "https://.../musicstream-2.1.3-20103.apk",
+  "versionCode": 40000,
+  "versionName": "4.0.0",
+  "name": "Zuno 4.0.0",
+  "notes": "- Rebranded to Zuno\\n- Dual streaming engine\\n- Android Auto & YT Music sync",
+  "apkUrl": "https://.../zuno-4.0.0-40000.apk",
   "apkSize": 48312764,
   "sha256": "…",
   "minSdk": 24,
@@ -254,14 +254,14 @@ export default function Docs() {
             <Clause id="import-playlists">Import playlist option</Clause>
             <p>
               Migrating your music from Spotify, Apple Music, YouTube Music, or other services
-              is straightforward. MusicStream allows you to import existing playlists directly
+              is straightforward. Zuno allows you to import existing playlists directly
               using standard CSV spreadsheets or simple plain text (<code>.txt</code>) files.
             </p>
 
             <h3>How to import a playlist</h3>
             <ol>
               <li>
-                Open the <strong>Library</strong> tab in MusicStream and tap <strong>Playlists</strong>.
+                Open the <strong>Library</strong> tab in Zuno and tap <strong>Playlists</strong>.
               </li>
               <li>
                 Tap the <strong>↓</strong> menu icon in the top corner and select{' '}
@@ -272,7 +272,7 @@ export default function Docs() {
                 <code>.txt</code> file using your device's file manager.
               </li>
               <li>
-                Review the detected tracks and tap <strong>Import</strong>. MusicStream will
+                Review the detected tracks and tap <strong>Import</strong>. Zuno will
                 automatically query the streaming catalog and match every track into your new local playlist.
               </li>
             </ol>
@@ -291,7 +291,7 @@ Levitating,Dua Lipa,Future Nostalgia
 Yellow,Coldplay,Parachutes`}</code>
             </pre>
             <p>
-              MusicStream recognizes common header variations such as <code>Title</code>,{' '}
+              Zuno recognizes common header variations such as <code>Title</code>,{' '}
               <code>Track Name</code>, <code>Song</code>, and <code>Artist</code>.
             </p>
 
@@ -325,9 +325,9 @@ Adele - Easy On Me`}</code>
 
             <h3>Matching &amp; local storage</h3>
             <p>
-              During import, MusicStream searches for the closest high-quality official audio stream
+              During import, Zuno searches for the closest high-quality official audio stream
               for each song. If an item cannot be found, a summary report lists the skipped tracks so
-              you can search for alternatives manually. Like all playlists in MusicStream, imported
+              you can search for alternatives manually. Like all playlists in Zuno, imported
               playlists are stored locally on your device with complete privacy.
             </p>
           </section>
@@ -337,7 +337,7 @@ Adele - Easy On Me`}</code>
             <Clause id="equalizer">Equalizer</Clause>
             <p>
               Found under <code>Settings → Equalizer</code>. It uses Android's system audio
-              effects, so it applies to MusicStream's output only.
+              effects, so it applies to Zuno's output only.
             </p>
             <ul>
               <li>Five frequency bands with individual gain sliders.</li>
@@ -420,14 +420,14 @@ Adele - Easy On Me`}</code>
 
             <h3>The update button does nothing</h3>
             <p>
-              MusicStream doesn't have permission to install apps. Go to{' '}
-              <code>Settings → Apps → MusicStream → Install unknown apps</code> and allow it.
+              Zuno doesn't have permission to install apps. Go to{' '}
+              <code>Settings → Apps → Zuno → Install unknown apps</code> and allow it.
             </p>
 
             <h3>Playback stops when the screen locks</h3>
             <p>
               Your device is aggressively killing background apps. Disable battery
-              optimisation for MusicStream in your system settings.
+              optimisation for Zuno in your system settings.
             </p>
 
             <h3>No lyrics for a song</h3>

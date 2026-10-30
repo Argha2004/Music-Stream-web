@@ -38,11 +38,11 @@ export default function Support() {
     ? `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(
         PAYEE_NAME
       )}&am=${encodeURIComponent(activeAmount)}&cu=INR&tn=${encodeURIComponent(
-        'Support MusicStream'
+        'Support Zuno'
       )}`
     : `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(
         PAYEE_NAME
-      )}&cu=INR&tn=${encodeURIComponent('Support MusicStream')}`
+      )}&cu=INR&tn=${encodeURIComponent('Support Zuno')}`
 
   function handleSelectPreset(amount) {
     setIsCustom(false)
@@ -60,10 +60,10 @@ export default function Support() {
       <Reveal className="max-w-3xl">
         <SectionLabel index={6}>Support Project</SectionLabel>
         <h1 className="drawing-title mt-3 text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-ink">
-          Support MusicStream
+          Support Zuno
         </h1>
         <p className="mt-2 text-sm sm:text-base lg:text-lg text-ink-2 leading-relaxed">
-          MusicStream is 100% free, private, and ad-free. Your contributions directly fund
+          Zuno is 100% free, private, and ad-free. Your contributions directly fund
           Cloudflare R2 APK distribution hosting, testing devices, and active development.
         </p>
       </Reveal>
@@ -82,7 +82,7 @@ export default function Support() {
             </span>
 
             <h2 className="mt-1 font-display text-xl sm:text-2xl font-bold text-ink">
-              Sign in to support MusicStream
+              Sign in to support Zuno
             </h2>
             <p className="mt-2 text-xs sm:text-sm text-ink-2 leading-relaxed max-w-md mx-auto">
               Please sign in with your account to view the UPI QR code and make a contribution.
@@ -106,7 +106,7 @@ export default function Support() {
             </div>
 
             <p className="mt-4 text-[11px] text-ink-3">
-              New to MusicStream? Create an account to get approved.
+              New to Zuno? Create an account to get approved.
             </p>
           </div>
         ) : (

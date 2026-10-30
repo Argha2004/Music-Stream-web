@@ -33,7 +33,7 @@ export default function Changelog() {
         <SectionLabel index={3}>Release history</SectionLabel>
         <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Revisions</h1>
         <p className="mt-2.5 sm:mt-3 max-w-2xl text-sm sm:text-base text-ink-2">
-          Every published build of MusicStream. Installed apps automatically poll this
+          Every published build of Zuno. Installed apps automatically poll this
           endpoint to notify you when updates are available.
         </p>
       </Reveal>

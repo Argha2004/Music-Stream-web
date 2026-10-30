@@ -161,7 +161,7 @@ export default function Download() {
     <Sheet label="Download release" rev={release?.version_name}>
       <Reveal className="max-w-3xl">
         <SectionLabel index={5}>Downloads</SectionLabel>
-        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Get MusicStream</h1>
+        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">Get Zuno</h1>
         <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm font-medium text-ink-3">
           Issued to approved tester <span className="text-primary font-semibold break-all">{user?.email}</span>
         </p>
@@ -262,7 +262,7 @@ export default function Download() {
                   ) : (
                     <>
                       <DownloadIcon className="h-4 sm:h-5 w-4 sm:w-5 shrink-0" />
-                      <span>Download MusicStream APK</span>
+                      <span>Download Zuno APK</span>
                     </>
                   )}
                 </button>
@@ -296,7 +296,7 @@ export default function Download() {
                 3
               </span>
               <p className="text-sm text-ink-2 leading-relaxed">
-                Tap <strong>Install</strong>. Once installed, also grant MusicStream the permission to install unknown apps so in-app over-the-air updates work seamlessly.
+                Tap <strong>Install</strong>. Once installed, also grant Zuno the permission to install unknown apps so in-app over-the-air updates work seamlessly.
               </p>
             </li>
           </ol>

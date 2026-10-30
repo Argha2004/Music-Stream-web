@@ -56,20 +56,15 @@ export default function Nav() {
           <nav aria-label="Main" className="flex h-16 items-center justify-between gap-4">
             {/* Logo */}
             <Link to="/" className="group flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-pill text-primary transition-transform group-hover:scale-105">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl overflow-hidden transition-transform group-hover:scale-105">
                 <img
-                  src="/Logo-dark.png"
-                  alt="MusicStream Logo"
-                  className="h-5 w-5 object-contain dark:hidden"
-                />
-                <img
-                  src="/Logo-final.png"
-                  alt="MusicStream Logo"
-                  className="h-5 w-5 object-contain hidden dark:block"
+                  src="/zuno.png"
+                  alt="Zuno Logo"
+                  className="h-8 w-8 object-contain rounded-lg"
                 />
               </div>
               <span className="font-display text-lg font-extrabold tracking-tight text-ink">
-                MusicStream
+                Zuno
               </span>
             </Link>
 

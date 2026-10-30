@@ -30,7 +30,7 @@ export default function AppVerify() {
   const [launched, setLaunched] = useState(false)
 
   const deepLink = session
-    ? `musicstream://verify?token=${encodeURIComponent(session.access_token || '')}&email=${encodeURIComponent(
+    ? `zuno://verify?token=${encodeURIComponent(session.access_token || '')}&email=${encodeURIComponent(
         user?.email || ''
       )}&user_id=${encodeURIComponent(user?.id || '')}&device_id=${encodeURIComponent(deviceId)}`
     : ''
@@ -55,17 +55,17 @@ export default function AppVerify() {
 
   return (
     <Sheet label="Device Verification">
-      <Reveal className="mx-auto max-w-xl">
+      <Reveal className="mx-auto max-w-xl w-full min-w-0">
         <SectionLabel index={4}>Device Licensing</SectionLabel>
-        <h1 className="drawing-title mt-3 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">
+        <h1 className="drawing-title mt-2 sm:mt-4 text-2xl sm:text-4xl lg:text-5xl">
           App Verification
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-ink-2">
-          Verify your mobile device to authorize and unlock your MusicStream application.
+        <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2">
+          Verify your mobile device to authorize and unlock your Zuno application.
         </p>
 
         {loading ? (
-          <div className="mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-8 text-center">
+          <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8 text-center">
             <RefreshCw className="mx-auto h-8 w-8 animate-spin text-primary opacity-80" />
             <p className="mt-4 font-mono text-xs uppercase tracking-wider text-ink-3">
               Checking Authorization…
@@ -73,21 +73,23 @@ export default function AppVerify() {
           </div>
         ) : !session ? (
           /* Case 1: User is not signed in */
-          <div className="mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8">
-            <div className="flex items-center justify-between gap-2 pb-4 border-b border-rule">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
+          <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-3.5 sm:p-8 min-w-0 overflow-hidden w-full">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-rule">
+              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
                 Authentication Required
               </span>
-              <Stamp tone="void">Unauthenticated</Stamp>
+              <Stamp tone="void" className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1">
+                Unauthenticated
+              </Stamp>
             </div>
 
-            <div className="mt-6 flex flex-col items-center text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 mb-4">
-                <KeyRound className="h-7 w-7" />
+            <div className="mt-5 sm:mt-6 flex flex-col items-center text-center">
+              <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 mb-3.5 sm:mb-4">
+                <KeyRound className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
-              <h2 className="text-lg font-bold text-ink">Sign in to verify your device</h2>
-              <p className="mt-2 text-xs sm:text-sm text-ink-2 max-w-sm">
-                MusicStream requires an approved account to activate. Please sign in below to confirm
+              <h2 className="text-base sm:text-lg font-bold text-ink">Sign in to verify your device</h2>
+              <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2 max-w-sm">
+                Zuno requires an approved account to activate. Please sign in below to confirm
                 your device authorization.
               </p>
 
@@ -97,7 +99,7 @@ export default function AppVerify() {
                     <span className="uppercase text-[10px] tracking-wider text-ink-4">
                       Pending Device ID
                     </span>
-                    <Smartphone className="h-3.5 w-3.5 opacity-60" />
+                    <Smartphone className="h-3.5 w-3.5 opacity-60 shrink-0" />
                   </div>
                   <div className="mt-1 font-semibold text-ink break-all text-[11px]">
                     {deviceId}
@@ -108,7 +110,7 @@ export default function AppVerify() {
               <Link
                 to="/login"
                 state={{ from: `${location.pathname}${location.search}` }}
-                className="btn btn-primary mt-6 w-full flex items-center justify-center gap-2"
+                className="btn btn-primary mt-6 w-full flex items-center justify-center gap-2 py-3 text-xs sm:text-sm font-semibold"
               >
                 <LogIn className="h-4 w-4" />
                 <span>Sign In to Authorize</span>
@@ -124,43 +126,43 @@ export default function AppVerify() {
           </div>
         ) : !approved ? (
           /* Case 2: Signed in, but not yet approved */
-          <div className="mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-6 sm:p-8">
-            <div className="flex items-center justify-between gap-2 pb-4 border-b border-rule">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
+          <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-3.5 sm:p-8 min-w-0 overflow-hidden w-full">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-rule">
+              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
                 Access Status
               </span>
-              <Stamp tone={rejected ? 'void' : 'approve'}>
+              <Stamp tone={rejected ? 'void' : 'approve'} className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1">
                 {rejected ? 'Refused' : 'Awaiting Approval'}
               </Stamp>
             </div>
 
-            <div className="mt-6 flex flex-col items-center text-center">
+            <div className="mt-5 sm:mt-6 flex flex-col items-center text-center">
               <div
-                className={`flex h-14 w-14 items-center justify-center rounded-2xl mb-4 ${
+                className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl mb-3.5 sm:mb-4 ${
                   rejected
                     ? 'bg-red-500/10 text-red-500'
                     : 'bg-amber-500/10 text-amber-500'
                 }`}
               >
-                <AlertTriangle className="h-7 w-7" />
+                <AlertTriangle className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
-              <h2 className="text-lg font-bold text-ink">
+              <h2 className="text-base sm:text-lg font-bold text-ink">
                 {rejected ? 'Access Declined' : 'Approval Pending'}
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-ink-2 max-w-sm">
+              <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2 max-w-sm">
                 {rejected
-                  ? 'Your account request was declined. You cannot verify or use MusicStream at this time.'
-                  : 'Your account is waiting for developer approval. Once approved, you can verify your device and run MusicStream.'}
+                  ? 'Your account request was declined. You cannot verify or use Zuno at this time.'
+                  : 'Your account is waiting for developer approval. Once approved, you can verify your device and run Zuno.'}
               </p>
 
-              <div className="mt-6 w-full space-y-2.5 rounded-xl border border-rule/60 bg-ground/50 p-4 text-left text-xs font-mono">
-                <div className="flex justify-between items-center text-ink-3">
-                  <span>Account:</span>
-                  <span className="font-semibold text-ink break-all">{user?.email}</span>
+              <div className="mt-5 sm:mt-6 w-full space-y-2 rounded-xl border border-rule/60 bg-ground/50 p-3 sm:p-4 text-left text-xs font-mono">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 text-ink-3">
+                  <span className="shrink-0 text-[11px]">Account:</span>
+                  <span className="font-semibold text-ink break-all text-[11px] sm:text-xs text-left sm:text-right">{user?.email}</span>
                 </div>
-                <div className="flex justify-between items-center text-ink-3">
-                  <span>Device:</span>
-                  <span className="text-ink break-all text-[11px]">{deviceId}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 text-ink-3 border-t border-rule/40 pt-2">
+                  <span className="shrink-0 text-[11px]">Device:</span>
+                  <span className="text-ink break-all text-[11px] text-left sm:text-right">{deviceId}</span>
                 </div>
               </div>
 
@@ -169,7 +171,7 @@ export default function AppVerify() {
                   type="button"
                   onClick={handleRecheck}
                   disabled={checking}
-                  className="btn btn-secondary mt-6 w-full flex items-center justify-center gap-2"
+                  className="btn btn-secondary mt-6 w-full flex items-center justify-center gap-2 py-3 text-xs sm:text-sm"
                 >
                   <RefreshCw className={`h-4 w-4 ${checking ? 'animate-spin' : ''}`} />
                   <span>{checking ? 'Checking Status…' : 'Check Approval Status'}</span>
@@ -179,48 +181,50 @@ export default function AppVerify() {
           </div>
         ) : (
           /* Case 3: Signed in and Approved! */
-          <div className="mt-8 rounded-2xl sm:rounded-3xl border border-primary/30 bg-primary/5 p-6 sm:p-8">
-            <div className="flex items-center justify-between gap-2 pb-4 border-b border-primary/20">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-primary">
+          <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-primary/30 bg-primary/5 p-3.5 sm:p-8 min-w-0 overflow-hidden w-full">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-primary/20">
+              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-primary">
                 Device Authorized
               </span>
-              <Stamp tone="approve">Verified Account</Stamp>
+              <Stamp tone="approve" className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1">
+                Verified Account
+              </Stamp>
             </div>
 
-            <div className="mt-6 flex flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/15 text-primary mb-4 shadow-lg shadow-primary/10">
-                <ShieldCheck className="h-8 w-8" />
+            <div className="mt-5 sm:mt-6 flex flex-col items-center text-center">
+              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-primary/15 text-primary mb-3.5 sm:mb-4 shadow-lg shadow-primary/10">
+                <ShieldCheck className="h-7 w-7 sm:h-8 sm:w-8" />
               </div>
-              <h2 className="text-xl font-bold text-ink">Ready to Launch MusicStream</h2>
-              <p className="mt-2 text-xs sm:text-sm text-ink-2 max-w-sm">
+              <h2 className="text-lg sm:text-xl font-bold text-ink">Ready to Launch Zuno</h2>
+              <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-ink-2 max-w-sm">
                 Your account is confirmed and approved. Click below to complete verification and unlock
-                the MusicStream app on your device.
+                the Zuno app on your device.
               </p>
 
-              <div className="mt-6 w-full space-y-3 rounded-2xl border border-rule bg-card-subtle p-4 text-left text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-ink-3 font-mono">Verified Email</span>
-                  <span className="font-semibold text-ink font-mono">{user?.email}</span>
+              <div className="mt-5 sm:mt-6 w-full space-y-2.5 sm:space-y-3 rounded-2xl border border-rule bg-card-subtle p-3.5 sm:p-4 text-left text-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2">
+                  <span className="text-ink-3 font-mono text-[11px] sm:text-xs shrink-0">Verified Email</span>
+                  <span className="font-semibold text-ink font-mono text-[11px] sm:text-xs break-all text-left sm:text-right">{user?.email}</span>
                 </div>
-                <div className="flex items-center justify-between border-t border-rule/50 pt-2">
-                  <span className="text-ink-3 font-mono">Device ID</span>
-                  <span className="font-mono text-ink text-[11px] break-all">{deviceId}</span>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 border-t border-rule/50 pt-2">
+                  <span className="text-ink-3 font-mono text-[11px] sm:text-xs shrink-0">Device ID</span>
+                  <span className="font-mono text-ink text-[11px] sm:text-xs break-all text-left sm:text-right">{deviceId}</span>
                 </div>
                 <div className="flex items-center justify-between border-t border-rule/50 pt-2 text-emerald-600 dark:text-emerald-400">
-                  <span className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle className="h-3.5 w-3.5" /> License Active
+                  <span className="flex items-center gap-1.5 font-medium text-[11px] sm:text-xs">
+                    <CheckCircle className="h-3.5 w-3.5 shrink-0" /> License Active
                   </span>
-                  <span className="font-mono text-[10px] uppercase">One-time Unlock</span>
+                  <span className="font-mono text-[9.5px] sm:text-[10px] uppercase font-bold tracking-wider">One-time Unlock</span>
                 </div>
               </div>
 
               <a
                 href={deepLink}
-                className="btn btn-primary mt-6 w-full flex items-center justify-center gap-2 py-3.5 text-sm font-semibold shadow-lg shadow-primary/20"
+                className="btn btn-primary mt-6 w-full flex items-center justify-center gap-2 py-3 sm:py-3.5 px-3 text-xs sm:text-sm font-semibold shadow-lg shadow-primary/20 text-center"
               >
-                <Sparkles className="h-4 w-4" />
-                <span>Open MusicStream App</span>
-                <ExternalLink className="h-4 w-4 ml-1 opacity-80" />
+                <Sparkles className="h-4 w-4 shrink-0" />
+                <span>Open Zuno App</span>
+                <ExternalLink className="h-4 w-4 ml-0.5 sm:ml-1 opacity-80 shrink-0" />
               </a>
 
               <p className="mt-3 text-[11px] text-ink-3 leading-relaxed">

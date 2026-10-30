@@ -85,7 +85,7 @@ export function AuthProvider({ children }) {
 
         setProfile(data)
       } catch (err) {
-        console.warn('[MusicStream] Profile verification check error:', err)
+        console.warn('[Zuno] Profile verification check error:', err)
       }
     }
 
