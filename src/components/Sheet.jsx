@@ -13,6 +13,7 @@ const SHEET_INDEX = {
   '/donate': '06',
   '/download': '07',
   '/login': '08',
+  '/reset-password': '08',
   '/signup': '09',
   '/admin': '10',
   '/report': '11',

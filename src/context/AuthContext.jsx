@@ -77,6 +77,12 @@ export function AuthProvider({ children }) {
           return
         }
 
+        // Allow users on password reset page to update their credentials
+        if (window.location.pathname.startsWith('/reset-password')) {
+          if (data) setProfile(data)
+          return
+        }
+
         // If profile was deleted from DB or status changed to rejected:
         if (!data || data.status === 'rejected') {
           triggerRefusal(userEmail)
@@ -191,6 +197,20 @@ export function AuthProvider({ children }) {
           password,
           options: { emailRedirectTo: `${window.location.origin}/login` },
         }),
+
+      /**
+       * Sends a password reset email via Supabase.
+       */
+      resetPassword: (email) =>
+        supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: `${window.location.origin}/reset-password`,
+        }),
+
+      /**
+       * Updates the user's password using the active or recovery session.
+       */
+      updatePassword: (password) =>
+        supabase.auth.updateUser({ password }),
 
       signOut: () => supabase.auth.signOut(),
 

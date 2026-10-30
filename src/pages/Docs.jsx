@@ -353,7 +353,7 @@ Adele - Easy On Me`}</code>
                 A secure in-app Google authentication browser will open. Log in with your standard Google or YouTube account credentials.
               </li>
               <li>
-                Once verified, your YouTube Music channel name andhandle will display on the About and Account screens.
+                Once verified, your YouTube Music channel name and handle will display on the About and Account screens.
               </li>
             </ol>
 

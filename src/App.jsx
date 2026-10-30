@@ -14,6 +14,7 @@ const Docs = lazy(() => import('./pages/Docs'))
 const License = lazy(() => import('./pages/License'))
 const Changelog = lazy(() => import('./pages/Changelog'))
 const Login = lazy(() => import('./pages/Login'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
 const Signup = lazy(() => import('./pages/Signup'))
 const Download = lazy(() => import('./pages/Download'))
 const Admin = lazy(() => import('./pages/Admin'))
@@ -75,6 +76,7 @@ export default function App() {
               <Route path="/license" element={<License />} />
               <Route path="/changelog" element={<Changelog />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/signup" element={<Signup />} />
               <Route
                 path="/download"
