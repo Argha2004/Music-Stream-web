@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react'
 import { humanizeAuthError, useAuth } from '../context/AuthContext'
-import { supabase } from '../lib/supabase'
+import { notifyPasswordChanged, supabase } from '../lib/supabase'
 import Sheet from '../components/Sheet'
 import Reveal from '../components/Reveal'
 import SectionLabel from '../components/SectionLabel'
@@ -80,6 +80,11 @@ export default function ResetPassword() {
     }
 
     setSuccess(true)
+
+    // Notify user via email that their password was changed successfully
+    notifyPasswordChanged(session?.user?.email).catch((e) =>
+      console.warn('Failed to send password change notification:', e)
+    )
   }
 
   return (

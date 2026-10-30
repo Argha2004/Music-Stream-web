@@ -134,6 +134,36 @@ export async function notifyAdminSignup(email) {
   }
 }
 
+/**
+ * Notifies the user via email that their password was changed successfully.
+ * Non-blocking security alert: failure will not prevent password change.
+ */
+export async function notifyPasswordChanged(email) {
+  try {
+    const { data } = await supabase.auth.getSession()
+    const token = data?.session?.access_token
+    const targetEmail = email || data?.session?.user?.email
+
+    const headers = { 'Content-Type': 'application/json' }
+    if (token) headers.Authorization = `Bearer ${token}`
+
+    const res = await fetch('/api/notify-password-changed', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email: targetEmail,
+        changedAt: new Date().toISOString(),
+      }),
+    })
+    const body = await res.json().catch(() => ({}))
+    if (!res.ok) return 'failed'
+    return body.sent ? 'sent' : 'skipped'
+  } catch (err) {
+    console.warn('Password change notification error:', err)
+    return 'failed'
+  }
+}
+
 export function formatBytes(bytes) {
   if (!bytes) return null
   return `${(bytes / 1048576).toFixed(1)} MB`
