@@ -20,6 +20,7 @@ const SECTIONS = [
   { id: 'playback', label: 'Playback & queue' },
   { id: 'library', label: 'Library & playlists' },
   { id: 'import-playlists', label: 'Import playlist option' },
+  { id: 'yt-music-sync', label: 'YouTube Music & Google Sync' },
   { id: 'equalizer', label: 'Equalizer' },
   { id: 'appearance', label: 'Appearance' },
   { id: 'permissions', label: 'Permissions' },
@@ -332,6 +333,56 @@ Adele - Easy On Me`}</code>
             </p>
           </section>
 
+          <section id="yt-music-sync">
+            <Clause id="yt-music-sync">YouTube Music &amp; Google Account Sync</Clause>
+            <p>
+              Zuno features direct Google Account integration, allowing you to connect
+              your YouTube Music account to synchronize your personal library, custom playlists
+              (including private, unlisted, and public playlists), Liked Songs, and your YouTube channel profile.
+            </p>
+
+            <h3>How to connect your Google Account</h3>
+            <ol>
+              <li>
+                Open the <strong>Settings</strong> or <strong>About</strong> section in Zuno.
+              </li>
+              <li>
+                Under the <strong>YouTube Music Account</strong> banner, tap <strong>Connect Account</strong> (or <strong>Sign in with Google</strong>).
+              </li>
+              <li>
+                A secure in-app Google authentication browser will open. Log in with your standard Google or YouTube account credentials.
+              </li>
+              <li>
+                Once verified, your YouTube Music channel name andhandle will display on the About and Account screens.
+              </li>
+            </ol>
+
+            <h3>What gets synchronized</h3>
+            <ul>
+              <li>
+                <strong>Private &amp; Public Playlists:</strong> All playlists created or saved on your YouTube Music account are loaded directly into the <strong>Library → Playlists</strong> screen.
+              </li>
+              <li>
+                <strong>Liked Songs:</strong> Your personal YouTube Music &ldquo;Liked Music&rdquo; playlist syncs alongside your local favorites.
+              </li>
+              <li>
+                <strong>Channel Profile:</strong> Your verified YouTube channel name and handle appear on your profile and about screens.
+              </li>
+              <li>
+                <strong>Personalized Recommendations:</strong> In-app discovery and song radios reflect your listening history and preferences.
+              </li>
+            </ul>
+
+            <h3>Syncing your latest playlists</h3>
+            <p>
+              To refresh your YouTube Music library after creating or updating playlists on YouTube Music, go to <strong>Library → Playlists</strong> and tap the <strong>Sync / Refresh</strong> button, or pull down to refresh. Zuno fetches updated playlist tracks directly via the YouTube InnerTube API.
+            </p>
+
+            <h3>Privacy &amp; Security</h3>
+            <p>
+              Your Google password and authentication credentials are <strong>never stored</strong> or shared with any third-party servers. Zuno uses isolated session cookies stored purely within your phone&apos;s encrypted private application storage. You can disconnect your Google account at any time with a single tap from <strong>Settings → Sign Out</strong>.
+            </p>
+          </section>
 
           <section id="equalizer">
             <Clause id="equalizer">Equalizer</Clause>

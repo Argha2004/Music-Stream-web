@@ -74,11 +74,11 @@ export default function AppVerify() {
         ) : !session ? (
           /* Case 1: User is not signed in */
           <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-3.5 sm:p-8 min-w-0 overflow-hidden w-full">
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-rule">
-              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3.5 sm:pb-4 border-b border-rule">
+              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink-3 shrink-0">
                 Authentication Required
               </span>
-              <Stamp tone="void" className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1">
+              <Stamp tone="void" className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 whitespace-nowrap shrink-0">
                 Unauthenticated
               </Stamp>
             </div>
@@ -94,14 +94,14 @@ export default function AppVerify() {
               </p>
 
               {deviceId && (
-                <div className="mt-5 w-full rounded-xl border border-rule/60 bg-ground/50 p-3 font-mono text-xs text-ink-3 text-left">
-                  <div className="flex justify-between items-center">
-                    <span className="uppercase text-[10px] tracking-wider text-ink-4">
+                <div className="mt-5 w-full rounded-xl sm:rounded-2xl border border-rule/60 bg-ground/50 p-3 sm:p-4 font-mono text-left">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="uppercase text-[10px] sm:text-[11px] tracking-wider text-ink-3 font-semibold">
                       Pending Device ID
                     </span>
                     <Smartphone className="h-3.5 w-3.5 opacity-60 shrink-0" />
                   </div>
-                  <div className="mt-1 font-semibold text-ink break-all text-[11px]">
+                  <div className="font-semibold text-ink break-all text-xs sm:text-sm select-all">
                     {deviceId}
                   </div>
                 </div>
@@ -112,7 +112,7 @@ export default function AppVerify() {
                 state={{ from: `${location.pathname}${location.search}` }}
                 className="btn btn-primary mt-6 w-full flex items-center justify-center gap-2 py-3 text-xs sm:text-sm font-semibold"
               >
-                <LogIn className="h-4 w-4" />
+                <LogIn className="h-4 w-4 shrink-0" />
                 <span>Sign In to Authorize</span>
               </Link>
 
@@ -127,11 +127,11 @@ export default function AppVerify() {
         ) : !approved ? (
           /* Case 2: Signed in, but not yet approved */
           <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-rule bg-card-subtle p-3.5 sm:p-8 min-w-0 overflow-hidden w-full">
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-rule">
-              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink-3">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3.5 sm:pb-4 border-b border-rule">
+              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-ink-3 shrink-0">
                 Access Status
               </span>
-              <Stamp tone={rejected ? 'void' : 'approve'} className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1">
+              <Stamp tone={rejected ? 'void' : 'approve'} className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 whitespace-nowrap shrink-0">
                 {rejected ? 'Refused' : 'Awaiting Approval'}
               </Stamp>
             </div>
@@ -155,14 +155,22 @@ export default function AppVerify() {
                   : 'Your account is waiting for developer approval. Once approved, you can verify your device and run Zuno.'}
               </p>
 
-              <div className="mt-5 sm:mt-6 w-full space-y-2 rounded-xl border border-rule/60 bg-ground/50 p-3 sm:p-4 text-left text-xs font-mono">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 text-ink-3">
-                  <span className="shrink-0 text-[11px]">Account:</span>
-                  <span className="font-semibold text-ink break-all text-[11px] sm:text-xs text-left sm:text-right">{user?.email}</span>
+              <div className="mt-5 sm:mt-6 w-full divide-y divide-rule/60 rounded-xl sm:rounded-2xl border border-rule/60 bg-ground/50 p-3 sm:p-4 text-left">
+                <div className="pb-2">
+                  <div className="text-[10px] sm:text-[11px] font-mono font-semibold uppercase tracking-wider text-ink-3 mb-1">
+                    Account Email
+                  </div>
+                  <div className="font-semibold text-ink font-mono text-xs sm:text-sm break-all select-all">
+                    {user?.email}
+                  </div>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 text-ink-3 border-t border-rule/40 pt-2">
-                  <span className="shrink-0 text-[11px]">Device:</span>
-                  <span className="text-ink break-all text-[11px] text-left sm:text-right">{deviceId}</span>
+                <div className="pt-2">
+                  <div className="text-[10px] sm:text-[11px] font-mono font-semibold uppercase tracking-wider text-ink-3 mb-1">
+                    Device ID
+                  </div>
+                  <div className="font-mono text-ink-2 text-xs sm:text-sm break-all select-all">
+                    {deviceId}
+                  </div>
                 </div>
               </div>
 
@@ -182,11 +190,11 @@ export default function AppVerify() {
         ) : (
           /* Case 3: Signed in and Approved! */
           <div className="mt-6 sm:mt-8 rounded-2xl sm:rounded-3xl border border-primary/30 bg-primary/5 p-3.5 sm:p-8 min-w-0 overflow-hidden w-full">
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 sm:pb-4 border-b border-primary/20">
-              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-primary">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3.5 sm:pb-4 border-b border-primary/20">
+              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider text-primary shrink-0">
                 Device Authorized
               </span>
-              <Stamp tone="approve" className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1">
+              <Stamp tone="approve" className="text-[10px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 whitespace-nowrap shrink-0">
                 Verified Account
               </Stamp>
             </div>
@@ -201,20 +209,35 @@ export default function AppVerify() {
                 the Zuno app on your device.
               </p>
 
-              <div className="mt-5 sm:mt-6 w-full space-y-2.5 sm:space-y-3 rounded-2xl border border-rule bg-card-subtle p-3.5 sm:p-4 text-left text-xs">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2">
-                  <span className="text-ink-3 font-mono text-[11px] sm:text-xs shrink-0">Verified Email</span>
-                  <span className="font-semibold text-ink font-mono text-[11px] sm:text-xs break-all text-left sm:text-right">{user?.email}</span>
+              <div className="mt-5 sm:mt-6 w-full divide-y divide-rule/60 rounded-xl sm:rounded-2xl border border-rule bg-card-subtle p-3 sm:p-4 text-left">
+                {/* Verified Email */}
+                <div className="pb-2.5">
+                  <div className="text-[10px] sm:text-[11px] font-mono font-semibold uppercase tracking-wider text-ink-3 mb-1">
+                    Verified Email
+                  </div>
+                  <div className="font-semibold text-ink font-mono text-xs sm:text-sm break-all select-all leading-snug">
+                    {user?.email}
+                  </div>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-2 border-t border-rule/50 pt-2">
-                  <span className="text-ink-3 font-mono text-[11px] sm:text-xs shrink-0">Device ID</span>
-                  <span className="font-mono text-ink text-[11px] sm:text-xs break-all text-left sm:text-right">{deviceId}</span>
+
+                {/* Device ID */}
+                <div className="py-2.5">
+                  <div className="text-[10px] sm:text-[11px] font-mono font-semibold uppercase tracking-wider text-ink-3 mb-1">
+                    Device ID
+                  </div>
+                  <div className="font-mono text-ink-2 text-xs sm:text-sm break-all select-all leading-snug">
+                    {deviceId}
+                  </div>
                 </div>
-                <div className="flex items-center justify-between border-t border-rule/50 pt-2 text-emerald-600 dark:text-emerald-400">
+
+                {/* License status */}
+                <div className="pt-2.5 flex flex-wrap items-center justify-between gap-2 text-emerald-600 dark:text-emerald-400">
                   <span className="flex items-center gap-1.5 font-medium text-[11px] sm:text-xs">
                     <CheckCircle className="h-3.5 w-3.5 shrink-0" /> License Active
                   </span>
-                  <span className="font-mono text-[9.5px] sm:text-[10px] uppercase font-bold tracking-wider">One-time Unlock</span>
+                  <span className="font-mono text-[9.5px] sm:text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
+                    One-time Unlock
+                  </span>
                 </div>
               </div>
 

@@ -7,7 +7,7 @@ export default function Stamp({ children, tone = 'approve', className = '' }) {
   return (
     <motion.span
       role="status"
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider ${
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider whitespace-nowrap shrink-0 ${
         void_
           ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-400 border border-red-200 dark:border-red-900/40'
           : 'bg-primary-pill text-primary-pill-text border border-primary-pill/80'
